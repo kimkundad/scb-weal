@@ -2,7 +2,7 @@
 
 
 @section('title')
-Test
+Welcome to scb.idx.co.th
 @stop
 
 @section('stylesheet')
