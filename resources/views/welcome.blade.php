@@ -81,7 +81,7 @@ Welcome to scb.idx.co.th
                     </div>
                 </div>
 
-                <div class="p-26 step2 hidden text-center" style="margin-top: 160px">
+                <div class="p-26 step2 hidden text-center" style="margin-top: 180px">
                         <img src="{{ url('img/welcome.png') }}" style="width: 180px" class="img-fluid" alt="">
                         <div id="result2">
 
@@ -91,7 +91,7 @@ Welcome to scb.idx.co.th
                         </div>
                 </div>
 
-                <div class="p-26 step3 hidden text-center" style="margin-top: 310px">
+                <div class="p-26 step3 hidden text-center" >
                         <img src="{{ url('img/success.png') }}" style="width: 180px" class="img-fluid" alt="">
                         <div>
                             <p style="color: white; font-size: 18px">ท่านสามารถดูรายเอียดงานได้ที่นี่</p>

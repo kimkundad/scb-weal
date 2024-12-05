@@ -1214,7 +1214,13 @@ cursor: pointer; }
     height: 56px;
     padding: 0 23px;
   }
-
+.step3{
+    position: absolute;
+    top: 63%;
+    /* position: absolute; */
+    left: 0;
+    right: 0;
+}
 
 
 
