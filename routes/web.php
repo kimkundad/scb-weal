@@ -18,6 +18,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/morning', function () {
+    return view('morning');
+});
+
+Route::get('/afternoon', function () {
+    return view('afternoon');
+});
+
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -15,7 +15,8 @@ body {
   position: absolute;    margin-left: auto; width: 100%; margin-right: auto;
 }
 .logo_website_main{
-  width: 149px; height: 105px;
+margin-top: 15px;
+  width: 120px; height: 97px;
 }
 body, body, h1, h2, h3, h4, h5, h6 {
   font-family: 'Prompt', sans-serif !important;
