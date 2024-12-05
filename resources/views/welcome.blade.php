@@ -94,7 +94,7 @@ Welcome to scb.idx.co.th
                 <div class="p-26 step3 hidden text-center" >
                         <img src="{{ url('img/success.png') }}" style="width: 180px" class="img-fluid" alt="">
                         <div>
-                            <p style="color: white; font-size: 18px">ท่านสามารถดูรายเอียดงานได้ที่นี่</p>
+                            <p style="color: white; font-size: 18px">ท่านสามารถดูรายละเอียดงานได้ที่นี่</p>
                         </div>
                         <div style="margin-top: 15px">
                         <img id="successBtn" src="{{ url('img/event.png') }}" style="width:310px" class="img-fluid" alt="">
@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Apply fade-bg class to trigger animation
       setTimeout(() => {
         step1.classList.remove("hidden");
-        container.style.backgroundImage = "url('img/key2.png')"; // Set the second background
+        container.style.backgroundImage = "url('img/key2.png?v2')"; // Set the second background
       }, 2000); // 2-second delay before transition
     });
 
@@ -184,7 +184,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     <div> <p style="color: white; font-size: 20px">${data.data[3]}</p> </div>
                 `;
             } else {
+                hideLoading();
                 resultDiv.innerHTML = `<p style="color: white;">ไม่พบข้อมูลของท่าน <br> โปรดติดต่อเจ้าหน้าที่</p>`;
+
             }
         })
         .catch(error => {
