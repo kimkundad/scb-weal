@@ -93,7 +93,7 @@ Welcome to scb.idx.co.th
                 </div>
 
                 <div class="p-26 step3 hidden text-center" >
-                        <img src="{{ url('img/success.png') }}" style="width: 180px" class="img-fluid" alt="">
+                        <img src="{{ url('img/success.png') }}" style="width: 240px" class="img-fluid" alt="">
                         <div>
                             <p style="color: white; font-size: 18px">ท่านสามารถดูรายละเอียดงานได้ที่นี่</p>
                         </div>

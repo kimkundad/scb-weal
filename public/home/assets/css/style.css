@@ -1222,6 +1222,21 @@ cursor: pointer; }
     left: 0;
     right: 0;
 }
+@media all and (max-width: 414px) {
+    .step3{
+        top: 60%;
+    }
 
+}
+@media all and (max-width: 390px) {
+    .step3{
+        top: 57%;
+    }
+}
+@media all and (max-width: 375px) {
+    .step3{
+        top: 55%;
+    }
+}
 
 
