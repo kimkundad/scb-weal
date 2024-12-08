@@ -31,6 +31,7 @@ class EmployeeController extends Controller
         $spreadsheetId = '1lXKPbJApFJ5cRDLBEd06WLfsTin1tH3cv8TW8jEMK64'; // ใส่ Spreadsheet ID ที่ต้องการ
         $range = 'DATASET'; // ใส่ชื่อ Sheet
 
+        
          // ดึงข้อมูลทั้งหมดจาก Google Sheet
          $data = $this->googleSheet->getSheetData($spreadsheetId, $range);
 
