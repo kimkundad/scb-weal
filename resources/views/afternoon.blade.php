@@ -57,7 +57,7 @@ Welcome to scb.idx.co.th
 
             <div class="header_logo">
                 <div class="d-flex justify-content-center">
-                    <a href="{{ url('/afternoon') }}">
+                    <a href="{{ url('/morning') }}">
                         <img class="img-fluid logo_website_main" src="{{ url('img/logo_scb@2x.png') }}" />
                     </a>
                 </div>
@@ -98,8 +98,8 @@ Welcome to scb.idx.co.th
                             <p style="color: white; font-size: 18px">ท่านสามารถดูรายละเอียดงานได้ที่นี่</p>
                         </div>
                         <div style="margin-top: 15px">
-                            <a href="https://events.connexplatforms.com/@scb-wealth-forum2024">
-                                <img id="successBtn" src="{{ url('img/event.png') }}" style="width:310px" class="img-fluid" alt="">
+                            <a href="https://events.connexplatforms.com/@scb-wealth-forum2024?ac=100353">
+                            <img id="successBtn" src="{{ url('img/event.png') }}" style="width:310px" class="img-fluid" alt="">
                             </a>
                         </div>
                 </div>
@@ -144,30 +144,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const showLoading = () => {
         loadingDiv.style.display = 'block';
-    };
+        };
 
-    const hideLoading = () => {
-        loadingDiv.style.display = 'none';
-    };
+        const hideLoading = () => {
+            loadingDiv.style.display = 'none';
+        };
 
-      document.getElementById('searchBtn').addEventListener('click', function () {
-    const employeeCode = document.getElementById('employeeCode').value;
+    document.getElementById('searchBtn').addEventListener('click', function () {
+        const employeeCode = document.getElementById('employeeCode').value;
 
-    if (!employeeCode) {
-        alert('กรุณากรอกรหัสพนักงาน');
-        return;
-    }
+        if (!employeeCode) {
+            alert('กรุณากรอกรหัสพนักงาน');
+            return;
+        }
 
-    showLoading(); // แสดง Loading
+        showLoading(); // แสดง Loading
+        const time = 2; // เปลี่ยนเป็น 2 เพื่อเช็คคอลัมน์ที่ 10
 
-    fetch('{{ url('/employee/search') }}', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify({ employee_code: employeeCode })
-    })
+        fetch('{{ url('/employee/search') }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({ employee_code: employeeCode, time : time })
+        })
         .then(response => response.json())
         .then(data => {
 
@@ -179,13 +180,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 hideLoading();
 
-                step2.classList.remove("hidden");
-                step1.classList.add("hidden");
                 employeeData = data.data; // เก็บข้อมูลพนักงาน
-                resultDiv2.innerHTML = `
-                    <div> <p style="color: white; font-size: 22px">${data.data[5]} <br>${data.data[4]}</p> </div>
-                    <div> <p style="color: white; font-size: 20px">${data.data[3]}</p> </div>
-                `;
+
+                if (data.data[9] && data.data[9] !== '') { // ตรวจสอบว่าคอลัมน์ 9 (index 8) มีข้อมูล
+                resultDiv.innerHTML = `<p style="color: white;">คุณได้ลงทะเบียนแล้วเมื่อ ${data.checkin_date}</p>`;
+
+                } else {
+                    step2.classList.remove("hidden");
+                    step1.classList.add("hidden");
+
+                    resultDiv2.innerHTML = `
+                        <div> <p style="color: white; font-size: 22px">${data.data[5]} <br>${data.data[4]}</p> </div>
+                        <div> <p style="color: white; font-size: 20px">${data.data[3]}</p> </div>
+                    `;
+                }
+
             } else {
                 hideLoading();
                 resultDiv.innerHTML = `<p style="color: white;">ไม่พบข้อมูลของท่าน <br> โปรดติดต่อเจ้าหน้าที่</p>`;
@@ -196,7 +205,7 @@ document.addEventListener("DOMContentLoaded", () => {
             hideLoading(); // ซ่อน Loading เมื่อเกิดข้อผิดพลาด
                 console.error('Error:', error);
         });
-});
+    });
 
 
 document.getElementById('registerBtn').addEventListener('click', function () {
@@ -229,6 +238,10 @@ document.getElementById('registerBtn').addEventListener('click', function () {
                         step2.classList.add("hidden");
 
                         container.style.backgroundImage = "url('img/bg1.png')"; // Set the second background
+
+                        // อัปเดตลิงก์ในปุ่ม
+                            const successBtn = document.getElementById('successBtn');
+                            successBtn.parentNode.href = `https://events.connexplatforms.com/@scb-wealth-forum2024?ac=${employeeData[4]}`; // อัปเดตลิงก์ด้วยหมายเลขพนักงาน
 
                     } else {
                         alert('เกิดข้อผิดพลาด: ' + data.message);

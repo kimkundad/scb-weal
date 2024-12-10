@@ -21,16 +21,10 @@ class EmployeeController extends Controller
     {
         // รับค่ารหัสพนักงานจากคำขอ
         $employeeCode = $request->input('employee_code');
-
-        // ตัวอย่าง: ดึงข้อมูลพนักงานจากฐานข้อมูล
-        // $employeeData = [
-        //     '12345' => 'John Doe',
-        //     '67890' => 'Jane Smith'
-        // ];
+        $time = $request->input('time'); // รับค่า time
 
         $spreadsheetId = '1lXKPbJApFJ5cRDLBEd06WLfsTin1tH3cv8TW8jEMK64'; // ใส่ Spreadsheet ID ที่ต้องการ
         $range = 'DATASET'; // ใส่ชื่อ Sheet
-
 
          // ดึงข้อมูลทั้งหมดจาก Google Sheet
          $data = $this->googleSheet->getSheetData($spreadsheetId, $range);
@@ -46,9 +40,18 @@ class EmployeeController extends Controller
         $row = $this->googleSheet->findRowByColumnValue($data, 4, $employeeCode);
 
         if ($row) {
+
+            $checkinDate = null;
+            if ($time == 1) {
+                $checkinDate = isset($row[8]) && !empty($row[8]) ? $row[8] : null; // คอลัมน์ที่ 9 (index 8)
+            } elseif ($time == 2) {
+                $checkinDate = isset($row[9]) && !empty($row[9]) ? $row[9] : null; // คอลัมน์ที่ 10 (index 9)
+            }
+
             return response()->json([
                 'success' => true,
-                'data' => $row // ส่งคืนข้อมูลทั้งแถว
+                'data' => $row, // ส่งคืนข้อมูลทั้งแถว
+                'checkin_date' => $checkinDate // ส่งวันที่ Check-in กลับไป (ถ้ามี)
             ]);
         } else {
             return response()->json([
