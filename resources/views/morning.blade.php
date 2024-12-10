@@ -98,7 +98,7 @@ Welcome to scb.idx.co.th
                             <p style="color: white; font-size: 18px">ท่านสามารถดูรายละเอียดงานได้ที่นี่</p>
                         </div>
                         <div style="margin-top: 15px">
-                            <a href="https://events.connexplatforms.com/@scb-wealth-forum2024">
+                            <a href="https://events.connexplatforms.com/@scb-wealth-forum2024?ac=100353">
                             <img id="successBtn" src="{{ url('img/event.png') }}" style="width:310px" class="img-fluid" alt="">
                             </a>
                         </div>
