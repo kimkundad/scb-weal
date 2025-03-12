@@ -10,9 +10,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="author" content="">
     <meta name="keywords" content="">
-    <meta name="description" content="">
-    <title> Welcome to scb.idx.co.th </title>
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ url('img/favicon-32x32.png') }}" />
+    <meta name="description" content="ยินดีต้อนรับเหล่ากองทัพผีเสื้อ เข้าสู่ค่ำคืนแห่งการเปลี่ยนแปลงที่มีความหมาย The Meaningful Change for Life">
+    <title> The Meaningful Change for Life </title>
+    <link rel="icon" href="{{ url('img/favicon.ico') }}" type="image/x-icon">
 
     {{-- <meta property="og:url"           content="https://nextfamilychallenge-vetbuddyexpert.com" />
     <meta property="og:type"          content="website" />
