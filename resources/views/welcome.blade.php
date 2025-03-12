@@ -12,7 +12,7 @@ Welcome to scb.idx.co.th
     cursor: pointer;
 }
 .chakra-container-page {
-  background-image: url('{{ url('img/myBg.jpg') }}'); /* ลิงก์รูปภาพ */
+  background-image: url('{{ url('img/bg_first.jpg') }}'); /* ลิงก์รูปภาพ */
   background-size: contain; /* ปรับให้รูปเต็มพื้นที่ */
   background-position: center; /* วางรูปตรงกลาง */
   background-repeat: no-repeat; /* ป้องกันการซ้ำของรูป */
