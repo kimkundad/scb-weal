@@ -24,34 +24,19 @@ Welcome to scb.idx.co.th
     transition: background-image 1s ease-in-out;
 }
 
- /* Hidden class for initial setup */
-    .fade-bg {
-      animation: fadeBackground 2s ease-in-out forwards; /* Trigger animation */
+ @media (max-width: 768px) {
+    .chakra-container-page {
+        background-size: cover !important; /* ปรับให้รูปเต็มหน้าจอ */
+        background-position: center !important;
+        overflow: hidden; /* ป้องกันเลื่อนหน้าจอแล้วเห็นส่วนเกิน */
     }
-
-    /* Keyframes for fade effect */
-    @keyframes fadeBackground {
-      0% {
-        background-image: url('img/bg1.png'); /* Initial image */
-      }
-      100% {
-        background-image: url('img/key2.png'); /* Final image */
-      }
-    }
+}
 
 </style>
 
 @stop('stylesheet')
 
 @section('content')
-
-
-<div id="loading" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 9999; text-align: center;">
-    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-        <img src="{{ url('img/loading.gif') }}" alt="Loading" style="width: 100px;">
-        <p style="color: white; font-size: 18px;">กำลังดำเนินการ...</p>
-    </div>
-</div>
 
 <div id="main" >
     <div class="chakra-container-page">
