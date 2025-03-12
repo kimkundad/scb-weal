@@ -30,6 +30,15 @@ Welcome to scb.idx.co.th
         font-family: 'TTB ExtraBold', sans-serif !important;
 }
 
+ @media (max-width: 768px) {
+    .chakra-container-page {
+        background-size: cover !important; /* ปรับให้รูปเต็มหน้าจอ */
+        background-position: center !important;
+        overflow: hidden; /* ป้องกันเลื่อนหน้าจอแล้วเห็นส่วนเกิน */
+    }
+}
+
+
 </style>
 
 @stop('stylesheet')
