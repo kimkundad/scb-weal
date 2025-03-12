@@ -18,15 +18,22 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/morning', function () {
-    return view('morning');
+Route::get('/search', function () {
+    return view('search');
 });
+
+Route::get('/result/{tableNumber}', function($tableNumber) {
+    return view('result', compact('tableNumber'));
+})->name('result');
+
 
 Route::get('/afternoon', function () {
     return view('afternoon');
 });
 
 Auth::routes();
+
+Route::post('/api_search', [EmployeeController::class, 'api_search']);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::post('/employee/search', [EmployeeController::class, 'search'])->name('employee.search');

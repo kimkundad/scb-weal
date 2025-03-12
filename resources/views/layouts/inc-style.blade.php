@@ -19,9 +19,9 @@
     display: none
 }
 html {
-    background: #090022;
+    background: #061441;
 }
 body {
-    background-color: #090022;
+    background-color: #061441;
 }
 </style>

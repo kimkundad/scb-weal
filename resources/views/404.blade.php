@@ -24,20 +24,6 @@ Welcome to scb.idx.co.th
     transition: background-image 1s ease-in-out;
 }
 
- /* Hidden class for initial setup */
-    .fade-bg {
-      animation: fadeBackground 2s ease-in-out forwards; /* Trigger animation */
-    }
-
-    /* Keyframes for fade effect */
-    @keyframes fadeBackground {
-      0% {
-        background-image: url('img/bg1.png'); /* Initial image */
-      }
-      100% {
-        background-image: url('img/key2.png'); /* Final image */
-      }
-    }
 
 </style>
 
@@ -57,18 +43,14 @@ Welcome to scb.idx.co.th
     <div class="chakra-container-page">
         <div id="content" >
 
-            <div class="justify-content-center" >
-                <img src="{{ url('img/btn/text2x-8.png') }}" class="img-fluid d-block mx-auto" style="width: 75%;" />
-                <br>
-                <img src="{{ url('img/btn/KV2x-8.png') }}" class="img-fluid d-block mx-auto" style="width: 75%;" />
-            </div>
-            <br><br>
-            <div class="text-center">
-                <a href="{{ url('/search') }}">
-                    <img src="{{ url('img/btn/btn-register2x-8.png') }}" class="img-fluid d-block mx-auto" style="width: 50%;" />
-                </a>
-            </div>
+            <div class="text-center"> <p style="color: white; font-size: 28px; margin-top: 150px; margin-bottom: 0px; font-family: 'TTB ExtraBold', sans-serif !important;">ไม่พบรหัสพนักงาน</p> </div>
 
+            <div class="text-center" style="margin-top: 160px">
+
+               <a href="{{ url('/search') }}">
+               <img src="{{ url('img/btn/btn-back2x-8.png') }}" class="img-fluid d-block mx-auto" style="width: 50%;" />
+               <a>
+            </div>
 
         </div>
     </div>
@@ -81,6 +63,9 @@ Welcome to scb.idx.co.th
 
 <script>
 
-  </script>
+
+</script>
+
+
 
 @stop('scripts')
