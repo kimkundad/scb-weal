@@ -40,16 +40,20 @@ class EmployeeController extends Controller
         $row = $this->googleSheet->findRowByColumnValue($data, 0, $employeeCode);
 
         if ($row) {
+            // ตรวจสอบว่ามีข้อมูลในคอลัมน์ "วันและเวลาที่ลงทะเบียน" หรือไม่
+            $checkinDate = isset($row[6]) && !empty($row[6]) ? $row[6] : null; // คอลัมน์ G (index 6)
 
-         //   dd($row);
+            if ($checkinDate) {
+                // ✅ ถ้าลงทะเบียนแล้ว → ไปหน้า result ทันที
+                $tableNumber = isset($row[7]) ? $row[7] : "N/A"; // คอลัมน์ H (index 7)
+                return redirect()->route('result', ['tableNumber' => $tableNumber]);
+            }
 
-            $data['data'] = $row;
-            return view('regis', $data);
-
-
+            // ✅ ถ้ายังไม่ลงทะเบียน → ไปหน้า regis
+            return view('regis', ['data' => $row]);
         } else {
-
-            return view('404', $data);
+            // ❌ ถ้าไม่พบพนักงาน → ไปหน้า 404
+            return view('404');
         }
 
     }
@@ -106,6 +110,7 @@ class EmployeeController extends Controller
         'tableNumber' => $tableNumber
     ]);
 }
+
 
 
 
