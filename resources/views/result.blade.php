@@ -33,7 +33,7 @@ Welcome to scb.idx.co.th
 }
 
 .seat-number {
-    font-size: 80px;
+    font-size: 140px;
     font-weight: bold;
     color: #ff7d00;
     text-align: center; /* จัดข้อความตรงกลางแนวนอน */
