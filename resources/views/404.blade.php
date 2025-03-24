@@ -55,7 +55,7 @@ Welcome to scb.idx.co.th
             <div class="text-center" style="margin-top: 160px">
 
                <a href="{{ url('/search') }}">
-               <img src="{{ url('img/btn/btn-back2x-8.png') }}" class="img-fluid d-block mx-auto" style="width: 50%;" />
+               <img src="{{ url('img/btn2/btn-back2x-8-fix.png') }}" class="img-fluid d-block mx-auto" style="width: 50%;" />
                <a>
             </div>
 
