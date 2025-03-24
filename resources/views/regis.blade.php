@@ -56,10 +56,10 @@ Welcome to scb.idx.co.th
             <div class="text-center"> <p style="color: white; font-size: 24px; margin-top: -15px; font-family: 'TTB Regular', sans-serif !important;">{{ $data[3] }}</p> </div>
 
             <div class="text-center" style="margin-top: 140px">
-               <img id="registerBtn" src="{{ url('img/btn/btn-register_12x-8.png') }}" class="img-fluid d-block mx-auto" style="width: 50%;" />
+               <img id="registerBtn" src="{{ url('img/btn2/btn-register_12x-8-fix.png') }}" class="img-fluid d-block mx-auto" style="width: 50%;" />
                <br>
                <a href="{{ url('/search') }}">
-               <img src="{{ url('img/btn/btn-back2x-8.png') }}" class="img-fluid d-block mx-auto" style="width: 50%;" />
+               <img src="{{ url('img/btn2/btn-back2x-8-fix.png') }}" class="img-fluid d-block mx-auto" style="width: 50%;" />
                <a>
             </div>
 

@@ -68,7 +68,7 @@ Welcome to scb.idx.co.th
                                 <div id="result" style="margin-top: 10px; height: 70px; color: green;  text-align: center; font-size: 20px; ">
                         </div>
                         <div class="text-center">
-                            <img id="searchBtn" src="{{ url('img/btn/btn-enter2x-8.png') }}" style="width:55%" class="img-fluid" alt="">
+                            <img id="searchBtn" src="{{ url('img/btn2/btn-enter2x-8-fix.png') }}" style="width:55%" class="img-fluid" alt="">
                         </div>
                     </div>
                 </div>

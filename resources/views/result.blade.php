@@ -84,13 +84,13 @@ Welcome to scb.idx.co.th
             </div>
 
             <p style="font-size: 22px; margin-top:10px">
-                โปรดแสดงหน้านี้ให้กับเจ้าหน้าที่<br>บริเวณประตูทางเข้าฮอล
+                กรุณาบันทึกหน้าจอเพื่อแสงต่อเจ้าหน้าที่
             </p>
 
             <!-- ปุ่ม Save & Close -->
             <div class="text-center">
                 <a href="{{ url('/') }}">
-                    <img src="{{ url('img/btn/btn-close2x-8.png') }}" style="width:45%" class="save-close-btn img-fluid d-block mx-auto" />
+                    <img src="{{ url('img/btn2/btn-close2x-8-fix.png') }}" style="width:45%" class="save-close-btn img-fluid d-block mx-auto" />
                 </a>
             </div>
 
