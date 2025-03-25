@@ -28,6 +28,7 @@ Welcome to scb.idx.co.th
     border-radius: 50px;
         height: 65px;
         font-family: 'TTB ExtraBold', sans-serif !important;
+        font-size: 38px;
 }
 
  @media (max-width: 768px) {
