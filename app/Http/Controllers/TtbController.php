@@ -97,7 +97,24 @@ class TtbController extends Controller
             $question
         ];
 
+        // 1. เพิ่มคำถามในหัวข้อ
         $this->googleSheet->appendRow($spreadsheetId, $sheetName, $newRow);
+
+        // 2. อัปเดตเวลาใน Data List
+        $dataList = $this->googleSheet->getSheetData($spreadsheetId, 'Data List');
+
+        $rowIndex = null;
+        foreach ($dataList as $index => $row) {
+            if (isset($row[0]) && trim($row[0]) == trim($employeeId)) {
+                $rowIndex = $index + 1;
+                break;
+            }
+        }
+
+        if ($rowIndex) {
+            $cell = 'F' . $rowIndex;
+            $this->googleSheet->updateCell($spreadsheetId, 'Data List!' . $cell, $timestamp);
+        }
 
         return response()->json(
             [
