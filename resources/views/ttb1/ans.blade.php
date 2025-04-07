@@ -91,6 +91,10 @@
 document.getElementById('qaForm').addEventListener('submit', async function (e) {
   e.preventDefault();
 
+  const submitBtn = document.querySelector('.submit-btn');
+  submitBtn.disabled = true;
+  submitBtn.innerText = "กำลังส่ง..."; // 🔄 loading text
+
   const employeeId = document.getElementById('employeeId').value.trim();
   const fullName = document.getElementById('fullName').value.trim();
   const question = document.getElementById('question').value.trim();
@@ -98,6 +102,8 @@ document.getElementById('qaForm').addEventListener('submit', async function (e) 
 
   if (!employeeId || !fullName || !question) {
     alert("กรุณากรอกข้อมูลให้ครบ");
+    submitBtn.disabled = false;
+    submitBtn.innerText = "ส่งคำถาม";
     return;
   }
 
@@ -120,12 +126,17 @@ document.getElementById('qaForm').addEventListener('submit', async function (e) 
       window.location.href = "{{ url('/ans_success') }}";
     } else {
       alert(result.message || 'เกิดข้อผิดพลาด');
+      submitBtn.disabled = false;
+      submitBtn.innerText = "ส่งคำถาม";
     }
   } catch (err) {
     alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
     console.error(err);
+    submitBtn.disabled = false;
+    submitBtn.innerText = "ส่งคำถาม";
   }
 });
+
 </script>
 
 <script>
