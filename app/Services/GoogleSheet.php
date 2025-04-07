@@ -58,4 +58,24 @@ class GoogleSheet
         $params
     );
 }
+
+
+public function appendRow($spreadsheetId, $sheetName, $rowData)
+{
+    $range = $sheetName . '!A:E';
+    $body = new \Google\Service\Sheets\ValueRange([
+        'values' => [$rowData]
+    ]);
+
+    $params = ['valueInputOption' => 'USER_ENTERED'];
+
+    return $this->service->spreadsheets_values->append(
+        $spreadsheetId,
+        $range,
+        $body,
+        $params
+    );
+}
+
+
 }

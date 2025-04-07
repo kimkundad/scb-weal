@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\TtbController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,8 +16,22 @@ use App\Http\Controllers\EmployeeController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('ttb1.index');
 });
+
+Route::get('/ans', function (Illuminate\Http\Request $request) {
+    $id = $request->query('id'); // ดึงค่า id จาก query string
+    return view('ttb1.ans', ['id' => $id]);
+});
+
+Route::get('/auto_search', [TtbController::class, 'auto_search']);
+
+
+Route::get('/ans_success', function () {
+    return view('ttb1.success');
+});
+
+Route::post('/post_ans', [TtbController::class, 'post_ans']);
 
 Route::get('/search', function () {
     return view('search');
