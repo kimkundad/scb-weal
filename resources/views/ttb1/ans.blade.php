@@ -33,7 +33,7 @@
 
             <p class="info" style="display: none;"></p>
             <div class="confirmed-status" style="display: none; margin-top: 10px;">
-                <div class="check-icon2"></div>
+                <img src="{{ url('img/Path@2x.png') }}" style="width: 40px; height: 40px" />
             </div>
 
             <label for="question">โปรดระบุคำถาม</label>

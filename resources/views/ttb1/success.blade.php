@@ -30,8 +30,8 @@
     <main>
         <h2>Q&A</h2>
         <br><br><br><br><br>
-        <div class="check-icon"></div>
-<br>
+        <img src="{{ url('img/Path@2x.png') }}" style="width: 100px; height: 100px" />
+        <br>
         <div class="message">
             ระบบได้รับคำถาม<br>ของคุณเรียบร้อยแล้ว
         </div>
