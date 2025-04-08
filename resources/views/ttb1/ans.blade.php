@@ -33,7 +33,7 @@
 
             <p class="info" style="display: none;"></p>
             <div class="confirmed-status" style="display: none; margin-top: 10px;">
-            <div class="check-icon2"></div>
+                <div class="check-icon2"></div>
             </div>
 
             <label for="question">โปรดระบุคำถาม</label>
@@ -58,163 +58,150 @@
 
 
 <script>
-  const input = document.getElementById('employeeId');
-  const infoBox = document.querySelector('.info');
-  const fullNameInput = document.getElementById('fullName');
+    const input = document.getElementById('employeeId');
+    const infoBox = document.querySelector('.info');
+    const fullNameInput = document.getElementById('fullName');
 
-  let timer;
-  input.addEventListener('input', function () {
-    clearTimeout(timer);
-    const value = input.value.trim();
+    let timer;
+    input.addEventListener('input', function () {
+      clearTimeout(timer);
+      const value = input.value.trim();
 
-    if (value === '') {
-      infoBox.style.display = 'none';
-      fullNameInput.value = '';
-      return;
-    }
+      if (value === '') {
+        infoBox.style.display = 'none';
+        fullNameInput.value = '';
+        document.querySelector('.submit-btn-user').style.display = 'none';
+        document.querySelector('.confirmed-status').style.display = 'none';
+        return;
+      }
 
-    timer = setTimeout(() => {
-      fetch(`/auto_search?employee_code=${value}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            infoBox.innerHTML = `คุณส่งคำถามในชื่อ <strong>${data.full_name}</strong>`;
-            infoBox.style.display = 'block';
-            fullNameInput.value = data.full_name;
-            localStorage.setItem('employeeId', input.value); // ✅ เก็บไว้
-            localStorage.setItem('fullName', data.full_name); // เก็บชื่อไว้ด้วยถ้าต้องใช้
+      timer = setTimeout(() => {
+        fetch(`/auto_search?employee_code=${value}`)
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+              infoBox.innerHTML = `คุณส่งคำถามในชื่อ <strong>${data.full_name}</strong>`;
+              infoBox.style.display = 'block';
+              fullNameInput.value = data.full_name;
 
-            document.querySelector('.submit-btn-user').style.display = 'inline-block';
-             // แจ้งให้ปุ่ม refresh
-            document.dispatchEvent(new Event('fullNameSet'));
+              localStorage.setItem('employeeId', input.value);
+              localStorage.setItem('fullName', data.full_name);
 
-          } else {
-            infoBox.innerHTML = 'ไม่พบรหัสพนักงาน';
-            infoBox.style.display = 'block';
-            fullNameInput.value = '';
-          }
-        });
-    }, 300);
-  });
-</script>
+              document.querySelector('.submit-btn-user').style.display = 'inline-block';
+            } else {
+              infoBox.innerHTML = 'ไม่พบรหัสพนักงาน';
+              infoBox.style.display = 'block';
+              fullNameInput.value = '';
+              document.querySelector('.submit-btn-user').style.display = 'none';
+              document.querySelector('.confirmed-status').style.display = 'none';
+            }
 
-<script>
-document.getElementById('qaForm').addEventListener('submit', async function (e) {
-  e.preventDefault();
-
-  const submitBtn = document.querySelector('.submit-btn');
-  submitBtn.disabled = true;
-  submitBtn.innerText = "กำลังส่ง..."; // 🔄 loading text
-
-  const employeeId = document.getElementById('employeeId').value.trim();
-  const fullName = document.getElementById('fullName').value.trim();
-  const question = document.getElementById('question').value.trim();
-  const topicId = document.getElementById('topicId').value;
-
-  if (!employeeId || !fullName || !question) {
-    alert("กรุณากรอกข้อมูลให้ครบ");
-    submitBtn.disabled = false;
-    submitBtn.innerText = "ส่งคำถาม";
-    return;
-  }
-
-  const formData = new FormData();
-  formData.append('employeeId', employeeId);
-  formData.append('full_name', fullName);
-  formData.append('question', question);
-  formData.append('id', topicId);
-  formData.append('_token', '{{ csrf_token() }}');
-
-  try {
-    const res = await fetch(`{{ url('/post_ans') }}`, {
-      method: 'POST',
-      body: formData
+            toggleSubmitButton();
+          });
+      }, 300);
     });
 
-    const result = await res.json();
+    document.querySelector('.submit-btn-user').addEventListener('click', () => {
+      const icon = document.querySelector('.confirmed-status');
+      icon.style.display = 'inline-block';
 
-    if (result.success) {
-      window.location.href = "{{ url('/ans_success') }}";
-    } else {
-      alert(result.message || 'เกิดข้อผิดพลาด');
-      submitBtn.disabled = false;
-      submitBtn.innerText = "ส่งคำถาม";
+      document.dispatchEvent(new Event('fullNameSet'));
+      toggleSubmitButton();
+    });
+
+    document.getElementById('qaForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const submitBtn = document.querySelector('.submit-btn');
+      submitBtn.disabled = true;
+      submitBtn.innerText = "กำลังส่ง...";
+
+      const employeeId = document.getElementById('employeeId').value.trim();
+      const fullName = document.getElementById('fullName').value.trim();
+      const question = document.getElementById('question').value.trim();
+      const topicId = document.getElementById('topicId').value;
+
+      if (!employeeId || !fullName || !question) {
+        alert("กรุณากรอกข้อมูลให้ครบ");
+        submitBtn.disabled = false;
+        submitBtn.innerText = "ส่งคำถาม";
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('employeeId', employeeId);
+      formData.append('full_name', fullName);
+      formData.append('question', question);
+      formData.append('id', topicId);
+      formData.append('_token', '{{ csrf_token() }}');
+
+      try {
+        const res = await fetch(`{{ url('/post_ans') }}`, {
+          method: 'POST',
+          body: formData
+        });
+
+        const result = await res.json();
+
+        if (result.success) {
+          window.location.href = "{{ url('/ans_success') }}";
+        } else {
+          alert(result.message || 'เกิดข้อผิดพลาด');
+          submitBtn.disabled = false;
+          submitBtn.innerText = "ส่งคำถาม";
+        }
+      } catch (err) {
+        alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
+        console.error(err);
+        submitBtn.disabled = false;
+        submitBtn.innerText = "ส่งคำถาม";
+      }
+    });
+
+    function toggleSubmitButton() {
+      const employeeInput = document.getElementById('employeeId');
+      const fullNameInput = document.getElementById('fullName');
+      const questionInput = document.getElementById('question');
+
+      const btnActive = document.querySelector('.submit-btn');
+      const btnDisabled = document.querySelector('.submit-btn-dis');
+      const checkIcon = document.querySelector('.confirmed-status');
+
+      const emp = employeeInput.value.trim();
+      const fullName = fullNameInput.value.trim();
+      const question = questionInput.value.trim();
+      const isConfirmed = checkIcon.style.display === 'inline-block';
+
+      const isReady = emp !== '' && fullName !== '' && question !== '' && isConfirmed;
+
+      btnActive.style.display = isReady ? 'inline-block' : 'none';
+      btnDisabled.style.display = isReady ? 'none' : 'inline-block';
     }
-  } catch (err) {
-    alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
-    console.error(err);
-    submitBtn.disabled = false;
-    submitBtn.innerText = "ส่งคำถาม";
-  }
-});
 
-</script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const employeeInput = document.getElementById('employeeId');
+      const fullNameInput = document.getElementById('fullName');
+      const infoBox = document.querySelector('.info');
 
-<script>
-window.addEventListener('DOMContentLoaded', () => {
-  const employeeInput = document.getElementById('employeeId');
-  const fullNameInput = document.getElementById('fullName');
-  const infoBox = document.querySelector('.info');
+      const savedId = localStorage.getItem('employeeId');
+      const savedName = localStorage.getItem('fullName');
 
-  const savedId = localStorage.getItem('employeeId');
-  const savedName = localStorage.getItem('fullName');
+      if (savedId) {
+        employeeInput.value = savedId;
+      }
 
-  if (savedId) {
-    employeeInput.value = savedId;
-  }
+      if (savedName) {
+        fullNameInput.value = savedName;
+        infoBox.innerHTML = `คุณส่งคำถามในชื่อ <strong>${savedName}</strong>`;
+        infoBox.style.display = 'block';
+      }
 
-  if (savedName) {
-    fullNameInput.value = savedName;
-    infoBox.innerHTML = `คุณส่งคำถามในชื่อ <strong>${savedName}</strong>`;
-    infoBox.style.display = 'block';
-  }
+      toggleSubmitButton();
 
-  toggleSubmitButton(); // ✅ ตรวจสถานะปุ่มตอนเปิดหน้า
-});
-</script>
-
-<script>
-
-
-function toggleSubmitButton() {
-  const employeeInput = document.getElementById('employeeId');
-  const fullNameInput = document.getElementById('fullName');
-  const questionInput = document.getElementById('question');
-
-  const btnActive = document.querySelector('.submit-btn');
-  const btnDisabled = document.querySelector('.submit-btn-dis');
-  const checkIcon = document.querySelector('.confirmed-status');
-
-  const emp = employeeInput.value.trim();
-  const fullName = fullNameInput.value.trim();
-  const question = questionInput.value.trim();
-  const isConfirmed = checkIcon.style.display === 'inline-block';
-
-  const isReady = emp !== '' && fullName !== '' && question !== '' && isConfirmed;
-
-  btnActive.style.display = isReady ? 'inline-block' : 'none';
-  btnDisabled.style.display = isReady ? 'none' : 'inline-block';
-}
-
-// ฟังทุก event ที่เกี่ยวข้อง
-window.addEventListener('DOMContentLoaded', () => {
-  toggleSubmitButton();
-
-  document.getElementById('employeeId').addEventListener('input', toggleSubmitButton);
-  document.getElementById('question').addEventListener('input', toggleSubmitButton);
-
-  document.addEventListener('fullNameSet', toggleSubmitButton);
-});
-</script>
-
-<script>
-  document.querySelector('.submit-btn-user').addEventListener('click', () => {
-    const icon = document.querySelector('.confirmed-status');
-    icon.style.display = 'inline-block';
-
-    // แจ้งว่า full_name พร้อมให้ส่งคำถาม
-    document.dispatchEvent(new Event('fullNameSet'));
-  });
-</script>
+      employeeInput.addEventListener('input', toggleSubmitButton);
+      document.getElementById('question').addEventListener('input', toggleSubmitButton);
+      document.addEventListener('fullNameSet', toggleSubmitButton);
+    });
+  </script>
 
 </html>
