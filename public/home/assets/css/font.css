@@ -54,7 +54,7 @@ span, p , li ,strong, option , label, input, a, b, textarea {
   .question-section h2 {
     color: white;
     margin-bottom: 20px;
-    font-size: 26px;
+    font-size: 33px;
   }
 
   .question-list {
@@ -119,14 +119,14 @@ span, p , li ,strong, option , label, input, a, b, textarea {
   }
 
   header img {
-    max-height: 30px;
+    max-height: 24px;
   }
 
   main {
     flex: 1;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: start;
     background: linear-gradient(to right, #0d2f6c, #014fe7);
 
   }
@@ -187,7 +187,6 @@ span, p , li ,strong, option , label, input, a, b, textarea {
 
   .copyright {
     font-size: 12px;
-    padding-top: 10px;
     color: #ccc;
   }
 
@@ -246,7 +245,7 @@ span, p , li ,strong, option , label, input, a, b, textarea {
 
   .question-section h2 {
     text-align: center;
-    font-size: 24px;
+    font-size: 33px;
     margin-bottom: 20px;
   }
 
@@ -259,6 +258,7 @@ span, p , li ,strong, option , label, input, a, b, textarea {
     text-align: start;
     margin-top: 10px;
     margin-bottom: 5px;
+    font-size: 16px;
     font-weight: 500;
   }
 
@@ -286,7 +286,7 @@ span, p , li ,strong, option , label, input, a, b, textarea {
     padding: 12px;
     border: none;
     border-radius: 8px;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
     margin-top: 20px;
     cursor: pointer;
@@ -296,6 +296,36 @@ span, p , li ,strong, option , label, input, a, b, textarea {
   .submit-btn:hover {
     background-color: #e27c00;
   }
+
+  .submit-btn-user{
+    background-color: #f7941e;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .submit-btn-user:hover{
+    background-color: #e27c00;
+  }
+
+  .submit-btn-dis{
+    background-color: transparent;
+    color: #ffffff69;
+    padding: 12px;
+    border: 2px solid #ffffff69;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
 
 
   .check-icon {
@@ -315,8 +345,27 @@ span, p , li ,strong, option , label, input, a, b, textarea {
     color: white;
   }
 
+  .check-icon2{
+    display: inline-block;
+                width: 40px;
+                height: 40px;
+                background-color: #00c853;
+                border-radius: 50%;
+                text-align: center;
+                line-height: 40px;
+                font-size: 16px;
+                color: #fff;
+                margin-left: 10px;
+  }
+  .check-icon2::before {
+    content: '✔';
+    font-size: 32px;
+    color: white;
+  }
+
   .message {
-    font-size: 22px;
+    text-align: center;
+    font-size: 18px;
     margin-bottom: 30px;
   }
 
@@ -325,7 +374,7 @@ span, p , li ,strong, option , label, input, a, b, textarea {
     color: white;
     border: none;
     padding: 14px 45px;
-    font-size: 16px;
+    font-size: 18px;
     border-radius: 8px;
     cursor: pointer;
     width: 100%;

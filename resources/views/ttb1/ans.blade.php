@@ -26,15 +26,21 @@
             <label for="employeeId">รหัสพนักงาน</label>
             <input type="text" id="employeeId" name="employeeId" placeholder="กรอกรหัสพนักงาน">
 
+            <a class="submit-btn-user" >ยืนยัน</a>
+
             <input type="hidden" name="full_name" id="fullName">
             <input type="hidden" name="id" id="topicId" value="{{ $id }}">
 
             <p class="info" style="display: none;"></p>
+            <div class="confirmed-status" style="display: none; margin-top: 10px;">
+            <div class="check-icon2"></div>
+            </div>
 
             <label for="question">โปรดระบุคำถาม</label>
             <textarea id="question" name="question" rows="5" placeholder="พิมพ์คำถามของคุณที่นี่..."></textarea>
 
-            <button type="submit" class="submit-btn">ส่งคำถาม</button>
+            <button type="submit" class="submit-btn" style="display: none;">ส่งคำถาม</button>
+            <button type="button" class="submit-btn-dis" disabled>ส่งคำถาม</button>
             </form>
 
 
@@ -77,13 +83,18 @@
             fullNameInput.value = data.full_name;
             localStorage.setItem('employeeId', input.value); // ✅ เก็บไว้
             localStorage.setItem('fullName', data.full_name); // เก็บชื่อไว้ด้วยถ้าต้องใช้
+
+            document.querySelector('.submit-btn-user').style.display = 'inline-block';
+             // แจ้งให้ปุ่ม refresh
+            document.dispatchEvent(new Event('fullNameSet'));
+
           } else {
             infoBox.innerHTML = 'ไม่พบรหัสพนักงาน';
             infoBox.style.display = 'block';
             fullNameInput.value = '';
           }
         });
-    }, 500);
+    }, 300);
   });
 </script>
 
@@ -140,23 +151,69 @@ document.getElementById('qaForm').addEventListener('submit', async function (e) 
 </script>
 
 <script>
-  window.addEventListener('DOMContentLoaded', () => {
-    const employeeInput = document.getElementById('employeeId');
-    const fullNameInput = document.getElementById('fullName');
-    const infoBox = document.querySelector('.info');
+window.addEventListener('DOMContentLoaded', () => {
+  const employeeInput = document.getElementById('employeeId');
+  const fullNameInput = document.getElementById('fullName');
+  const infoBox = document.querySelector('.info');
 
-    const savedId = localStorage.getItem('employeeId');
-    const savedName = localStorage.getItem('fullName');
+  const savedId = localStorage.getItem('employeeId');
+  const savedName = localStorage.getItem('fullName');
 
-    if (savedId) {
-      employeeInput.value = savedId;
-    }
+  if (savedId) {
+    employeeInput.value = savedId;
+  }
 
-    if (savedName) {
-      fullNameInput.value = savedName;
-      infoBox.innerHTML = `คุณส่งคำถามในชื่อ <strong>${savedName}</strong>`;
-      infoBox.style.display = 'block';
-    }
+  if (savedName) {
+    fullNameInput.value = savedName;
+    infoBox.innerHTML = `คุณส่งคำถามในชื่อ <strong>${savedName}</strong>`;
+    infoBox.style.display = 'block';
+  }
+
+  toggleSubmitButton(); // ✅ ตรวจสถานะปุ่มตอนเปิดหน้า
+});
+</script>
+
+<script>
+
+
+function toggleSubmitButton() {
+  const employeeInput = document.getElementById('employeeId');
+  const fullNameInput = document.getElementById('fullName');
+  const questionInput = document.getElementById('question');
+
+  const btnActive = document.querySelector('.submit-btn');
+  const btnDisabled = document.querySelector('.submit-btn-dis');
+  const checkIcon = document.querySelector('.confirmed-status');
+
+  const emp = employeeInput.value.trim();
+  const fullName = fullNameInput.value.trim();
+  const question = questionInput.value.trim();
+  const isConfirmed = checkIcon.style.display === 'inline-block';
+
+  const isReady = emp !== '' && fullName !== '' && question !== '' && isConfirmed;
+
+  btnActive.style.display = isReady ? 'inline-block' : 'none';
+  btnDisabled.style.display = isReady ? 'none' : 'inline-block';
+}
+
+// ฟังทุก event ที่เกี่ยวข้อง
+window.addEventListener('DOMContentLoaded', () => {
+  toggleSubmitButton();
+
+  document.getElementById('employeeId').addEventListener('input', toggleSubmitButton);
+  document.getElementById('question').addEventListener('input', toggleSubmitButton);
+
+  document.addEventListener('fullNameSet', toggleSubmitButton);
+});
+</script>
+
+<script>
+  document.querySelector('.submit-btn-user').addEventListener('click', () => {
+    const icon = document.querySelector('.confirmed-status');
+    icon.style.display = 'inline-block';
+
+    // แจ้งว่า full_name พร้อมให้ส่งคำถาม
+    document.dispatchEvent(new Event('fullNameSet'));
   });
 </script>
 

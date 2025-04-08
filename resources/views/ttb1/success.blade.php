@@ -12,8 +12,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    text-align: center;
+    justify-content: start;
+    text-align: start;
     padding: 20px;
   }
 
@@ -29,7 +29,7 @@
 
     <main>
         <h2>Q&A</h2>
-        <br><br>
+        <br><br><br><br><br>
         <div class="check-icon"></div>
 <br>
         <div class="message">
