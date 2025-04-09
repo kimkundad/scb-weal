@@ -219,7 +219,7 @@ span, p , li ,strong, option , label, input, a, b, textarea {
     }
 
     footer {
-      position: absolute;
+      position: static;
       bottom: 0;
       padding: 15px;
       font-size: 14px;
