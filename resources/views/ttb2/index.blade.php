@@ -67,10 +67,11 @@
         } else {
           // ถ้ายังไม่ลงทะเบียน ➡️ ไปหน้า confirm_user
           window.location.href = '{{ url("confirm_user") }}' +
-          '?code=' + encodeURIComponent(employeeCode) +
-          '&name=' + encodeURIComponent(response.full_name) +
-          '&message=' + encodeURIComponent(response.welcomeMessage) +
-          '&registered=false';
+            '?code=' + encodeURIComponent(employeeCode) +
+            '&name=' + encodeURIComponent(response.full_name) +
+            '&message1=' + encodeURIComponent(response.messagePart1) +
+            '&message2=' + encodeURIComponent(response.messagePart2) +
+            '&registered=' + (response.alreadyRegistered ? 'true' : 'false');
         }
       } else {
         $('#error-msg').show();

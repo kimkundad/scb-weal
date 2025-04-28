@@ -37,14 +37,18 @@ class Ttb2Controller extends Controller
 
         foreach ($rows as $row) {
             if (isset($row[0]) && strval(trim($row[0])) === strval(trim($employeeCode))) {
-                $fullName = trim($row[1]); // ชื่อ + นามสกุล
-                $welcomeMessage = isset($row[4]) ? trim($row[4]) : '';
-                $alreadyRegistered = isset($row[5]) && !empty($row[5]); // ถ้ามีค่าในคอลัมน์ F ถือว่าลงทะเบียนแล้ว
+                $fullName = trim($row[1]) . ' ' . trim($row[2]); // ชื่อ + นามสกุล
+
+                $messagePart1 = isset($row[3]) ? trim($row[3]) : ''; // คอลัมน์ D
+                $messagePart2 = isset($row[4]) ? trim($row[4]) : ''; // คอลัมน์ E
+
+                $alreadyRegistered = isset($row[5]) && !empty($row[5]);
 
                 return response()->json([
                     'success' => true,
                     'full_name' => $fullName,
-                    'welcomeMessage' => $welcomeMessage,
+                    'messagePart1' => $messagePart1,
+                    'messagePart2' => $messagePart2,
                     'alreadyRegistered' => $alreadyRegistered
                 ]);
             }
