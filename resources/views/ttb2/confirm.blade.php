@@ -10,27 +10,27 @@
     <link rel="icon" href="{{ url('img/favicon.ico') }}" type="image/x-icon">
     <style>
        .name {
-            font-size: 26px;
+            font-size: 28px;
             font-weight: bold;
             color: #004aad;
             margin-bottom: 10px;
         }
 
         .welcome {
-            font-size: 18px;
+            font-size: 20px;
             color: #01245f;
             margin-bottom: 10px;
         }
 
         .role {
-            font-size: 18px;
+            font-size: 20px;
             color: #f57c00;
             font-weight: bold;
             margin-bottom: 20px;
         }
 
         .complete-message {
-            font-size: 14px;
+            font-size: 18px;
             color: #01245f;
             text-align: center;
             margin-top: 20px;
