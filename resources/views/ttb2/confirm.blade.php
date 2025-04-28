@@ -51,7 +51,9 @@
         <main>
 
             <div style=" display: flex; flex-direction: column; ">
-                <img src="{{ url('img/ttb2/hello@2x.png') }}" class="img-fluid" />
+            <div class="text-center">
+                <img src="{{ url('img/ttb2/hello@2x.png') }}" class="img-fluid" style="width:80%" />
+                </div>
                 <br>
 
                 {{-- ตัวอย่างการแสดงผล --}}
