@@ -1,0 +1,211 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Services\GoogleSheet;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+
+class Ttb2Controller extends Controller
+{
+    //
+
+    protected $googleSheet;
+
+    public function __construct(GoogleSheet $googleSheet)
+    {
+        $this->googleSheet = $googleSheet;
+    }
+
+    public function auto_search(Request $request) {
+        $employeeCode = $request->input('employee_code');
+        $spreadsheetId = '1uDRFk0e305NjtwsWiPey0GdNNvLdbBdx_rOnnB-BLeY';
+        $range = 'ฟอร์มลงทะเบียน';
+
+        $data = $this->googleSheet->getSheetData($spreadsheetId, $range);
+
+        if (!$data) {
+            return response()->json([
+                'success' => false,
+                'message' => 'ไม่สามารถดึงข้อมูลจาก Google Sheets'
+            ]);
+        }
+
+        // ค้นหาข้อมูล
+        $rows = array_slice($data, 1);
+
+        foreach ($rows as $row) {
+            if (isset($row[0]) && strval(trim($row[0])) === strval(trim($employeeCode))) {
+                $fullName = trim($row[1]) . ' ' . trim($row[2]); // ชื่อ + นามสกุล
+                $welcomeMessage = isset($row[4]) ? trim($row[4]) : '';
+                $alreadyRegistered = isset($row[5]) && !empty($row[5]); // ถ้ามีค่าในคอลัมน์ F ถือว่าลงทะเบียนแล้ว
+
+                return response()->json([
+                    'success' => true,
+                    'full_name' => $fullName,
+                    'welcomeMessage' => $welcomeMessage,
+                    'alreadyRegistered' => $alreadyRegistered
+                ]);
+            }
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'ไม่พบรหัสพนักงาน'
+        ]);
+    }
+
+    public function post_submit(Request $request)
+{
+    $employeeId = $request->input('employeeId');
+    $timestamp = now()->format('Y-m-d H:i:s');
+
+    if (!$employeeId) {
+        return response()->json([
+            'success' => false,
+            'message' => 'เกิดข้อผิดพลาด: ไม่พบรหัสพนักงานที่ส่งมา'
+        ]);
+    }
+
+    $spreadsheetId = '1uDRFk0e305NjtwsWiPey0GdNNvLdbBdx_rOnnB-BLeY';
+    $dataList = $this->googleSheet->getSheetData($spreadsheetId, 'ฟอร์มลงทะเบียน');
+
+    if (!$dataList || !is_array($dataList)) {
+        return response()->json([
+            'success' => false,
+            'message' => 'ไม่สามารถดึงข้อมูลจาก Google Sheets'
+        ]);
+    }
+
+    $rowIndex = null;
+    $fullName = null;
+    $alreadyRegistered = false;
+
+    foreach ($dataList as $index => $row) {
+        if (isset($row[0]) && trim($row[0]) == trim($employeeId)) {
+            $rowIndex = $index + 1;
+            $fullName = trim($row[1]) . ' ' . trim($row[2]);
+            $alreadyRegistered = isset($row[5]) && !empty($row[5]); // ตรวจสอบว่ามีค่าแล้ว
+            break;
+        }
+    }
+
+    if ($rowIndex) {
+        if ($alreadyRegistered) {
+            // ❗ ไม่ต้องอัปเดต เพราะเคยลงทะเบียนแล้ว
+            return response()->json([
+                'success' => false,
+                'alreadyRegistered' => true,
+                'message' => 'รหัสพนักงานนี้ได้ลงทะเบียนแล้วก่อนหน้านี้',
+                'data' => [
+                    'employee_id' => $employeeId,
+                    'full_name' => $fullName
+                ]
+            ]);
+        }
+
+        // ถ้ายังไม่เคยลงทะเบียน ให้บันทึกเวลา
+        $cell = 'F' . $rowIndex;
+        $this->googleSheet->updateCell($spreadsheetId, 'ฟอร์มลงทะเบียน!' . $cell, $timestamp);
+
+        return response()->json([
+            'success' => true,
+            'alreadyRegistered' => false,
+            'data' => [
+                'employee_id' => $employeeId,
+                'full_name' => $fullName,
+                'timestamp' => $timestamp
+            ]
+        ]);
+    }
+
+    return response()->json([
+        'success' => false,
+        'message' => 'ไม่พบรหัสพนักงานในระบบ'
+    ]);
+}
+
+
+
+
+    public function post_ans(Request $request)
+    {
+        $employeeId = $request->input('employeeId');
+        $question = $request->input('question');
+        $id = $request->input('id');
+        $full_name = $request->input('full_name');
+        $timestamp = now()->format('Y-m-d H:i:s');
+
+        Log::debug('Post Answer Payload', [
+            'employeeId' => $employeeId,
+            'full_name' => $full_name,
+            'question' => $question,
+            'id' => $id
+        ]);
+
+        if (!$employeeId || !$full_name || !$question) {
+            return response()->json([
+                'success' => false,
+                'message' => 'ข้อมูลไม่ครบ กรุณากรอกข้อมูลทั้งหมด'
+            ]);
+        }
+
+        $sheetMap = [
+            1 => 'กระบวนการและวิธีการทำงาน',
+            2 => 'กลยุทธ์และแผนธุรกิจ',
+            3 => 'พัฒนาบุคลากร',
+            4 => 'IT & Digital',
+            5 => 'ช่องทางการให้บริการ',
+            6 => 'ผลิตภัณฑ์และบริการ',
+            7 => 'วัฒนธรรมองค์กร',
+            8 => 'อื่นๆ'
+        ];
+
+        $sheetName = $sheetMap[$id] ?? 'อื่นๆ';
+        $spreadsheetId = '1Q1i2VAna27ERbYaZey7RDR7gXicBZz_jL6WS8lGrt-Q';
+
+        $rows = $this->googleSheet->getSheetData($spreadsheetId, $sheetName);
+        $nextNo = count($rows);
+
+        $newRow = [
+            $nextNo,
+            $employeeId,
+            $full_name,
+            $timestamp,
+            $question
+        ];
+
+        // 1. เพิ่มคำถามในหัวข้อ
+        $this->googleSheet->appendRow($spreadsheetId, $sheetName, $newRow);
+
+        // 2. อัปเดตเวลาใน Data List
+        $dataList = $this->googleSheet->getSheetData($spreadsheetId, 'Data List');
+
+        $rowIndex = null;
+        foreach ($dataList as $index => $row) {
+            if (isset($row[0]) && trim($row[0]) == trim($employeeId)) {
+                $rowIndex = $index + 1;
+                break;
+            }
+        }
+
+        if ($rowIndex) {
+            $cell = 'F' . $rowIndex;
+            $this->googleSheet->updateCell($spreadsheetId, 'Data List!' . $cell, $timestamp);
+        }
+
+        return response()->json(
+            [
+                'success' => true,
+                'data' => $sheetName
+            ]
+        );
+    }
+
+
+
+
+
+
+}

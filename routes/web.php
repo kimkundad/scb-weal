@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\TtbController;
+use App\Http\Controllers\Ttb2Controller;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,7 +17,11 @@ use App\Http\Controllers\TtbController;
 */
 
 Route::get('/', function () {
-    return view('ttb1.index');
+    return view('ttb2.index');
+});
+
+Route::get('/confirm_user', function () {
+    return view('ttb2.confirm');
 });
 
 Route::get('/ans', function (Illuminate\Http\Request $request) {
@@ -24,14 +29,16 @@ Route::get('/ans', function (Illuminate\Http\Request $request) {
     return view('ttb1.ans', ['id' => $id]);
 });
 
-Route::get('/auto_search', [TtbController::class, 'auto_search']);
+Route::post('/auto_search', [Ttb2Controller::class, 'auto_search']);
 
 
 Route::get('/ans_success', function () {
     return view('ttb1.success');
 });
 
-Route::post('/post_ans', [TtbController::class, 'post_ans']);
+
+Route::post('/post_submit', [Ttb2Controller::class, 'post_submit']);
+Route::post('/post_ans', [Ttb2Controller::class, 'post_ans']);
 
 Route::get('/search', function () {
     return view('search');
