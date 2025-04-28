@@ -37,7 +37,7 @@ class Ttb2Controller extends Controller
 
         foreach ($rows as $row) {
             if (isset($row[0]) && strval(trim($row[0])) === strval(trim($employeeCode))) {
-                $fullName = trim($row[1]) . ' ' . trim($row[2]); // ชื่อ + นามสกุล
+                $fullName = trim($row[1]); // ชื่อ + นามสกุล
 
                 $messagePart1 = isset($row[3]) ? trim($row[3]) : ''; // คอลัมน์ D
                 $messagePart2 = isset($row[4]) ? trim($row[4]) : ''; // คอลัมน์ E
