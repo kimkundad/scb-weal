@@ -30,7 +30,7 @@
                 </div>
                 <br>
                <div class="form-section-custom road-bg">
-                    <p style="font-size:16px; font-weight: 700; text-align: center; margin-bottom: 15px">กรอกรหัสพนักงานเพื่อลงทะเบียน</p>
+                    <p style="font-size:18px; font-weight: 700; text-align: center; margin-bottom: 15px">กรอกรหัสพนักงานเพื่อลงทะเบียน</p>
                     <input type="text" id="employee_code" name="employee_code" placeholder="กรอกรหัสพนักงาน">
 
                     <img src="{{ url('img/ttb2/enter@2x.png') }}" id="search-btn" style="width: 40%; cursor:pointer;" />
