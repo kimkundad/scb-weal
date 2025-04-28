@@ -20,6 +20,10 @@ Route::get('/', function () {
     return view('ttb2.index');
 });
 
+Route::get('/Notfound', function () {
+    return view('ttb2.404');
+});
+
 Route::get('/confirm_user', function () {
     return view('ttb2.confirm');
 });

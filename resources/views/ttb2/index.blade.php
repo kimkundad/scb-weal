@@ -49,31 +49,38 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
   $('#search-btn').on('click', function() {
-    var employeeCode = $('#employee_code').val();
-    var token = $('meta[name="csrf-token"]').attr('content');
+  var employeeCode = $('#employee_code').val();
+  var token = $('meta[name="csrf-token"]').attr('content');
 
-    $.ajax({
-      url: '{{ url("auto_search") }}',
-      type: 'POST',
-      data: {
-        _token: token,
-        employee_code: employeeCode
-      },
-      success: function(response) {
-        if(response.success) {
-            window.location.href = '{{ url("confirm_user") }}' +
-            '?code=' + encodeURIComponent(employeeCode) +
-            '&name=' + encodeURIComponent(response.full_name) +
-            '&message=' + encodeURIComponent(response.welcomeMessage) +
-            '&registered=' + (response.alreadyRegistered ? 'true' : 'false');
+  $.ajax({
+    url: '{{ url("auto_search") }}',
+    type: 'POST',
+    data: {
+      _token: token,
+      employee_code: employeeCode
+    },
+    success: function(response) {
+      if(response.success) {
+        // ถ้าลงทะเบียนแล้ว ➡️ ไปหน้า Notfound
+        if(response.alreadyRegistered) {
+          window.location.href = '{{ url("/Notfound") }}';
         } else {
-            $('#error-msg').show();
+          // ถ้ายังไม่ลงทะเบียน ➡️ ไปหน้า confirm_user
+          window.location.href = '{{ url("confirm_user") }}' +
+          '?code=' + encodeURIComponent(employeeCode) +
+          '&name=' + encodeURIComponent(response.full_name) +
+          '&message=' + encodeURIComponent(response.welcomeMessage) +
+          '&registered=false';
         }
-      }, // ✅ ตรงนี้ต้องมี comma!
-      error: function() {
-        alert('เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์');
+      } else {
+        $('#error-msg').show();
       }
-    });
+    },
+    error: function() {
+      alert('เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์');
+    }
   });
+});
+
 </script>
 </html>
