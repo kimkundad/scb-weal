@@ -4,25 +4,26 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Q&A Responsive</title>
+    <title>Welcome to Kick-off development journey.</title>
     <link rel="stylesheet" href="{{ url('/home/assets/css/ttb2.css') }}?v{{ time() }}" type="text/css" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="icon" href="{{ url('img/favicon.ico') }}" type="image/x-icon">
     <style>
        .name {
-            font-size: 20px;
+            font-size: 26px;
             font-weight: bold;
             color: #004aad;
             margin-bottom: 10px;
         }
 
         .welcome {
-            font-size: 16px;
+            font-size: 18px;
             color: #01245f;
             margin-bottom: 10px;
         }
 
         .role {
-            font-size: 16px;
+            font-size: 18px;
             color: #f57c00;
             font-weight: bold;
             margin-bottom: 20px;

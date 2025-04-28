@@ -37,7 +37,7 @@ class Ttb2Controller extends Controller
 
         foreach ($rows as $row) {
             if (isset($row[0]) && strval(trim($row[0])) === strval(trim($employeeCode))) {
-                $fullName = trim($row[1]) . ' ' . trim($row[2]); // ชื่อ + นามสกุล
+                $fullName = trim($row[1]); // ชื่อ + นามสกุล
                 $welcomeMessage = isset($row[4]) ? trim($row[4]) : '';
                 $alreadyRegistered = isset($row[5]) && !empty($row[5]); // ถ้ามีค่าในคอลัมน์ F ถือว่าลงทะเบียนแล้ว
 
