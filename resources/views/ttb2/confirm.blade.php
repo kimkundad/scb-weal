@@ -29,7 +29,6 @@
         }
 
         .complete-message {
-            display: none;
             font-size: 14px;
             color: #01245f;
             text-align: center;
