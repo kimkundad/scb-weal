@@ -74,7 +74,7 @@
                 @if(!empty($message1) || !empty($message2))
                 <div class="role">
                     @if(!empty($message1))
-                        <b style="color: #01245f; font-size:18 ;">{{ $message1 }}</b><br>
+                        <b style="color: #01245f; font-size:18px ;">{{ $message1 }}</b><br>
                     @endif
                     @if(!empty($message2))
                         {{ $message2 }}
