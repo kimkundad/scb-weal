@@ -23,7 +23,7 @@
         }
 
         .role {
-            font-size: 20px;
+            font-size: 28px;
             color: #f57c00;
             font-weight: bold;
             margin-bottom: 20px;
