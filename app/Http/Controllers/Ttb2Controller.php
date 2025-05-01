@@ -6,9 +6,13 @@ use Illuminate\Http\Request;
 use App\Services\GoogleSheet;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
-use Google\Service\Sheets\CopyPasteRequest;
-use Google\Service\Sheets\Request as SheetRequest;
 use Google\Service\Sheets\BatchUpdateSpreadsheetRequest;
+use Google\Service\Sheets\Request as SheetRequest;
+use Google\Service\Sheets\RepeatCellRequest;
+use Google\Service\Sheets\GridRange;
+use Google\Service\Sheets\CellData;
+use Google\Service\Sheets\DataValidationRule;
+use Google\Service\Sheets\BooleanCondition;
 
 class Ttb2Controller extends Controller
 {
@@ -149,7 +153,7 @@ public function post_ans_ttb3(Request $request)
 
     $spreadsheetId = '1jDiViPp1kVCvDhHzOljyd62VfrSjpYKZKaG4nrfl7EQ';
     $sheetName = 'คำถามรวม';
-    $sheetId = 0; // ถ้า Sheet อยู่ตำแหน่งแรก
+    $sheetId = 0; // ระบุ sheetId ที่ถูกต้อง
 
     $rows = $this->googleSheet->getSheetData($spreadsheetId, $sheetName);
     $nextRowNumber = count($rows) + 1;
@@ -159,46 +163,44 @@ public function post_ans_ttb3(Request $request)
         2 => 'พัฒนาบุคลากร',
         3 => 'IT & Digital'
     ];
-
     $topic = $topics[$id] ?? 'อื่น ๆ';
 
+    // เพิ่มข้อมูลลง Google Sheets (ยกเว้น checkbox)
     $newRow = [
         $nextRowNumber,
         $topic,
         $question,
-        '', // เพื่อให้ copy format ได้
+        '', // ช่อง Checkbox
         $timestamp
     ];
-
     $this->googleSheet->appendRow($spreadsheetId, $sheetName, $newRow);
 
-    // ✅ คัดลอก Format จาก D2 ไปยัง D{nextRowNumber}
+    // ใช้ repeatCell เพื่อใส่ checkbox format ใน column D ของแถวใหม่
     $requests = [
-        new \Google\Service\Sheets\Request([
-            'copyPaste' => new \Google\Service\Sheets\CopyPasteRequest([
-                'source' => [
-                    'sheetId' => $sheetId,
-                    'startRowIndex' => 1,
-                    'endRowIndex' => 2,
-                    'startColumnIndex' => 3,
-                    'endColumnIndex' => 4,
-                ],
-                'destination' => [
+        new SheetRequest([
+            'repeatCell' => new RepeatCellRequest([
+                'range' => new GridRange([
                     'sheetId' => $sheetId,
                     'startRowIndex' => $nextRowNumber - 1,
                     'endRowIndex' => $nextRowNumber,
                     'startColumnIndex' => 3,
-                    'endColumnIndex' => 4,
-                ],
-                'pasteType' => 'PASTE_FORMAT'
+                    'endColumnIndex' => 4
+                ]),
+                'cell' => new CellData([
+                    'dataValidation' => new DataValidationRule([
+                        'condition' => new BooleanCondition([
+                            'type' => 'BOOLEAN'
+                        ]),
+                        'strict' => true,
+                        'showCustomUi' => true
+                    ])
+                ]),
+                'fields' => 'dataValidation'
             ])
         ])
     ];
 
-    $body = new \Google\Service\Sheets\BatchUpdateSpreadsheetRequest([
-        'requests' => $requests
-    ]);
-
+    $body = new BatchUpdateSpreadsheetRequest(['requests' => $requests]);
     $this->googleSheet->getService()->spreadsheets->batchUpdate($spreadsheetId, $body);
 
     return response()->json([
