@@ -158,11 +158,20 @@ public function post_ans_ttb3(Request $request)
     $rows = $this->googleSheet->getSheetData($spreadsheetId, $sheetName);
     $nextRowNumber = count($rows) + 1;
 
-    // ✅ สร้างเลขอ้างอิงไม่ซ้ำ 6 หลัก
-    $existingCodes = array_column($rows, 5); // คอลัมน์ F
-    do {
-        $refCode = str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
-    } while (in_array($refCode, $existingCodes));
+    // ✅ สร้างรหัส QA ไม่ซ้ำ: QA000001++
+    $existingRefs = array_column($rows, 5); // คอลัมน์ F
+    $maxNumber = 0;
+
+    foreach ($existingRefs as $ref) {
+        if (preg_match('/QA(\d{6})/', $ref, $matches)) {
+            $num = (int)$matches[1];
+            if ($num > $maxNumber) {
+                $maxNumber = $num;
+            }
+        }
+    }
+
+    $newRefCode = 'QA' . str_pad($maxNumber + 1, 6, '0', STR_PAD_LEFT);
 
     $topics = [
         1 => 'กระบวนการและวิธีการทำงาน',
@@ -178,7 +187,7 @@ public function post_ans_ttb3(Request $request)
         $question,
         '', // ช่อง Checkbox
         $timestamp,
-        $refCode // F: รหัสอ้างอิง
+        $newRefCode // F: รหัสอ้างอิง
     ];
     $this->googleSheet->appendRow($spreadsheetId, $sheetName, $newRow);
 
