@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Services\GoogleSheet;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Google\Service\Sheets\CopyPasteRequest;
+use Google\Service\Sheets\Request as SheetRequest;
+use Google\Service\Sheets\BatchUpdateSpreadsheetRequest;
 
 class Ttb2Controller extends Controller
 {
@@ -130,58 +133,130 @@ class Ttb2Controller extends Controller
     ]);
 }
 
+
 public function post_ans_ttb3(Request $request)
-    {
-        $question = $request->input('question');
-        $id = $request->input('id');
-        $timestamp = now()->format('Y-m-d H:i:s');
+{
+    $question = $request->input('question');
+    $id = $request->input('id');
+    $timestamp = now()->format('Y-m-d H:i:s');
 
-        Log::debug('Post Answer Payload', [
-            'question' => $question,
-            'id' => $id
+    if (!$question || !$id) {
+        return response()->json([
+            'success' => false,
+            'message' => 'กรุณากรอกข้อมูลให้ครบถ้วน'
         ]);
-
-        if (!$question || !$id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'ข้อมูลไม่ครบ กรุณากรอกข้อมูลทั้งหมด'
-            ]);
-        }
-
-
-        $topicMap = [
-            '1' => 'กระบวนการและวิธีการทำงาน',
-            '2' => 'พัฒนาบุคลากร',
-            '3' => 'IT & Digital',
-        ];
-
-        $topicName = $topicMap[$id] ?? 'ไม่ทราบหัวข้อ';
-
-        $sheetName = 'คำถามรวม';
-        $spreadsheetId = '1jDiViPp1kVCvDhHzOljyd62VfrSjpYKZKaG4nrfl7EQ';
-
-        $rows = $this->googleSheet->getSheetData($spreadsheetId, $sheetName);
-        $nextNo = count($rows);
-
-        $newRow = [
-            $nextNo,
-            $topicName,
-            $question,
-            'FALSE', // ช่องสำหรับการตรวจสอบ (ยังไม่ต้องมีการทำเครื่องหมาย)
-            $timestamp
-        ];
-
-        // 1. เพิ่มคำถามในหัวข้อ
-        $this->googleSheet->appendRow($spreadsheetId, $sheetName, $newRow);
-
-
-        return response()->json(
-            [
-                'success' => true,
-                'data' => $sheetName
-            ]
-        );
     }
+
+    $spreadsheetId = '1jDiViPp1kVCvDhHzOljyd62VfrSjpYKZKaG4nrfl7EQ';
+    $sheetName = 'คำถามรวม';
+
+    $rows = $this->googleSheet->getSheetData($spreadsheetId, $sheetName);
+    $nextRowNumber = count($rows) + 1; // นับหัวแถว +1
+
+    // Mapping topic
+    $topics = [
+        1 => 'กระบวนการและวิธีการทำงาน',
+        2 => 'พัฒนาบุคลากร',
+        3 => 'IT & Digital'
+    ];
+
+    $topic = $topics[$id] ?? 'อื่น ๆ';
+
+    // เพิ่มข้อมูลลง Google Sheets
+    $newRow = [
+        $nextRowNumber,
+        $topic,
+        $question,
+        '', // คอลัมน์ D ต้องเว้นว่างไว้ให้ copy format
+        $timestamp
+    ];
+
+    $this->googleSheet->appendRow($spreadsheetId, $sheetName, $newRow);
+
+    // ✅ คัดลอก Format (Checkbox) จาก D2 ไปยัง D{nextRowNumber}
+    $requests = [
+        new SheetRequest([
+            'copyPaste' => new CopyPasteRequest([
+                'source' => [
+                    'sheetId' => 0,
+                    'startRowIndex' => 1,
+                    'endRowIndex' => 2,
+                    'startColumnIndex' => 3,
+                    'endColumnIndex' => 4,
+                ],
+                'destination' => [
+                    'sheetId' => 0,
+                    'startRowIndex' => $nextRowNumber - 1,
+                    'endRowIndex' => $nextRowNumber,
+                    'startColumnIndex' => 3,
+                    'endColumnIndex' => 4,
+                ],
+                'pasteType' => 'PASTE_FORMAT'
+            ])
+        ])
+    ];
+
+    $body = new BatchUpdateSpreadsheetRequest(['requests' => $requests]);
+    $this->googleSheet->sheetsService->spreadsheets->batchUpdate($spreadsheetId, $body);
+
+    return response()->json([
+        'success' => true,
+        'data' => $sheetName
+    ]);
+}
+
+    // public function post_ans_ttb3(Request $request)
+    // {
+    //     $question = $request->input('question');
+    //     $id = $request->input('id');
+    //     $timestamp = now()->format('Y-m-d H:i:s');
+
+    //     Log::debug('Post Answer Payload', [
+    //         'question' => $question,
+    //         'id' => $id
+    //     ]);
+
+    //     if (!$question || !$id) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'ข้อมูลไม่ครบ กรุณากรอกข้อมูลทั้งหมด'
+    //         ]);
+    //     }
+
+
+    //     $topicMap = [
+    //         '1' => 'กระบวนการและวิธีการทำงาน',
+    //         '2' => 'พัฒนาบุคลากร',
+    //         '3' => 'IT & Digital',
+    //     ];
+
+    //     $topicName = $topicMap[$id] ?? 'ไม่ทราบหัวข้อ';
+
+    //     $sheetName = 'คำถามรวม';
+    //     $spreadsheetId = '1jDiViPp1kVCvDhHzOljyd62VfrSjpYKZKaG4nrfl7EQ';
+
+    //     $rows = $this->googleSheet->getSheetData($spreadsheetId, $sheetName);
+    //     $nextNo = count($rows);
+
+    //     $newRow = [
+    //         $nextNo,
+    //         $topicName,
+    //         $question,
+    //         'FALSE', // ช่องสำหรับการตรวจสอบ (ยังไม่ต้องมีการทำเครื่องหมาย)
+    //         $timestamp
+    //     ];
+
+    //     // 1. เพิ่มคำถามในหัวข้อ
+    //     $this->googleSheet->appendRow($spreadsheetId, $sheetName, $newRow);
+
+
+    //     return response()->json(
+    //         [
+    //             'success' => true,
+    //             'data' => $sheetName
+    //         ]
+    //     );
+    // }
 
 
     public function post_ans(Request $request)
