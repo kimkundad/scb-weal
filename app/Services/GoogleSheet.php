@@ -109,5 +109,10 @@ public function copyPasteFormat($spreadsheetId, $sheetId, $fromRow, $toRow)
     return $this->service->spreadsheets->batchUpdate($spreadsheetId, $body);
 }
 
+public function getService()
+{
+    return $this->service;
+}
+
 
 }

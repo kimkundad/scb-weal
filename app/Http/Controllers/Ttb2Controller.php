@@ -149,11 +149,11 @@ public function post_ans_ttb3(Request $request)
 
     $spreadsheetId = '1jDiViPp1kVCvDhHzOljyd62VfrSjpYKZKaG4nrfl7EQ';
     $sheetName = 'คำถามรวม';
+    $sheetId = 0; // ถ้า Sheet อยู่ตำแหน่งแรก
 
     $rows = $this->googleSheet->getSheetData($spreadsheetId, $sheetName);
-    $nextRowNumber = count($rows) + 1; // นับหัวแถว +1
+    $nextRowNumber = count($rows) + 1;
 
-    // Mapping topic
     $topics = [
         1 => 'กระบวนการและวิธีการทำงาน',
         2 => 'พัฒนาบุคลากร',
@@ -162,30 +162,29 @@ public function post_ans_ttb3(Request $request)
 
     $topic = $topics[$id] ?? 'อื่น ๆ';
 
-    // เพิ่มข้อมูลลง Google Sheets
     $newRow = [
         $nextRowNumber,
         $topic,
         $question,
-        '', // คอลัมน์ D ต้องเว้นว่างไว้ให้ copy format
+        '', // เพื่อให้ copy format ได้
         $timestamp
     ];
 
     $this->googleSheet->appendRow($spreadsheetId, $sheetName, $newRow);
 
-    // ✅ คัดลอก Format (Checkbox) จาก D2 ไปยัง D{nextRowNumber}
+    // ✅ คัดลอก Format จาก D2 ไปยัง D{nextRowNumber}
     $requests = [
-        new SheetRequest([
-            'copyPaste' => new CopyPasteRequest([
+        new \Google\Service\Sheets\Request([
+            'copyPaste' => new \Google\Service\Sheets\CopyPasteRequest([
                 'source' => [
-                    'sheetId' => 0,
+                    'sheetId' => $sheetId,
                     'startRowIndex' => 1,
                     'endRowIndex' => 2,
                     'startColumnIndex' => 3,
                     'endColumnIndex' => 4,
                 ],
                 'destination' => [
-                    'sheetId' => 0,
+                    'sheetId' => $sheetId,
                     'startRowIndex' => $nextRowNumber - 1,
                     'endRowIndex' => $nextRowNumber,
                     'startColumnIndex' => 3,
@@ -196,15 +195,18 @@ public function post_ans_ttb3(Request $request)
         ])
     ];
 
-    $body = new BatchUpdateSpreadsheetRequest(['requests' => $requests]);
-    $sheetId = 0; // หรือใช้ method แยกถ้า sheet ไม่ใช่ index แรก
-    $this->googleSheet->copyPasteFormat($spreadsheetId, $sheetId, 1, $nextRowNumber - 1);
+    $body = new \Google\Service\Sheets\BatchUpdateSpreadsheetRequest([
+        'requests' => $requests
+    ]);
+
+    $this->googleSheet->getService()->spreadsheets->batchUpdate($spreadsheetId, $body);
 
     return response()->json([
         'success' => true,
         'data' => $sheetName
     ]);
 }
+
 
     // public function post_ans_ttb3(Request $request)
     // {
