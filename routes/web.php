@@ -25,7 +25,7 @@ Route::domain('ttb.idx.co.th')->group(function () {
 
 // qanda.idx.co.th → ไป path /qanda
 Route::domain('qanda.idx.co.th')->group(function () {
-    Route::get('/qanda', function () {
+    Route::get('/', function () {
         return view('ttb3.index'); // หรือ controller ก็ได้
     });
 });
