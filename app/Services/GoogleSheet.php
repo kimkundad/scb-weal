@@ -4,6 +4,9 @@ namespace App\Services;
 
 use Google\Client;
 use Google\Service\Sheets;
+use Google\Service\Sheets\BatchUpdateSpreadsheetRequest;
+use Google\Service\Sheets\Request as SheetRequest;
+use Google\Service\Sheets\CopyPasteRequest;
 
 class GoogleSheet
 {
@@ -75,6 +78,35 @@ public function appendRow($spreadsheetId, $sheetName, $rowData)
         $body,
         $params
     );
+}
+
+
+public function copyPasteFormat($spreadsheetId, $sheetId, $fromRow, $toRow)
+{
+    $requests = [
+        new SheetRequest([
+            'copyPaste' => new CopyPasteRequest([
+                'source' => [
+                    'sheetId' => $sheetId,
+                    'startRowIndex' => $fromRow,
+                    'endRowIndex' => $fromRow + 1,
+                    'startColumnIndex' => 3, // D
+                    'endColumnIndex' => 4,
+                ],
+                'destination' => [
+                    'sheetId' => $sheetId,
+                    'startRowIndex' => $toRow,
+                    'endRowIndex' => $toRow + 1,
+                    'startColumnIndex' => 3,
+                    'endColumnIndex' => 4,
+                ],
+                'pasteType' => 'PASTE_FORMAT'
+            ])
+        ])
+    ];
+
+    $body = new BatchUpdateSpreadsheetRequest(['requests' => $requests]);
+    return $this->service->spreadsheets->batchUpdate($spreadsheetId, $body);
 }
 
 

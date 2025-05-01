@@ -197,7 +197,8 @@ public function post_ans_ttb3(Request $request)
     ];
 
     $body = new BatchUpdateSpreadsheetRequest(['requests' => $requests]);
-    $this->googleSheet->sheetsService->spreadsheets->batchUpdate($spreadsheetId, $body);
+    $sheetId = 0; // หรือใช้ method แยกถ้า sheet ไม่ใช่ index แรก
+    $this->googleSheet->copyPasteFormat($spreadsheetId, $sheetId, 1, $nextRowNumber - 1);
 
     return response()->json([
         'success' => true,
