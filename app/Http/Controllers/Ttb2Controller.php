@@ -167,7 +167,7 @@ public function post_ans_ttb3(Request $request)
             $nextNo,
             $topicName,
             $question,
-            '', // ช่องสำหรับการตรวจสอบ (ยังไม่ต้องมีการทำเครื่องหมาย)
+            'FALSE', // ช่องสำหรับการตรวจสอบ (ยังไม่ต้องมีการทำเครื่องหมาย)
             $timestamp
         ];
 
