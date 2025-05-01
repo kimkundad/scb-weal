@@ -158,6 +158,12 @@ public function post_ans_ttb3(Request $request)
     $rows = $this->googleSheet->getSheetData($spreadsheetId, $sheetName);
     $nextRowNumber = count($rows) + 1;
 
+    // ✅ สร้างเลขอ้างอิงไม่ซ้ำ 6 หลัก
+    $existingCodes = array_column($rows, 5); // คอลัมน์ F
+    do {
+        $refCode = str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
+    } while (in_array($refCode, $existingCodes));
+
     $topics = [
         1 => 'กระบวนการและวิธีการทำงาน',
         2 => 'พัฒนาบุคลากร',
@@ -171,7 +177,8 @@ public function post_ans_ttb3(Request $request)
         $topic,
         $question,
         '', // ช่อง Checkbox
-        $timestamp
+        $timestamp,
+        $refCode // F: รหัสอ้างอิง
     ];
     $this->googleSheet->appendRow($spreadsheetId, $sheetName, $newRow);
 
