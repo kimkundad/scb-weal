@@ -16,8 +16,18 @@ use App\Http\Controllers\Ttb2Controller;
 |
 */
 
-Route::get('/', function () {
-    return view('ttb2.index');
+// ttb.idx.co.th → ไป path /
+Route::domain('ttb.idx.co.th')->group(function () {
+    Route::get('/', function () {
+        return view('ttb2.index'); // หรือ controller ก็ได้
+    });
+});
+
+// qanda.idx.co.th → ไป path /qanda
+Route::domain('qanda.idx.co.th')->group(function () {
+    Route::get('/qanda', function () {
+        return view('ttb3.index'); // หรือ controller ก็ได้
+    });
 });
 
 Route::get('/Notfound', function () {
@@ -30,19 +40,21 @@ Route::get('/confirm_user', function () {
 
 Route::get('/ans', function (Illuminate\Http\Request $request) {
     $id = $request->query('id'); // ดึงค่า id จาก query string
-    return view('ttb1.ans', ['id' => $id]);
+    return view('ttb3.ans', ['id' => $id]);
 });
 
 Route::post('/auto_search', [Ttb2Controller::class, 'auto_search']);
 
 
 Route::get('/ans_success', function () {
-    return view('ttb1.success');
+    return view('ttb3.success');
 });
 
 
 Route::post('/post_submit', [Ttb2Controller::class, 'post_submit']);
 Route::post('/post_ans', [Ttb2Controller::class, 'post_ans']);
+
+Route::post('/post_ans_ttb3', [Ttb2Controller::class, 'post_ans_ttb3']);
 
 Route::get('/search', function () {
     return view('search');

@@ -130,7 +130,58 @@ class Ttb2Controller extends Controller
     ]);
 }
 
+public function post_ans_ttb3(Request $request)
+    {
+        $question = $request->input('question');
+        $id = $request->input('id');
+        $timestamp = now()->format('Y-m-d H:i:s');
 
+        Log::debug('Post Answer Payload', [
+            'question' => $question,
+            'id' => $id
+        ]);
+
+        if (!$question || !$id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'ข้อมูลไม่ครบ กรุณากรอกข้อมูลทั้งหมด'
+            ]);
+        }
+
+
+        $topicMap = [
+            '1' => 'กระบวนการและวิธีการทำงาน',
+            '2' => 'พัฒนาบุคลากร',
+            '3' => 'IT & Digital',
+        ];
+
+        $topicName = $topicMap[$id] ?? 'ไม่ทราบหัวข้อ';
+
+        $sheetName = 'คำถามรวม';
+        $spreadsheetId = '1jDiViPp1kVCvDhHzOljyd62VfrSjpYKZKaG4nrfl7EQ';
+
+        $rows = $this->googleSheet->getSheetData($spreadsheetId, $sheetName);
+        $nextNo = count($rows) + 1;
+
+        $newRow = [
+            $nextNo,
+            $topicName,
+            $question,
+            '', // ช่องสำหรับการตรวจสอบ (ยังไม่ต้องมีการทำเครื่องหมาย)
+            $timestamp
+        ];
+
+        // 1. เพิ่มคำถามในหัวข้อ
+        $this->googleSheet->appendRow($spreadsheetId, $sheetName, $newRow);
+
+
+        return response()->json(
+            [
+                'success' => true,
+                'data' => $sheetName
+            ]
+        );
+    }
 
 
     public function post_ans(Request $request)
