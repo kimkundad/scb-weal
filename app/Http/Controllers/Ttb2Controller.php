@@ -161,7 +161,7 @@ public function post_ans_ttb3(Request $request)
         $spreadsheetId = '1jDiViPp1kVCvDhHzOljyd62VfrSjpYKZKaG4nrfl7EQ';
 
         $rows = $this->googleSheet->getSheetData($spreadsheetId, $sheetName);
-        $nextNo = count($rows) + 1;
+        $nextNo = count($rows);
 
         $newRow = [
             $nextNo,
