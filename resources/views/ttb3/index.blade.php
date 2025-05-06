@@ -57,7 +57,7 @@
 
     function updateCharCountDisplay() {
       const len = questionInput.value.length;
-      charCountDisplay.textContent = `พิมพ์แล้ว ${len}/${maxChars} ตัวอักษร`;
+      charCountDisplay.textContent = ` ${len}/${maxChars} ตัวอักษร`;
     }
 
     function enforceCharLimit() {
