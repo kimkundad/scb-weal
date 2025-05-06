@@ -16,6 +16,10 @@ use App\Http\Controllers\Ttb2Controller;
 |
 */
 
+// Route::get('/', function () {
+//         return view('ttb3.index'); // หรือ controller ก็ได้
+//     });
+
 // ttb.idx.co.th → ไป path /
 Route::domain('ttb.idx.co.th')->group(function () {
     Route::get('/', function () {

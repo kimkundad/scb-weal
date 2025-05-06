@@ -22,7 +22,7 @@
           @csrf
           <input type="hidden" name="id" id="topicId" value="1">
 
-          <label for="question">โปรดระบุคำถาม 1</label>
+          <label for="question">โปรดระบุคำถาม </label>
           <textarea id="question" name="question" rows="5" placeholder="พิมพ์คำถามของคุณที่นี่..."></textarea>
 
           <button type="submit" class="submit-btn" style="display: none;">ส่งคำถาม</button>
@@ -51,8 +51,9 @@
     const charCountDisplay = document.createElement('div');
     charCountDisplay.style.marginTop = '5px';
     charCountDisplay.style.fontSize = '14px';
-    charCountDisplay.style.color = '#666';
-  //  questionInput.parentNode.appendChild(charCountDisplay);
+    charCountDisplay.style.color = '#fff';
+    charCountDisplay.style.fontFamily = "'TTB Regular', sans-serif";
+    questionInput.parentNode.appendChild(charCountDisplay);
 
     function updateCharCountDisplay() {
       const len = questionInput.value.length;
@@ -74,7 +75,7 @@
 
     questionInput.addEventListener('input', () => {
       enforceCharLimit();
-    //  updateCharCountDisplay();
+      updateCharCountDisplay();
       toggleSubmitButton();
     });
 
