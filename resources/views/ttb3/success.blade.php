@@ -28,7 +28,7 @@
     </header>
 
     <main>
-        <h2>Q&A</h2>
+<br><br>
         <br><br><br><br><br>
         <img src="{{ url('img/Path@2x.png') }}" style="width: 100px; height: 100px" />
         <br>
