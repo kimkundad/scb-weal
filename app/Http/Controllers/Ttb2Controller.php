@@ -174,7 +174,7 @@ public function post_ans_ttb3(Request $request)
     $newRefCode = 'QA' . str_pad($maxNumber + 1, 6, '0', STR_PAD_LEFT);
 
     $topics = [
-        1 => 'กระบวนการและวิธีการทำงาน',
+        1 => '-',
         2 => 'พัฒนาบุคลากร',
         3 => 'IT & Digital'
     ];
