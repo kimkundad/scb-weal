@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\TtbController;
 use App\Http\Controllers\Ttb2Controller;
+use App\Http\Controllers\TPController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,13 +18,31 @@ use App\Http\Controllers\Ttb2Controller;
 */
 
 // Route::get('/', function () {
-//         return view('ttb3.index'); // หรือ controller ก็ได้
-//     });
+//         return view('tp.index'); // หรือ controller ก็ได้
+// });
+
+Route::get('/p2', function () {
+    return view('tp.p2');
+});
+
+Route::get('/p3', function () {
+    return view('tp.p3');
+});
+
+Route::post('/tp_step1', [TPController::class, 'postStep1']);
+Route::post('/tp_step2', [TPController::class, 'postStep2']);
+Route::post('/tp_step3', [TPController::class, 'postStep3']);
 
 // ttb.idx.co.th → ไป path /
 Route::domain('ttb.idx.co.th')->group(function () {
     Route::get('/', function () {
         return view('ttb2.index'); // หรือ controller ก็ได้
+    });
+});
+
+Route::domain('tp.ideavivat.com')->group(function () {
+    Route::get('/', function () {
+        return view('tp.index'); // หรือ controller ก็ได้
     });
 });
 
@@ -52,6 +71,10 @@ Route::post('/auto_search', [Ttb2Controller::class, 'auto_search']);
 
 Route::get('/ans_success', function () {
     return view('ttb3.success');
+});
+
+Route::get('/tp_ans_success', function () {
+    return view('tp.success');
 });
 
 
