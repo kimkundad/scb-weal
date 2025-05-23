@@ -56,15 +56,8 @@
                         </label>
                     </div>
 
-
-
-
-
-
-
-
                     <br><br><br>
-                    <button type="submit">ยืนข้อมูลสมาชิก</button>
+                    <button type="submit" id="submitBtn">ยืนข้อมูลสมาชิก</button>
                     <br>
                     <a onclick="history.back()" class="back-btn-user">ย้อนกลับ</a>
 
@@ -88,6 +81,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   const form = document.getElementById('qaForm');
+  const submitBtn = document.getElementById('submitBtn');
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
@@ -112,6 +106,8 @@ document.addEventListener('DOMContentLoaded', function () {
         confirmButtonColor: '#00c853'
       });
     } else {
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'กำลังส่ง...';
       form.submit();
     }
   });
