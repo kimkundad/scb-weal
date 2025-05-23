@@ -17,9 +17,9 @@ use App\Http\Controllers\TPController;
 |
 */
 
-Route::get('/', function () {
-        return view('tp.index'); // หรือ controller ก็ได้
-});
+// Route::get('/', function () {
+//         return view('tp.index'); // หรือ controller ก็ได้
+// });
 
 Route::get('/p2', function () {
     return view('tp.p2');
