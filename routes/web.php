@@ -5,6 +5,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\TtbController;
 use App\Http\Controllers\Ttb2Controller;
 use App\Http\Controllers\TPController;
+use App\Http\Controllers\SrichanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,9 +18,36 @@ use App\Http\Controllers\TPController;
 |
 */
 
-// Route::get('/', function () {
-//         return view('tp.index'); // หรือ controller ก็ได้
-// });
+Route::middleware(['auth'])->group(function () {
+
+    // Route::get('/', function () {
+    //         return view('srichan.index'); // หรือ controller ก็ได้
+    // });
+
+
+    Route::domain('srichandxbambam')->group(function () {
+        Route::get('/', function () {
+            return view('srichan.index'); // หรือ controller ก็ได้
+        });
+    });
+
+    Route::get('/srichand/show-info', function () {
+        return view('srichan.ans'); // เปลี่ยนชื่อไฟล์ Blade ตามที่ใช้จริง
+    })->name('showInfo');
+
+    Route::get('/verify_code/{code}', [SrichanController::class, 'verify']);
+
+    Route::post('/register_user', [SrichanController::class, 'registerUser']);
+
+    Route::get('/srichan_success', function () {
+            return view('srichan.success'); // หรือ controller ก็ได้
+    });
+
+});
+
+Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
+
+Route::post('/search_cus', [SrichanController::class, 'search_cus']);
 
 Route::get('/p2', function () {
     return view('tp.p2');
