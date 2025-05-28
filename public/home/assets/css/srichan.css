@@ -96,7 +96,7 @@ span, p , li ,strong, option , label, input, a, b, textarea {
 
   body {
     font-family: sans-serif;
-    background: linear-gradient(to bottom right, #0d2f6c, #014fe7);
+    background: linear-gradient(to right, #1B0000, #370000);
     color: #fff;
   }
 
@@ -127,7 +127,7 @@ span, p , li ,strong, option , label, input, a, b, textarea {
     display: flex;
     justify-content: center;
     align-items: start;
-    background: linear-gradient(to right, #0d2f6c, #014fe7);
+    background: linear-gradient(to right, #1B0000, #370000);
 
   }
 
