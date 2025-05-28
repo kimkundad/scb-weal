@@ -26,7 +26,7 @@
                 <label for="fullname" style="margin-bottom:10px">โปรดระบุชื่อ-นามสกุล</label>
                 <input type="text" name="fullname" id="fullname" required>
                 <br>
-                <button type="button" class="submit-btn" id="search-btn">ค้นหา</button>
+                <button type="submit" class="submit-btn" id="search-btn">ค้นหา</button>
             </div>
             <div class="error-message" id="error-msg" style="color: red; display:none;">ไม่พบชื่อ-นามสกุล</div>
         </form>
@@ -47,6 +47,17 @@
   $('#search-btn').on('click', function () {
     const name = $('#fullname').val();
     const token = $('meta[name="csrf-token"]').attr('content');
+
+    if (!name) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'กรุณาระบุชื่อ-นามสกุล, ที่นั่ง, Code',
+      text: 'คุณต้องกรอกชื่อ-นามสกุลก่อนค้นหา',
+      confirmButtonColor: '#d33',
+      confirmButtonText: 'ตกลง'
+    });
+    return; // ยกเลิกถ้าไม่ได้กรอก
+  }
 
     $.ajax({
       url: '{{ url("/search_cus") }}',
