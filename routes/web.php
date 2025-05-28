@@ -24,8 +24,7 @@ Route::middleware(['auth'])->group(function () {
     //         return view('srichan.index'); // หรือ controller ก็ได้
     // });
 
-
-    Route::domain('srichandxbambam')->group(function () {
+    Route::domain('srichandxbambam.com')->group(function () {
         Route::get('/', function () {
             return view('srichan.index'); // หรือ controller ก็ได้
         });
