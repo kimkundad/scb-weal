@@ -26,7 +26,7 @@
                 <label for="fullname" style="margin-bottom:10px">โปรดระบุชื่อ-นามสกุล</label>
                 <input type="text" name="fullname" id="fullname" required>
                 <br>
-                <button type="submit" class="submit-btn" id="search-btn">ค้นหา</button>
+                <button class="submit-btn" id="search-btn">ค้นหา</button>
             </div>
             <div class="error-message" id="error-msg" style="color: red; display:none;">ไม่พบชื่อ-นามสกุล</div>
         </form>
