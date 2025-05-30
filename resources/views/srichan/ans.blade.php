@@ -49,7 +49,21 @@
         <h2>{{ request('full_name') }}</h2>
          <br>
         <div>
-        <p class="assets1">LUCKY FAN - <span>EXCLUSIVE ZONE</span></p>
+        <p class="assets1">LUCKY FAN -
+
+        @php
+        $seat = request('nameSeat');
+        @endphp
+
+        @if ($seat === 'EXCLUSIVE')
+            <span style="color: #E8C02B">{{ $seat }}</span>
+        @elseif ($seat === 'REGULAR')
+            <span style="color: #03A9F4">{{ $seat }}</span>
+        @else
+            <span>{{ $seat }}</span> {{-- กรณีอื่น ๆ --}}
+        @endif
+
+        </p>
         <h2>Seat No: {{ request('seat') }}</h2>
         </div>
 

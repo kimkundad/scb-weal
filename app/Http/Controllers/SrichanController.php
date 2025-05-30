@@ -36,6 +36,7 @@ public function search_cus(Request $request)
         $seat     = trim($row[2] ?? '');
         $zone     = trim($row[3] ?? '');
         $code     = trim($row[5] ?? ''); // คอลัมน์ F
+        $nameSeat = trim($row[8] ?? '');
 
         // ตรวจสอบจากชื่อ, ที่นั่ง, หรือโค้ด
         if (
@@ -49,11 +50,13 @@ public function search_cus(Request $request)
                 'zone' => $zone,
                 'seat' => $seat,
                 'code' => $code,
+                'nameSeat' => $nameSeat,
                 'redirect_url' => url('/srichand/show-info') . '?' . http_build_query([
                     'full_name' => $fullName,
                     'zone' => $zone,
                     'seat' => $seat,
-                    'code' => $code
+                    'code' => $code,
+                    'nameSeat' => $nameSeat,
                 ])
             ]);
         }
@@ -81,13 +84,15 @@ public function search_cus(Request $request)
                 $fullName = $row[1] ?? '-';
                 $seat = $row[2] ?? '-';
                 $zone = $row[3] ?? '-';
+                $nameSeat = $row[8] ?? '-';
 
                 // ✅ เพิ่ม 'code' เข้าไปใน redirect parameters
                 return redirect()->route('showInfo', [
                     'full_name' => $fullName,
                     'zone' => $zone,
                     'seat' => $seat,
-                    'code' => $code
+                    'code' => $code,
+                    'nameSeat' => $nameSeat,
                 ]);
             }
         }
