@@ -19,6 +19,7 @@ class SrichanController extends Controller
 public function search_cus(Request $request)
 {
     $input = trim($request->input('name'));
+
     $spreadsheetId = '1KDkKK_Ty2vpAl0CnzjnYC1tFpZSwMJgSChmJS08BS_U';
     $range = 'List';
 
@@ -31,35 +32,36 @@ public function search_cus(Request $request)
         ]);
     }
 
+    $results = [];
+
     foreach ($data as $row) {
         $fullName = trim($row[1] ?? '');
         $seat     = trim($row[2] ?? '');
         $zone     = trim($row[3] ?? '');
-        $code     = trim($row[5] ?? ''); // คอลัมน์ F
+        $code     = trim($row[5] ?? '');
         $nameSeat = trim($row[8] ?? '');
 
-        // ตรวจสอบจากชื่อ, ที่นั่ง, หรือโค้ด
         if (
             stripos($fullName, $input) !== false ||
             stripos($seat, $input) !== false ||
             stripos($code, $input) !== false
         ) {
-            return response()->json([
-                'success' => true,
+            $results[] = [
                 'full_name' => $fullName,
                 'zone' => $zone,
                 'seat' => $seat,
                 'code' => $code,
                 'nameSeat' => $nameSeat,
-                'redirect_url' => url('/srichand/show-info') . '?' . http_build_query([
-                    'full_name' => $fullName,
-                    'zone' => $zone,
-                    'seat' => $seat,
-                    'code' => $code,
-                    'nameSeat' => $nameSeat,
-                ])
-            ]);
+            ];
         }
+    }
+
+    if (count($results)) {
+        return response()->json([
+            'success' => true,
+            'multiple' => count($results) > 1,
+            'results' => $results,
+        ]);
     }
 
     return response()->json([

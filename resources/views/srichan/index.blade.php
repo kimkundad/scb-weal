@@ -30,6 +30,9 @@
             </div>
             <div class="error-message" id="error-msg" style="color: red; display:none;">ไม่พบชื่อ-นามสกุล</div>
         </form>
+
+        <br>
+        <div id="result-list" style="margin-top: 20px;"></div>
       </div>
     </main>
     <input type="hidden" value="{{ Auth::user()->username }}">
@@ -45,10 +48,11 @@
 
 <script>
   $('#search-btn').on('click', function () {
-    const name = $('#fullname').val();
-    const token = $('meta[name="csrf-token"]').attr('content');
+  const name = $('#fullname').val();
+  const token = $('meta[name="csrf-token"]').attr('content');
+  $('#result-list').html(''); // เคลียร์ก่อน
 
-    if (!name) {
+  if (!name) {
     Swal.fire({
       icon: 'warning',
       title: 'กรุณาระบุชื่อ-นามสกุล, ที่นั่ง, Code',
@@ -56,46 +60,53 @@
       confirmButtonColor: '#d33',
       confirmButtonText: 'ตกลง'
     });
-    return; // ยกเลิกถ้าไม่ได้กรอก
+    return;
   }
 
-    $.ajax({
-      url: '{{ url("/search_cus") }}',
-      type: 'POST',
-      data: {
-        _token: token,
-        name: name
-      },
-      success: function (response) {
-        if (response.success) {
-          Swal.fire({
-            icon: 'success',
-            title: 'พบข้อมูลแล้ว',
-            text: 'ยินดีต้อนรับคุณ ' + response.full_name,
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'ไปหน้าข้อมูล'
-          }).then(() => {
-            window.location.href = response.redirect_url;
-          });
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'ไม่พบข้อมูล',
-            text: 'กรุณาตรวจสอบชื่อ-นามสกุลอีกครั้ง',
-            confirmButtonColor: '#d33',
-            confirmButtonText: 'ลองอีกครั้ง'
-          });
-        }
-      },
-      error: function () {
+  $.ajax({
+    url: '{{ url("/search_cus") }}',
+    type: 'POST',
+    data: {
+      _token: token,
+      name: name
+    },
+    success: function (response) {
+      if (response.success && response.multiple) {
+  // กรณีมีหลายผลลัพธ์
+  $('#result-list').html('<h4>พบหลายรายการ กรุณาเลือก:</h4>');
+  response.results.forEach(r => {
+    const url = `{{ url('/srichand/show-info') }}?` + new URLSearchParams(r).toString();
+    $('#result-list').append(`
+      <div style="margin: 10px 0;">
+        <a href="${url}" class="submit-btn" style="display:inline-block;">${r.full_name} (${r.seat})</a>
+      </div>
+    `);
+  });
+} else if (response.success && response.results.length === 1) {
+  // ✅ กรณีเดียว —> สร้าง redirect_url จาก result แรก
+  const r = response.results[0];
+  const url = `{{ url('/srichand/show-info') }}?` + new URLSearchParams(r).toString();
+  window.location.href = url;
+} else {
         Swal.fire({
           icon: 'error',
-          title: 'เกิดข้อผิดพลาด',
-          text: 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้',
+          title: 'ไม่พบข้อมูล',
+          text: 'กรุณาตรวจสอบชื่อ-นามสกุลอีกครั้ง',
+          confirmButtonColor: '#d33',
+          confirmButtonText: 'ลองอีกครั้ง'
         });
       }
-    });
+    },
+    error: function () {
+      Swal.fire({
+        icon: 'error',
+        title: 'เกิดข้อผิดพลาด',
+        text: 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้',
+      });
+    }
   });
+});
+
 </script>
 
 

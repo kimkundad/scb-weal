@@ -282,6 +282,7 @@ span, p , li ,strong, option , label, input, a, b, textarea {
   }
 
   .submit-btn {
+    text-decoration: none;
     display: block;
     background-color: #CA0A23;
     color: white;

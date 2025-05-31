@@ -20,9 +20,9 @@ use App\Http\Controllers\SrichanController;
 
 Route::middleware(['auth'])->group(function () {
 
-    // Route::get('/', function () {
-    //         return view('srichan.index'); // หรือ controller ก็ได้
-    // });
+    Route::get('/', function () {
+            return view('srichan.index'); // หรือ controller ก็ได้
+    });
 
     Route::domain('srichandxbambam.com')->group(function () {
         Route::get('/', function () {
