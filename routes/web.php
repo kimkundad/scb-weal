@@ -18,11 +18,17 @@ use App\Http\Controllers\SrichanController;
 |
 */
 
+Route::domain('ttb.idx.co.th')->group(function () {
+    Route::get('/', function () {
+        return view('welcome'); // หรือ controller ก็ได้
+    });
+});
+
+
+
 Route::middleware(['auth'])->group(function () {
 
-    Route::get('/', function () {
-            return view('srichan.index'); // หรือ controller ก็ได้
-    });
+    
 
     Route::domain('srichandxbambam.com')->group(function () {
         Route::get('/', function () {
@@ -61,11 +67,11 @@ Route::post('/tp_step2', [TPController::class, 'postStep2']);
 Route::post('/tp_step3', [TPController::class, 'postStep3']);
 
 // ttb.idx.co.th → ไป path /
-Route::domain('ttb.idx.co.th')->group(function () {
-    Route::get('/', function () {
-        return view('ttb2.index'); // หรือ controller ก็ได้
-    });
-});
+// Route::domain('ttb.idx.co.th')->group(function () {
+//     Route::get('/', function () {
+//         return view('ttb2.index'); // หรือ controller ก็ได้
+//     });
+// });
 
 Route::domain('tp.ideavivat.com')->group(function () {
     Route::get('/', function () {
