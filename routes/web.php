@@ -18,9 +18,7 @@ use App\Http\Controllers\SrichanController;
 |
 */
 
-Route::get('/', function () {
-        return view('welcome'); // หรือ controller ก็ได้
-    });
+
 
 Route::domain('ttb.idx.co.th')->group(function () {
     Route::get('/', function () {
