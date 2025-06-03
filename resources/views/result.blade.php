@@ -84,8 +84,8 @@ Welcome to scb.idx.co.th
             </div>
 
             <p style="font-size: 22px; margin-top:10px">
-                Please capture the screen <br>
-                กรุณาบันทึกหน้าจอเพื่อแสดงต่อเจ้าหน้าที่
+                โปรดแสดงหน้านี้ให้กับเจ้าหน้าที่ <br>
+บริเวณประตูทางเข้าฮอล
             </p>
 
             <!-- ปุ่ม Save & Close -->
