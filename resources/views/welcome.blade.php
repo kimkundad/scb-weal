@@ -45,7 +45,7 @@ Welcome to scb.idx.co.th
             <div class="justify-content-center" >
                 <img src="{{ url('img/btn/text2x-8.png') }}" class="img-fluid d-block mx-auto" style="width: 75%;" />
                 <br>
-                <img src="{{ url('img/btn/KV2x-8.png') }}" class="img-fluid d-block mx-auto" style="width: 75%;" />
+                <img src="{{ url('img/btn/KV2x-8-fix.png') }}" class="img-fluid d-block mx-auto" style="width: 75%;" />
             </div>
             <br><br>
             <div class="text-center">
