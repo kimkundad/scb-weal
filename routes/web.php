@@ -138,3 +138,4 @@ Route::post('/api_search', [EmployeeController::class, 'api_search']);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::post('/employee/search', [EmployeeController::class, 'search'])->name('employee.search');
 Route::post('/employee/register', [EmployeeController::class, 'register'])->name('employee.register');
+
