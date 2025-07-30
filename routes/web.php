@@ -84,7 +84,7 @@ Route::domain('tp.ideavivat.com')->group(function () {
 // qanda.idx.co.th → ไป path /qanda
 Route::domain('qanda.idx.co.th')->group(function () {
     Route::get('/', function () {
-        return view('ttb3.index'); // หรือ controller ก็ได้
+        return view('ttb1.index'); // หรือ controller ก็ได้
     });
 });
 
@@ -98,7 +98,7 @@ Route::get('/confirm_user', function () {
 
 Route::get('/ans', function (Illuminate\Http\Request $request) {
     $id = $request->query('id'); // ดึงค่า id จาก query string
-    return view('ttb3.ans', ['id' => $id]);
+    return view('ttb1.ans', ['id' => $id]);
 });
 
 Route::post('/auto_search', [Ttb2Controller::class, 'auto_search']);
