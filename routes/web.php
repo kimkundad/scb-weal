@@ -84,9 +84,13 @@ Route::domain('tp.ideavivat.com')->group(function () {
 // qanda.idx.co.th → ไป path /qanda
 Route::domain('qanda.idx.co.th')->group(function () {
     Route::get('/', function () {
-        return view('ttb1.index'); // หรือ controller ก็ได้
+        return view('ttb3.index'); // หรือ controller ก็ได้
     });
 });
+
+// Route::get('/', function () {
+//         return view('ttb3.index'); // หรือ controller ก็ได้
+//     });
 
 Route::get('/Notfound', function () {
     return view('ttb2.404');
