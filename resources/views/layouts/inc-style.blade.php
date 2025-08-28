@@ -24,4 +24,30 @@ html {
 body {
     background-color: #061441;
 }
+/* base dot */ 
+.dot {
+  display: inline-block;
+  width: 12px;          /* ขนาดวงกลม */
+  height: 12px;
+  border-radius: 50%;   /* ทำให้เป็นวงกลม */
+  vertical-align: middle;
+}
+
+/* สีเขียว (Check-in) */
+.dot-green {
+  background-color: #34D399; /* Tailwind Emerald 400 */
+}
+
+/* เผื่อคุณอยากใช้สีอื่น */
+.dot-orange {
+  background-color: #EA8238;
+}
+
+.dot-navy {
+  background-color: #001E7E;
+}
+
+.dot-gray {
+  background-color: #9CA3AF; /* Neutral */
+}
 </style>

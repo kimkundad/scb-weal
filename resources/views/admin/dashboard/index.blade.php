@@ -40,7 +40,18 @@
         .filter-row .form-control {
             height: 38px
         }
+
+
     </style>
+
+    <style>
+  .dot { display:inline-block; width:12px; height:12px; border-radius:50%; vertical-align:middle; }
+  .dot-green  { background:#34D399; } /* check-in */
+  .dot-orange { background:#EA8238; } /* เผื่อใช้ */
+  .dot-navy   { background:#001E7E; } /* เผื่อใช้ */
+  .dot-gray   { background:#9CA3AF; } /* สีเทาที่คุณขอ */
+</style>
+<meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 
 @section('content')
@@ -273,13 +284,12 @@
     </div>
 
     <div class="col-auto">
-      <label class="text-muted me-2">สาขา</label>
-      <select class="form-select w-120px" name="group" onchange="submitFilters()">
-        <option value="" @selected(request('group','')==='')>ทั้งหมด</option>
-        @foreach ($groups as $g)
-          <option value="{{ $g }}" @selected(request('group')===$g)>Group {{ $g }}</option>
-        @endforeach
-      </select>
+    <label class="text-muted me-2">สถานะ</label>
+    <select class="form-select w-120px" name="status" onchange="submitFilters()">
+        <option value="" @selected(request('status','')==='')>ทั้งหมด</option>
+        <option value="checked" @selected(request('status')==='checked')>เช็คอิน</option>
+        <option value="not_checked" @selected(request('status')==='not_checked')>ยังไม่เช็คอิน</option>
+    </select>
     </div>
 
     <div class="col-auto">
@@ -318,9 +328,19 @@
                                 <tr>
                                     <td>{{ ($members->firstItem() ?? 1) + $i }}</td>
 
-                                    <td>
+                                    <!-- <td>
                                         <span class="badge badge-light me-2">{{ $m['badge'] ?? 'Dealer' }}</span>
                                         <span class="badge-dot"></span>
+                                    </td> -->
+
+                                    <td>
+                                        <span class="badge badge-light me-2">{{ $m['badge'] ?: '—' }}</span>
+
+                                        <span class="status-dot" id="status-dot-{{ $m['row'] }}">
+                                            @if(!empty($m['checkin']))
+                                                <span class="dot dot-green"></span>
+                                            @endif
+                                        </span>
                                     </td>
 
                                     <td>Group {{ $m['group'] ?? 'A' }}</td>
@@ -333,9 +353,9 @@
                                     <td>{{ $m['department'] ?? '-' }}</td>
 
                                     {{-- ชีตไม่มีคอลัมน์ check-in ก็แสดง placeholder --}}
-                                    <td>
-                                        <div>—</div>
-                                        <div class="text-muted">—</div>
+                                   <td id="checkin-cell-{{ $m['row'] }}">
+                                        <div>{{ $m['checkin'] ? \Illuminate\Support\Str::of($m['checkin'])->beforeLast(' ') : '—' }}</div>
+                                        <div class="text-muted">{{ $m['checkin'] ? \Illuminate\Support\Str::of($m['checkin'])->afterLast(' ') : '—' }}</div>
                                     </td>
 
                                     <td>{{ $m['test_drive'] ?? '-' }}</td>
@@ -343,17 +363,28 @@
                                     <td>{{ $m['strategy'] ?? '-' }}</td>
 
                                     <td class="text-end">
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-light btn-sm">Check in</button>
-                                            <button type="button"
-                                                class="btn btn-light btn-sm dropdown-toggle dropdown-toggle-split"
-                                                data-bs-toggle="dropdown"></button>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li><a class="dropdown-item" href="#">ผู้มาแทน </a></li>
-                                                <li><a class="dropdown-item" href="#">แก้ไขข้อมูล</a></li>
-                                                <li><a class="dropdown-item" href="#">ฝากอุปกรณ์</a></li>
-                                            </ul>
-                                        </div>
+                                    <div class="btn-group">
+                                        <button
+  type="button"
+  class="btn btn-light btn-sm btn-checkin"
+  data-row="{{ $m['row'] }}"
+  data-checkin="{{ $m['checkin'] }}"
+  data-sheet="{{ $sheetName }}"            {{-- << เพิ่ม --}}
+  data-spreadsheet="{{ $spreadsheetId }}"  {{-- << เพิ่ม --}}
+>
+  {{ empty($m['checkin']) ? 'Check in' : 'ยกเลิก' }}
+</button>
+                                        <button type="button" class="btn btn-light btn-sm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"></button>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a class="dropdown-item" href="#">ผู้มาแทน</a></li>
+                                        <li>
+  <a class="dropdown-item"
+     href="{{ route('toyota.edit', ['spreadsheetId' => $spreadsheetId, 'sheetName' => $sheetName, 'row' => $m['row']]) }}">
+     แก้ไขข้อมูล
+  </a>
+</li>
+                                        </ul>
+                                    </div>
                                     </td>
                                 </tr>
                             @empty
@@ -413,4 +444,95 @@
     f.submit();
   }
 </script>
+<script>
+document.addEventListener('click', async (e) => {
+  const btn = e.target.closest('.btn-checkin');
+  if (!btn) return;
+
+  const row           = btn.dataset.row;
+  const sheetName     = btn.dataset.sheet || '';
+  const spreadsheetId = btn.dataset.spreadsheet || '';
+
+  btn.disabled = true;
+  const originalText = btn.textContent.trim();
+
+  try {
+    const res = await fetch("{{ route('toyota.checkin.toggle') }}", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({ row, sheetName, spreadsheetId })
+    });
+
+    // กันกรณี 4xx/5xx
+    if (!res.ok) {
+      const t = await res.text().catch(() => '');
+      throw new Error(`HTTP ${res.status} ${t}`);
+    }
+
+    const data = await res.json();
+
+    if (!data.ok) {
+      throw new Error(data.message || 'Update failed');
+    }
+
+    // =========================
+    // อัปเดตจุดสี (รองรับทั้ง id เดิม dot-<row> และ status-dot-<row>)
+    // =========================
+    const dotWrapLegacy = document.getElementById(`dot-${row}`);
+    if (dotWrapLegacy) {
+      dotWrapLegacy.innerHTML = data.checked ? '<span class="dot dot-green"></span>' : '';
+    }
+
+    const statusDot = document.getElementById(`status-dot-${row}`);
+    if (statusDot) {
+      statusDot.innerHTML = data.checked ? '<span class="dot dot-green"></span>' : '';
+    }
+
+    // =========================
+    // อัปเดตช่องวันที่/เวลา check-in (td)
+    // ต้องมี <td id="checkin-cell-{{ $m['row'] }}">
+    // =========================
+    const cellDate = document.getElementById(`checkin-cell-${row}`);
+    if (cellDate) {
+      if (data.checked && data.checkin) {
+        // data.checkin คาดรูปแบบ "YYYY-MM-DD HH:mm:ss" (จากเซิร์ฟเวอร์)
+        // เผื่อกรณีได้ ISO "YYYY-MM-DDTHH:mm:ss" ให้แทนที่ 'T' ด้วยช่องว่าง
+        const stamp = String(data.checkin).replace('T', ' ').trim();
+        const parts = stamp.split(' ');
+        const date = parts[0] || '—';
+        const time = (parts[1] || '—').replace(/\.\d+Z?$/, ''); // ตัด .ms หรือ Z ถ้ามี
+        cellDate.innerHTML = `
+          <div>${date}</div>
+          <div class="text-muted">${time}</div>
+        `;
+      } else {
+        cellDate.innerHTML = `
+          <div>—</div>
+          <div class="text-muted">—</div>
+        `;
+      }
+    }
+
+    // =========================
+    // เปลี่ยนข้อความปุ่ม
+    // =========================
+    btn.dataset.checkin = data.checked ? (data.checkin || '') : '';
+    btn.textContent = data.checked ? 'ยกเลิก' : 'Check in';
+
+  } catch (err) {
+    console.error(err);
+    alert('ไม่สามารถบันทึก Check-in ได้: ' + (err.message || ''));
+    // rollback ข้อความปุ่ม
+    btn.textContent = originalText;
+  } finally {
+    btn.disabled = false;
+  }
+});
+</script>
+
+
 @endsection

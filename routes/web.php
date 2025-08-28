@@ -20,7 +20,6 @@ use App\Http\Controllers\ToyataController;
 */
 
 
-
 Route::domain('ttb.idx.co.th')->group(function () {
     Route::get('/', function () {
         return view('welcome'); // หรือ controller ก็ได้
@@ -39,6 +38,16 @@ Route::middleware(['auth'])->group(function () {
         ->name('dashboard.index');
 
     Route::get('/members/create', [ToyataController::class, 'create'])->name('members.create');
+
+
+    // AJAX check-in
+    Route::post('/toyota/checkin', [ToyataController::class, 'checkIn'])->name('toyota.checkin');
+
+    Route::post('/toyota/checkin-toggle', [ToyataController::class, 'toggleCheckin'])
+    ->name('toyota.checkin.toggle');
+
+    Route::get('/toyota/edit',  [ToyataController::class, 'edit'])->name('toyota.edit');
+    Route::post('/toyota/update', [ToyataController::class, 'update'])->name('toyota.update');
 
 
 
