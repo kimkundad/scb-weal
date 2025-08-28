@@ -71,7 +71,7 @@ class GoogleSheet
     public function appendRow($spreadsheetId, $sheetName, $rowData)
     {
         $sheet = $this->quoteSheetName($sheetName);
-        $range = $sheet . '!A:E';
+        $range = $sheet . '!A:Z';
         $body = new ValueRange(['values' => [$rowData]]);
         $params = ['valueInputOption' => 'USER_ENTERED'];
         return $this->service->spreadsheets_values->append($spreadsheetId, $range, $body, $params);
@@ -113,5 +113,14 @@ class GoogleSheet
             }
         }
         return null;
+    }
+
+    public function appendRowFlexible(string $spreadsheetId, string $sheetName, array $rowData)
+    {
+        $sheet = $this->quoteSheetName($sheetName);
+        $range = $sheet . '!A:Z'; // ให้ครอบคลุมถึงคอลัมน์ J หรือมากกว่า
+        $body  = new \Google\Service\Sheets\ValueRange(['values' => [$rowData]]);
+        $params = ['valueInputOption' => 'USER_ENTERED'];
+        return $this->service->spreadsheets_values->append($spreadsheetId, $range, $body, $params);
     }
 }

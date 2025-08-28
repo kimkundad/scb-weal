@@ -40,18 +40,39 @@
         .filter-row .form-control {
             height: 38px
         }
-
-
     </style>
 
     <style>
-  .dot { display:inline-block; width:12px; height:12px; border-radius:50%; vertical-align:middle; }
-  .dot-green  { background:#34D399; } /* check-in */
-  .dot-orange { background:#EA8238; } /* เผื่อใช้ */
-  .dot-navy   { background:#001E7E; } /* เผื่อใช้ */
-  .dot-gray   { background:#9CA3AF; } /* สีเทาที่คุณขอ */
-</style>
-<meta name="csrf-token" content="{{ csrf_token() }}">
+        .dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            vertical-align: middle;
+        }
+
+        .dot-green {
+            background: #34D399;
+        }
+
+        /* check-in */
+        .dot-orange {
+            background: #EA8238;
+        }
+
+        /* เผื่อใช้ */
+        .dot-navy {
+            background: #001E7E;
+        }
+
+        /* เผื่อใช้ */
+        .dot-gray {
+            background: #9CA3AF;
+        }
+
+        /* สีเทาที่คุณขอ */
+    </style>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 
 @section('content')
@@ -61,9 +82,13 @@
         <div class="d-flex justify-content-between align-items-start mt-10">
             <div>
                 <h2 class="fw-bold mb-1">รายชื่อสมาชิกทั้งหมด</h2>
-                <div class="text-muted">Checkin ทั้งหมด
+                {{-- <div class="text-muted">Checkin ทั้งหมด
                     <span class="text-success fw-bold">{{ number_format($totals['checkin_all'] ?? 75) }}</span>
-                </div>
+                </div> --}}
+                <p class="text-muted">
+                    เช็คอินแล้ว: <span class="text-success fw-bold">{{ number_format($checkedCount) }}</span>
+                    • ยังไม่เช็คอิน: <span class="fw-bold">{{ number_format($notCheckedCount) }}</span>
+                </p>
             </div>
             <a href="{{ route('members.create') }}"
                 class="btn btn-outline btn-outline-dashed btn-outline-success btn-active-light-success">เพิ่มผู้เข้าร่วมงาน</a>
@@ -223,83 +248,82 @@
             </div>
         </div>
 
-{{-- Search + Filters (one GET form) --}}
-<form id="filterForm" method="GET" action="{{ url()->current() }}" class="mt-6 mb-3">
+        {{-- Search + Filters (one GET form) --}}
+        <form id="filterForm" method="GET" action="{{ url()->current() }}" class="mt-6 mb-3">
 
-  {{-- พกพา query อื่น ๆ ที่อาจมีอยู่ (ยกเว้นตัวที่เราจะเปลี่ยนเอง) --}}
-  @foreach(request()->except(['q','sort','badge','group','page']) as $k => $v)
-    <input type="hidden" name="{{ $k }}" value="{{ $v }}">
-  @endforeach
+            {{-- พกพา query อื่น ๆ ที่อาจมีอยู่ (ยกเว้นตัวที่เราจะเปลี่ยนเอง) --}}
+            @foreach (request()->except(['q', 'sort', 'badge', 'status', 'page']) as $k => $v)
+                <input type="hidden" name="{{ $k }}" value="{{ $v }}">
+            @endforeach
 
-  {{-- Search + datalist --}}
-  <div class="input-group mb-4">
-    <input
-      type="text"
-      class="form-control"
-      name="q"
-      value="{{ request('q') }}"
-      placeholder="ค้นหา (ชื่อภาษาไทย / อังกฤษ / แผนก)…"
-      list="memberSuggestions"
-    >
-    <button class="btn btn-light" type="submit" style="border:1px solid #E4E6EF">
-      <span class="svg-icon svg-icon-1">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-             xmlns="http://www.w3.org/2000/svg">
-          <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1"
-                transform="rotate(45 17.0365 15.1223)" fill="currentColor"></rect>
-          <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z"
-                fill="currentColor"></path>
-        </svg>
-      </span>
-    </button>
-  </div>
+            {{-- Search + datalist --}}
+            <div class="input-group mb-4">
+                <input type="text" class="form-control" name="q" value="{{ request('q') }}"
+                    placeholder="ค้นหา (ชื่อภาษาไทย / อังกฤษ / แผนก)…" list="memberSuggestions">
+                <button class="btn btn-light" type="submit" style="border:1px solid #E4E6EF">
+                    <span class="svg-icon svg-icon-1">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1"
+                                transform="rotate(45 17.0365 15.1223)" fill="currentColor"></rect>
+                            <path
+                                d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z"
+                                fill="currentColor"></path>
+                        </svg>
+                    </span>
+                </button>
+            </div>
 
-  {{-- suggestion list --}}
-  <datalist id="memberSuggestions">
-    @foreach(($suggestions ?? collect()) as $s)
-      @if(trim($s) !== '')
-        <option value="{{ $s }}"></option>
-      @endif
-    @endforeach
-  </datalist>
+            {{-- suggestion list --}}
+            <datalist id="memberSuggestions">
+                @foreach ($suggestions ?? collect() as $s)
+                    @if (trim($s) !== '')
+                        <option value="{{ $s }}"></option>
+                    @endif
+                @endforeach
+            </datalist>
 
-  {{-- Filters row --}}
-  <div class="filter-row row g-3 align-items-center">
-    <div class="col-auto w-180px">
-      <label class="text-muted me-2">เรียง ก - ฮ</label>
-      <select class="form-select w-180px" name="sort" onchange="submitFilters()">
-        <option value="new" @selected(request('sort','new')==='new')>เรียง ก - ฮ</option>
-        <option value="old" @selected(request('sort')==='old')>เรียง ฮ - ก</option>
-      </select>
-    </div>
+            {{-- Filters row --}}
+            <div class="filter-row row g-3 align-items-center">
+                <div class="col-auto w-180px">
+                    <label class="text-muted me-2">เรียง ก - ฮ</label>
+                    <select class="form-select w-180px" name="sort" onchange="submitFilters()">
+                        <option value="new" @selected(request('sort', 'new') === 'new')>เรียง ก - ฮ</option>
+                        <option value="old" @selected(request('sort') === 'old')>เรียง ฮ - ก</option>
+                    </select>
+                </div>
 
-    <div class="col-auto">
-      <label class="text-muted me-2">Badge</label>
-      <select class="form-select w-120px" name="badge" onchange="submitFilters()">
-        <option value="" @selected(request('badge','')==='')>ทั้งหมด</option>
-        <option value="Dealer"     @selected(request('badge')==='Dealer')>Dealer</option>
-        <option value="TMT"        @selected(request('badge')==='TMT')>TMT</option>
-        <option value="AFFILIATE"  @selected(request('badge')==='AFFILIATE')>AFFILIATE</option>
-      </select>
-    </div>
+                <div class="col-auto w-180px">
+                    <label class="text-muted me-2">Badge</label>
+                    <select class="form-select w-180px" name="badge" onchange="submitFilters()">
+                        <option value="" @selected(request('badge', '') === '')>ทั้งหมด</option>
+                        <option value="Dealer" @selected(request('badge') === 'Dealer')>Dealer</option>
+                        <option value="TMT" @selected(request('badge') === 'TMT')>TMT</option>
+                        <option value="AFFILIATE" @selected(request('badge') === 'AFFILIATE')>AFFILIATE</option>
+                    </select>
+                </div>
 
-    <div class="col-auto">
-    <label class="text-muted me-2">สถานะ</label>
-    <select class="form-select w-120px" name="status" onchange="submitFilters()">
-        <option value="" @selected(request('status','')==='')>ทั้งหมด</option>
-        <option value="checked" @selected(request('status')==='checked')>เช็คอิน</option>
-        <option value="not_checked" @selected(request('status')==='not_checked')>ยังไม่เช็คอิน</option>
-    </select>
-    </div>
+                <div class="col-auto w-180">
+                    <label class="text-muted me-2">สถานะ</label>
+                    <select class="form-select w-180px" name="status" onchange="submitFilters()">
+                        <option value="" @selected(request('status', '') === '')>ทั้งหมด</option>
+                        <option value="checked" @selected(request('status') === 'checked')>เช็คอิน</option>
+                        <option value="not_checked" @selected(request('status') === 'not_checked')>ยังไม่เช็คอิน</option>
+                        <option value="newMember" @selected(request('status') === 'newMember')>รายชื่อใหม่</option>
+                        <option value="instead" @selected(request('status') === 'instead')>ผู้มาแทน</option>
+                    </select>
+                </div>
 
-    <div class="col-auto">
-    <a href="{{ url('admin/dashboard') }}" class="btn btn-outline btn-outline-dashed btn-outline-warning btn-active-light-warning me-2 mt-4">ล้างข้อมูล</a>
-    </div>
+                <div class="col-auto">
+                    <a href="{{ url('admin/dashboard') }}"
+                        class="btn btn-outline btn-outline-dashed btn-outline-warning btn-active-light-warning me-2 mt-4">ล้างข้อมูล</a>
+                </div>
 
-  </div>
+            </div>
 
 
-</form>
+
+        </form>
 
 
 
@@ -329,17 +353,21 @@
                                     <td>{{ ($members->firstItem() ?? 1) + $i }}</td>
 
                                     <!-- <td>
-                                        <span class="badge badge-light me-2">{{ $m['badge'] ?? 'Dealer' }}</span>
-                                        <span class="badge-dot"></span>
-                                    </td> -->
+                                            <span class="badge badge-light me-2">{{ $m['badge'] ?? 'Dealer' }}</span>
+                                            <span class="badge-dot"></span>
+                                        </td> -->
 
                                     <td>
                                         <span class="badge badge-light me-2">{{ $m['badge'] ?: '—' }}</span>
 
                                         <span class="status-dot" id="status-dot-{{ $m['row'] }}">
-                                            @if(!empty($m['checkin']))
-                                                <span class="dot dot-green"></span>
-                                            @endif
+                                            @if((string)($m['new_member'] ?? '') === '1')
+                                             <span class="dot dot-navy"></span>     {{-- รายชื่อใหม่ --}}
+                                           @elseif(!empty($m['instead']))
+                                             <span class="dot dot-orange"></span>   {{-- ผู้มาแทน --}}
+                                           @elseif(!empty($m['checkin']))
+                                             <span class="dot dot-green"></span>    {{-- เช็คอินทั่วไป --}}
+                                           @endif
                                         </span>
                                     </td>
 
@@ -353,9 +381,13 @@
                                     <td>{{ $m['department'] ?? '-' }}</td>
 
                                     {{-- ชีตไม่มีคอลัมน์ check-in ก็แสดง placeholder --}}
-                                   <td id="checkin-cell-{{ $m['row'] }}">
-                                        <div>{{ $m['checkin'] ? \Illuminate\Support\Str::of($m['checkin'])->beforeLast(' ') : '—' }}</div>
-                                        <div class="text-muted">{{ $m['checkin'] ? \Illuminate\Support\Str::of($m['checkin'])->afterLast(' ') : '—' }}</div>
+                                    <td id="checkin-cell-{{ $m['row'] }}">
+                                        <div>
+                                            {{ $m['checkin'] ? \Illuminate\Support\Str::of($m['checkin'])->beforeLast(' ') : '—' }}
+                                        </div>
+                                        <div class="text-muted">
+                                            {{ $m['checkin'] ? \Illuminate\Support\Str::of($m['checkin'])->afterLast(' ') : '—' }}
+                                        </div>
                                     </td>
 
                                     <td>{{ $m['test_drive'] ?? '-' }}</td>
@@ -363,28 +395,34 @@
                                     <td>{{ $m['strategy'] ?? '-' }}</td>
 
                                     <td class="text-end">
-                                    <div class="btn-group">
-                                        <button
-  type="button"
-  class="btn btn-light btn-sm btn-checkin"
-  data-row="{{ $m['row'] }}"
-  data-checkin="{{ $m['checkin'] }}"
-  data-sheet="{{ $sheetName }}"            {{-- << เพิ่ม --}}
-  data-spreadsheet="{{ $spreadsheetId }}"  {{-- << เพิ่ม --}}
->
-  {{ empty($m['checkin']) ? 'Check in' : 'ยกเลิก' }}
-</button>
-                                        <button type="button" class="btn btn-light btn-sm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"></button>
-                                        <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><a class="dropdown-item" href="#">ผู้มาแทน</a></li>
-                                        <li>
-  <a class="dropdown-item"
-     href="{{ route('toyota.edit', ['spreadsheetId' => $spreadsheetId, 'sheetName' => $sheetName, 'row' => $m['row']]) }}">
-     แก้ไขข้อมูล
-  </a>
-</li>
-                                        </ul>
-                                    </div>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-light btn-sm btn-checkin"
+                                                data-row="{{ $m['row'] }}" data-checkin="{{ $m['checkin'] }}"
+                                                data-sheet="{{ $sheetName }}" {{-- << เพิ่ม --}}
+                                                data-spreadsheet="{{ $spreadsheetId }}" {{-- << เพิ่ม --}}
+                                                data-newmember="{{ (string) ($m['new_member'] ?? '') === '1' ? 1 : 0 }}"
+                                                data-instead="{{ !empty($m['instead']) ? 1 : 0 }}"
+                                                >
+                                                {{ empty($m['checkin']) ? 'Check in' : 'ยกเลิก' }}
+                                            </button>
+                                            <button type="button"
+                                                class="btn btn-light btn-sm dropdown-toggle dropdown-toggle-split"
+                                                data-bs-toggle="dropdown"></button>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    <a class="dropdown-item"
+                                                        href="{{ route('toyota.instead.form', ['spreadsheetId'=>$spreadsheetId,'sheetName'=>$sheetName,'row'=>$m['row']]) }}">
+                                                        ผู้มาแทน
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item"
+                                                        href="{{ route('toyota.edit', ['spreadsheetId' => $spreadsheetId, 'sheetName' => $sheetName, 'row' => $m['row']]) }}">
+                                                        แก้ไขข้อมูล
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </td>
                                 </tr>
                             @empty
@@ -424,7 +462,8 @@
                     </div>
                 </div>
                 <br><br>
-                <a href="{{ url('logout') }}" class="btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger me-2 mb-2">ออกจากระบบ</a>
+                <a href="{{ url('logout') }}"
+                    class="btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger me-2 mb-2">ออกจากระบบ</a>
                 <br><br><br><br>
             </div>
         </div>
@@ -436,103 +475,114 @@
     {{-- เปิดใช้ DataTables ได้ถ้าต้องการ --}}
     {{-- <script> $('.table').DataTable({ searching:false, paging:false, info:false }); </script> --}}
     <script>
-  function submitFilters(){
-    const f = document.getElementById('filterForm');
-    // รีเซ็ต page -> 1 ทุกครั้งที่เปลี่ยน filter
-    const pg = f.querySelector('input[name="page"]');
-    if (pg) pg.remove();
-    f.submit();
-  }
-</script>
-<script>
-document.addEventListener('click', async (e) => {
-  const btn = e.target.closest('.btn-checkin');
-  if (!btn) return;
+        function submitFilters() {
+            const f = document.getElementById('filterForm');
+            // รีเซ็ต page -> 1 ทุกครั้งที่เปลี่ยน filter
+            const pg = f.querySelector('input[name="page"]');
+            if (pg) pg.remove();
+            f.submit();
+        }
+    </script>
+    <script>
+        document.addEventListener('click', async (e) => {
+            const btn = e.target.closest('.btn-checkin');
+            if (!btn) return;
 
-  const row           = btn.dataset.row;
-  const sheetName     = btn.dataset.sheet || '';
-  const spreadsheetId = btn.dataset.spreadsheet || '';
+            const row = btn.dataset.row;
+            const sheetName = btn.dataset.sheet || '';
+            const spreadsheetId = btn.dataset.spreadsheet || '';
 
-  btn.disabled = true;
-  const originalText = btn.textContent.trim();
+            btn.disabled = true;
+            const originalText = btn.textContent.trim();
 
-  try {
-    const res = await fetch("{{ route('toyota.checkin.toggle') }}", {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({ row, sheetName, spreadsheetId })
-    });
+            try {
+                const res = await fetch("{{ route('toyota.checkin.toggle') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        row,
+                        sheetName,
+                        spreadsheetId
+                    })
+                });
 
-    // กันกรณี 4xx/5xx
-    if (!res.ok) {
-      const t = await res.text().catch(() => '');
-      throw new Error(`HTTP ${res.status} ${t}`);
-    }
+                // กันกรณี 4xx/5xx
+                if (!res.ok) {
+                    const t = await res.text().catch(() => '');
+                    throw new Error(`HTTP ${res.status} ${t}`);
+                }
 
-    const data = await res.json();
+                const data = await res.json();
 
-    if (!data.ok) {
-      throw new Error(data.message || 'Update failed');
-    }
+                if (!data.ok) {
+                    throw new Error(data.message || 'Update failed');
+                }
 
-    // =========================
-    // อัปเดตจุดสี (รองรับทั้ง id เดิม dot-<row> และ status-dot-<row>)
-    // =========================
-    const dotWrapLegacy = document.getElementById(`dot-${row}`);
-    if (dotWrapLegacy) {
-      dotWrapLegacy.innerHTML = data.checked ? '<span class="dot dot-green"></span>' : '';
-    }
+                // =========================
+                // อัปเดตจุดสี (รองรับทั้ง id เดิม dot-<row> และ status-dot-<row>)
+                // =========================
+                const dotWrapLegacy = document.getElementById(`dot-${row}`);
+                if (dotWrapLegacy) {
+                    dotWrapLegacy.innerHTML = data.checked ? '<span class="dot dot-green"></span>' : '';
+                }
 
-    const statusDot = document.getElementById(`status-dot-${row}`);
-    if (statusDot) {
-      statusDot.innerHTML = data.checked ? '<span class="dot dot-green"></span>' : '';
-    }
+                const statusDot = document.getElementById(`status-dot-${row}`);
+                if (statusDot) {
+                    // statusDot.innerHTML = data.checked ? '<span class="dot dot-green"></span>' : '';
+                      const isNew     = String(btn.dataset.newmember || '0') === '1';
+                      const isInstead = String(btn.dataset.instead    || '0') === '1';
+                      if (isNew) {
+                        statusDot.innerHTML = '<span class="dot dot-navy"></span>';
+                      } else if (isInstead) {
+                        statusDot.innerHTML = '<span class="dot dot-orange"></span>';
+                      } else {
+                        statusDot.innerHTML = data.checked ? '<span class="dot dot-green"></span>' : '';
+                      }
+                    }
 
-    // =========================
-    // อัปเดตช่องวันที่/เวลา check-in (td)
-    // ต้องมี <td id="checkin-cell-{{ $m['row'] }}">
-    // =========================
-    const cellDate = document.getElementById(`checkin-cell-${row}`);
-    if (cellDate) {
-      if (data.checked && data.checkin) {
-        // data.checkin คาดรูปแบบ "YYYY-MM-DD HH:mm:ss" (จากเซิร์ฟเวอร์)
-        // เผื่อกรณีได้ ISO "YYYY-MM-DDTHH:mm:ss" ให้แทนที่ 'T' ด้วยช่องว่าง
-        const stamp = String(data.checkin).replace('T', ' ').trim();
-        const parts = stamp.split(' ');
-        const date = parts[0] || '—';
-        const time = (parts[1] || '—').replace(/\.\d+Z?$/, ''); // ตัด .ms หรือ Z ถ้ามี
-        cellDate.innerHTML = `
+                // =========================
+                // อัปเดตช่องวันที่/เวลา check-in (td)
+                // ต้องมี <td id="checkin-cell-{{ $m['row'] }}">
+                // =========================
+                const cellDate = document.getElementById(`checkin-cell-${row}`);
+                if (cellDate) {
+                    if (data.checked && data.checkin) {
+                        // data.checkin คาดรูปแบบ "YYYY-MM-DD HH:mm:ss" (จากเซิร์ฟเวอร์)
+                        // เผื่อกรณีได้ ISO "YYYY-MM-DDTHH:mm:ss" ให้แทนที่ 'T' ด้วยช่องว่าง
+                        const stamp = String(data.checkin).replace('T', ' ').trim();
+                        const parts = stamp.split(' ');
+                        const date = parts[0] || '—';
+                        const time = (parts[1] || '—').replace(/\.\d+Z?$/, ''); // ตัด .ms หรือ Z ถ้ามี
+                        cellDate.innerHTML = `
           <div>${date}</div>
           <div class="text-muted">${time}</div>
         `;
-      } else {
-        cellDate.innerHTML = `
+                    } else {
+                        cellDate.innerHTML = `
           <div>—</div>
           <div class="text-muted">—</div>
         `;
-      }
-    }
+                    }
+                }
 
-    // =========================
-    // เปลี่ยนข้อความปุ่ม
-    // =========================
-    btn.dataset.checkin = data.checked ? (data.checkin || '') : '';
-    btn.textContent = data.checked ? 'ยกเลิก' : 'Check in';
+                // =========================
+                // เปลี่ยนข้อความปุ่ม
+                // =========================
+                btn.dataset.checkin = data.checked ? (data.checkin || '') : '';
+                btn.textContent = data.checked ? 'ยกเลิก' : 'Check in';
 
-  } catch (err) {
-    console.error(err);
-    alert('ไม่สามารถบันทึก Check-in ได้: ' + (err.message || ''));
-    // rollback ข้อความปุ่ม
-    btn.textContent = originalText;
-  } finally {
-    btn.disabled = false;
-  }
-});
-</script>
-
-
+            } catch (err) {
+                console.error(err);
+                alert('ไม่สามารถบันทึก Check-in ได้: ' + (err.message || ''));
+                // rollback ข้อความปุ่ม
+                btn.textContent = originalText;
+            } finally {
+                btn.disabled = false;
+            }
+        });
+    </script>
 @endsection

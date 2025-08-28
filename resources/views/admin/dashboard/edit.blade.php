@@ -44,6 +44,39 @@
         </select>
       </div>
 
+
+{{-- ========== ผู้มาแทน ========== --}}
+@php
+  $hasInstead = !empty($fields['instead_th'] ?? '')
+             || !empty($fields['instead_en'] ?? '')
+             || !empty($fields['instead_note'] ?? '');
+@endphp
+
+@if($hasInstead)
+  <div class="col-md-12"><h3 class="mb-1 mt-10">ผู้มาแทน</h3></div>
+
+  <div class="col-md-6">
+    <label class="form-label">ชื่อ–นามสกุล (ภาษาไทย) ผู้มาแทน</label>
+    <input type="text" class="form-control" name="instead_th"
+           value="{{ old('instead_th', $fields['instead_th'] ?? '') }}"
+           placeholder="เช่น นาย สมชาย มาแทน">
+  </div>
+  <div class="col-md-6">
+    <label class="form-label">ชื่อ–นามสกุล (ภาษาอังกฤษ) ผู้มาแทน</label>
+    <input type="text" class="form-control" name="instead_en"
+           value="{{ old('instead_en', $fields['instead_en'] ?? '') }}"
+           placeholder="Name Surname">
+  </div>
+
+  <div class="col-12">
+    <label class="form-label">Note</label>
+    <textarea class="form-control" name="instead_note" rows="5"
+              placeholder="สาเหตุ/รายละเอียดเพิ่มเติม">{{ old('instead_note', $fields['instead_note'] ?? '') }}</textarea>
+  </div>
+@endif
+{{-- ========== /ผู้มาแทน ========== --}}
+
+
       <div class="col-md-12"> <h3 class="mb-1 mt-10">รายละเอียดกิจกรรม</h3></div>
 @php
   // ตารางเวลา (อ้างอิงจากชีตที่แนบ)

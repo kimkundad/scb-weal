@@ -29,9 +29,11 @@ Route::domain('ttb.idx.co.th')->group(function () {
 
 Route::middleware(['auth'])->group(function () {
 
-    Route::get('/', function () {
-        return view('welcome'); // หรือ controller ก็ได้
-    });
+
+    Route::domain('toyota.idx.co.th')->group(function () {
+
+    Route::get('/', [App\Http\Controllers\ToyataController::class, 'index'])
+        ->name('dashboard.index');
 
     // Dashboard
     Route::get('/admin/dashboard', [App\Http\Controllers\ToyataController::class, 'index'])
@@ -48,6 +50,17 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/toyota/edit',  [ToyataController::class, 'edit'])->name('toyota.edit');
     Route::post('/toyota/update', [ToyataController::class, 'update'])->name('toyota.update');
+
+    Route::get('/members/create', [ToyataController::class, 'create'])->name('members.create');
+    Route::post('/members',        [ToyataController::class, 'store'])->name('members.store');
+
+    Route::get('/toyota/instead/{spreadsheetId}/{sheetName}/{row}', [ToyataController::class,'insteadForm'])
+    ->name('toyota.instead.form');
+
+Route::post('/toyota/instead', [ToyataController::class,'insteadStore'])
+    ->name('toyota.instead.store');
+
+    });
 
 
 
