@@ -6,6 +6,7 @@ use App\Http\Controllers\TtbController;
 use App\Http\Controllers\Ttb2Controller;
 use App\Http\Controllers\TPController;
 use App\Http\Controllers\SrichanController;
+use App\Http\Controllers\ToyataController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,28 +28,37 @@ Route::domain('ttb.idx.co.th')->group(function () {
 });
 
 
-
 Route::middleware(['auth'])->group(function () {
 
-
-
-    Route::domain('srichandxbambam.com')->group(function () {
-        Route::get('/', function () {
-            return view('srichan.index'); // หรือ controller ก็ได้
-        });
+    Route::get('/', function () {
+        return view('welcome'); // หรือ controller ก็ได้
     });
 
-    Route::get('/srichand/show-info', function () {
-        return view('srichan.ans'); // เปลี่ยนชื่อไฟล์ Blade ตามที่ใช้จริง
-    })->name('showInfo');
+    // Dashboard
+    Route::get('/admin/dashboard', [App\Http\Controllers\ToyataController::class, 'index'])
+        ->name('dashboard.index');
 
-    Route::get('/verify_code/{code}', [SrichanController::class, 'verify']);
+    Route::get('/members/create', [ToyataController::class, 'create'])->name('members.create');
 
-    Route::post('/register_user', [SrichanController::class, 'registerUser']);
 
-    Route::get('/srichan_success', function () {
-            return view('srichan.success'); // หรือ controller ก็ได้
-    });
+
+    // Route::domain('srichandxbambam.com')->group(function () {
+    //     Route::get('/', function () {
+    //         return view('srichan.index'); // หรือ controller ก็ได้
+    //     });
+    // });
+
+    // Route::get('/srichand/show-info', function () {
+    //     return view('srichan.ans'); // เปลี่ยนชื่อไฟล์ Blade ตามที่ใช้จริง
+    // })->name('showInfo');
+
+    // Route::get('/verify_code/{code}', [SrichanController::class, 'verify']);
+
+    // Route::post('/register_user', [SrichanController::class, 'registerUser']);
+
+    // Route::get('/srichan_success', function () {
+    //         return view('srichan.success'); // หรือ controller ก็ได้
+    // });
 
 });
 
