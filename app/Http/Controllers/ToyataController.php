@@ -273,29 +273,49 @@ class ToyataController extends Controller
             $filtered = $filtered->filter(fn($m) => !empty($m['instead']))->values();
         }
 
-        // sort: new = ก-ฮ, old = ฮ-ก (เทียบ name_th)
+        // --- sort: new = ก-ฮ (ASC), old = ฮ-ก (DESC) เทียบ name_th
         $sort = $request->input('sort', 'new');
-        $filtered = $filtered->sortBy('name_th', SORT_NATURAL | SORT_FLAG_CASE, $sort === 'old')->values();
 
-        // ---- pagination
-        $perPage   = (int)$request->input('per_page', 25);
-        $page      = LengthAwarePaginator::resolveCurrentPage();
-        $items     = $filtered->forPage($page, $perPage)->values();
-        $paginated = new LengthAwarePaginator($items, $filtered->count(), $perPage, $page, ['path'=>$request->url(),'query'=>$request->query()]);
+        $collator = new \Collator('th_TH'); // ใช้ locale ภาษาไทย
 
-        $checkedCount    = $allMembers->filter(fn($m)=>!empty($m['checkin']))->count();
-        $notCheckedCount = $allMembers->filter(fn($m)=> empty($m['checkin']))->count();
+        $filtered = $filtered->sort(function ($a, $b) use ($collator, $sort) {
+            $result = $collator->compare($a['name_th'], $b['name_th']);
+            return $sort === 'old' ? -$result : $result;
+        })->values();
+
+        // --- pagination (พก query string ทั้งหมด ยกเว้น page)
+        $perPage = (int) $request->input('per_page', 25);
+        $page    = LengthAwarePaginator::resolveCurrentPage('page');
+
+        $items = $filtered->forPage($page, $perPage)->values();
+
+        $paginated = new LengthAwarePaginator(
+            $items,
+            $filtered->count(),
+            $perPage,
+            $page,
+            [
+                'path'     => $request->url(), // base URL (ไม่ซ้อน query)
+                'pageName' => 'page',          // ชื่อพารามิเตอร์หน้า
+            ]
+        );
+
+        // ✅ ผูก query string ปัจจุบันทั้งหมด (ยกเว้น page) ให้ลิงก์หน้าอื่น ๆ
+        $paginated->appends($request->except('page'));
+
+        $checkedCount    = $allMembers->filter(fn($m) => !empty($m['checkin']))->count();
+        $notCheckedCount = $allMembers->filter(fn($m) => empty($m['checkin']))->count();
 
         return view('admin.dashboard.index', [
-            'members'     => $paginated,
-            'stats'       => $stats,
-            'totals'      => $totals,
-            'groups'      => $groups,
-            'suggestions' => $suggestions,
-            'sheetName'   => $sheetName,     // <— เผื่อใช้ใน view
-            'spreadsheetId' => $spreadsheetId,
-            'checkedCount'    => $checkedCount,
-            'notCheckedCount' => $notCheckedCount,
+            'members'        => $paginated,
+            'stats'          => $stats,
+            'totals'         => $totals,
+            'groups'         => $groups,
+            'suggestions'    => $suggestions,
+            'sheetName'      => $sheetName,
+            'spreadsheetId'  => $spreadsheetId,
+            'checkedCount'   => $checkedCount,
+            'notCheckedCount'=> $notCheckedCount,
         ]);
     }
 
@@ -327,34 +347,38 @@ class ToyataController extends Controller
             'name_th'    => ['required','string'],
             'name_en'    => ['nullable','string'],
             'dept'       => ['nullable','string'],
-            'badge'      => ['required','string'],
-            'group'      => ['required','string','in:A,B,C,D,E,F'],
+            'badge'      => ['nullable','string'],
+            'group'      => ['nullable','string'],
             'testdrive'  => ['nullable','string'],
             'cardisplay' => ['nullable','string'],
             'strategy'   => ['nullable','string'],
         ]);
 
-        $test     = $this->slotTest[$v['group']]     ?? '';
-        $car      = $this->slotCar[$v['group']]      ?? '';
-        $strategy = $this->slotStrategy[$v['group']] ?? '';
+        // $test     = $this->slotTest[$v['group']]     ?? '';
+        // $car      = $this->slotCar[$v['group']]      ?? '';
+        // $strategy = $this->slotStrategy[$v['group']] ?? '';
 
-         // ✅ เช็คอินทันทีเมื่อเพิ่ม
+       $group    = $v['group']      ?? '';     // เดิมอาจเป็น null
+        $test     = $v['testdrive']  ?? '';
+        $car      = $v['cardisplay'] ?? '';
+        $strategy = $v['strategy']   ?? '';
+
         $stamp = Carbon::now('Asia/Bangkok')->format('Y-m-d H:i:s');
 
-        //                             A    B          C          D            E            F             G      H      I        J      K
         $rowData = [
-            '',                         // A No. (ปล่อยว่าง)
-            $v['badge'] ?? '',          // B
-            $v['group'] ?? '',          // C
-            $v['name_th'] ?? '',        // D
-            $v['name_en'] ?? '',        // E
-            $v['dept'] ?? '',           // F
-            $test,                      // G Test Drive
-            $car,                       // H Car Display
-            $strategy,                  // I Strategy Sharing
-            $stamp,                        // J Check-in (ว่าง)
-            1,                          // K newMember_status = 1  <<<<  ตรงนี้!
+            '',                      // A
+            $v['badge']   ?? '',     // B
+            $group,                  // C
+            $v['name_th'] ?? '',     // D
+            $v['name_en'] ?? '',     // E
+            $v['dept']    ?? '',     // F
+            $test,                   // G
+            $car,                    // H
+            $strategy,               // I
+            $stamp,                  // J
+            1,                       // K
         ];
+
 
         try {
             // ใช้เมธอด append แบบช่วงกว้าง (ดูข้อ 2)
@@ -431,7 +455,7 @@ private function rowToFields(array $r): array
             'sheetName'     => ['required','string'],
             'spreadsheetId' => ['required','string'],
             'badge'         => ['nullable','string'],
-            'group'         => ['required','string','in:A,B,C,D,E,F'],
+            'group'         => ['nullable','string'],
             'name_th'       => ['nullable','string'],
             'name_en'       => ['nullable','string'],
             'dept'          => ['nullable','string'],
@@ -461,9 +485,9 @@ private function rowToFields(array $r): array
         ];
 
         // Override 3 ช่องเวลาให้ตรงตาม Group เสมอ
-        $validated['testdrive']  = $slotTest[$validated['group']] ?? '';
-        $validated['cardisplay'] = $slotCar[$validated['group']] ?? '';
-        $validated['strategy']   = $slotStrategy[$validated['group']] ?? '';
+        // $validated['testdrive']  = $slotTest[$validated['group']] ?? '';
+        // $validated['cardisplay'] = $slotCar[$validated['group']] ?? '';
+        // $validated['strategy']   = $slotStrategy[$validated['group']] ?? '';
 
         /** @var \App\Services\GoogleSheet $gs */
         $gs = app(\App\Services\GoogleSheet::class);
@@ -523,10 +547,31 @@ private function rowToFields(array $r): array
     }
 
 
-    public function insteadForm(string $spreadsheetId, string $sheetName, int $row)
-    {
-        return view('admin.dashboard.instead', compact('spreadsheetId','sheetName','row'));
-    }
+    public function insteadForm(
+            GoogleSheet $gs,
+            string $spreadsheetId,
+            string $sheetName,
+            int $row,
+            string $Name // ยังรับไว้ได้ เผื่อใช้เทียบ/โชว์
+        ) {
+            // อ่านช่วง A..K เฉพาะแถวที่สนใจ
+            $range = $sheetName.'!A'.$row.':K'.$row;
+            $values = $gs->getSheetData($spreadsheetId, $range);
+
+            // เผื่อคอลัมน์ว่าง ให้ pad ให้ครบ 11 คอลัมน์
+            $rowValues = array_pad($values[0] ?? [], 11, '');
+
+            // map เป็น key ชัด ๆ เพื่อใช้ใน blade
+            $cols = [
+                'no','badge','group','name_th','name_en','dept',
+                'testdrive','cardisplay','strategy','checkin','newMember_status'
+            ];
+            $member = array_combine($cols, $rowValues);
+
+            return view('admin.dashboard.instead', compact(
+                'spreadsheetId','sheetName','row','Name','member'
+            ));
+        }
 
     public function insteadStore(Request $request)
     {
@@ -558,7 +603,15 @@ private function rowToFields(array $r): array
             $stamp = Carbon::now('Asia/Bangkok')->format('Y-m-d H:i:s');
             $this->googleSheet->updateCell($spreadsheetId, "{$sheet}!J{$row}", $stamp, 'USER_ENTERED');
 
-            return redirect()->route('dashboard.index')->with('status','บันทึกผู้มาแทนและเช็คอินเรียบร้อย');
+            // return redirect()->route('dashboard.index')->with('status','บันทึกผู้มาแทนและเช็คอินเรียบร้อย');
+
+            return redirect()
+    ->route('toyota.edit', [
+        'row'           => $row,
+        'sheetName'     => $sheetName,
+        'spreadsheetId' => $spreadsheetId,
+    ])
+    ->with('status','บันทึกผู้มาแทนและเช็คอินเรียบร้อย');
         } catch (\Throwable $e) {
             Log::error('insteadStore failed', ['err'=>$e->getMessage(),'row'=>$row,'sheet'=>$sheetName]);
             return back()->withErrors(['store' => 'บันทึกไม่สำเร็จ: '.$e->getMessage()])->withInput();

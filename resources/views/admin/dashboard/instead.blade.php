@@ -6,7 +6,7 @@
   @if($errors->any()) <div class="alert alert-danger">@foreach($errors->all() as $e)<div>{{ $e }}</div>@endforeach</div> @endif
 
   <h3 class="mb-1 mt-10">เพิ่มผู้มาแทน</h3>
-  <div class="text-muted mb-4">ของ คาร์ล ออฟพินบอร์น</div>
+  <div class="text-dark mb-4" style="font-size:20px">ของ {{ $Name }}</div>
 
   <form method="POST" action="{{ route('toyota.instead.store') }}" class="row g-3">
     @csrf
@@ -27,6 +27,54 @@
       <label class="form-label">Note</label>
       <textarea class="form-control" name="note" rows="6" placeholder="กรอกเนื้อหา">{{ old('note') }}</textarea>
     </div>
+
+    <div class="col-md-12"><h3 class="mb-1 mt-10">รายละเอียดกิจกรรม</h3></div>
+
+
+     @php
+        $slotTest = ['A'=>'9.40 - 10.30','B'=>'10.35 - 11.25','C'=>'11.30 - 12.20','D'=>'14.00 - 14.50','E'=>'14.55 - 15.45','F'=>'15.50 - 16.40', 'ไม่มีกลุ่ม' =>''];
+        $groupVal = old('group','');
+      @endphp
+
+    <div class="col-md-6">
+  <label class="form-label">Group</label>
+  <select class="form-select" disabled>
+    <option>{{ old('group', $member['group'] ?? '') }}</option>
+  </select>
+  <!-- hidden เอาไว้ส่งค่า -->
+  <input type="hidden" name="group" value="{{ old('group', $member['group'] ?? '') }}">
+</div>
+
+      <div class="col-md-6">
+        <label class="form-label">Test Drive</label>
+        <input type="text"
+                class="form-control"
+                name="testdrive"
+                id="testdrive-input"
+                value="{{ old('testdrive', $member['testdrive'] ?? '') }}"
+                placeholder="เช่น 9.40 - 10.30" readonly>
+        </div>
+
+        <div class="col-md-6">
+        <label class="form-label">Car Display</label>
+        <input type="text"
+                class="form-control"
+                name="cardisplay"
+                id="cardisplay-input"
+                value="{{ old('cardisplay', $member['cardisplay'] ?? '') }}"
+                placeholder="เช่น 10.35 - 11.25" readonly>
+        </div>
+
+        <div class="col-md-6">
+        <label class="form-label">Strategy Sharing</label>
+        <input type="text"
+                class="form-control"
+                name="strategy"
+                id="strategy-input"
+                value="{{ old('strategy', $member['strategy'] ?? '') }}"
+                placeholder="เช่น 11.30 - 12.20" readonly>
+        </div>
+
 
     <div class="col-12 mt-3">
       <button type="submit" class="btn btn-danger btn-lg">บันทึกข้อมูลผู้ติดตาม</button>

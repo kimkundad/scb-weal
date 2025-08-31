@@ -12,8 +12,7 @@
   @endif
 
   <h3 class="mb-1 mt-10">เพิ่มรายชื่อ</h3>
-  <div class="text-muted mb-4">ของ คาร์ล ออฟพินบอร์น</div>
-
+    <br>
   <form method="POST" action="{{ route('members.store') }}">
     @csrf
 
@@ -44,7 +43,7 @@
       <div class="col-md-12"><h3 class="mb-1 mt-10">รายละเอียดกิจกรรม</h3></div>
 
       @php
-        $slotTest = ['A'=>'9.40 - 10.30','B'=>'10.35 - 11.25','C'=>'11.30 - 12.20','D'=>'14.00 - 14.50','E'=>'14.55 - 15.45','F'=>'15.50 - 16.40'];
+        $slotTest = ['A'=>'9.40 - 10.30','B'=>'10.35 - 11.25','C'=>'11.30 - 12.20','D'=>'14.00 - 14.50','E'=>'14.55 - 15.45','F'=>'15.50 - 16.40', 'ไม่มีกลุ่ม' =>''];
         $slotCar  = ['A'=>'10.35 - 11.25','B'=>'11.30 - 12.20','C'=>'9.40 - 10.30','D'=>'14.55 - 15.45','E'=>'15.50 - 16.40','F'=>'14.00 - 14.50'];
         $slotStr  = ['A'=>'11.30 - 12.20','B'=>'9.40 - 10.30','C'=>'10.35 - 11.25','D'=>'15.50 - 16.40','E'=>'14.00 - 14.50','F'=>'14.55 - 15.45'];
         $groupVal = old('group','');
@@ -54,12 +53,12 @@
       @endphp
 
       <div class="col-md-6">
-        <label class="form-label">Exhibition round / Group</label>
-        <select class="form-select" name="group" id="group-select" required>
+        <label class="form-label">Group</label>
+        <select class="form-select" name="group" id="group-select">
           <option value="">-- เลือกกลุ่ม --</option>
           @foreach($slotTest as $g => $t)
             <option value="{{ $g }}" {{ $groupVal === $g ? 'selected' : '' }}>
-              {{ $g }} (กลุ่ม) – {{ $t }} (Test Drive)
+              {{ $g }}
             </option>
           @endforeach
         </select>
@@ -108,11 +107,11 @@
       if (slotStrategy[g]) s.value = slotStrategy[g];
     }
 
-    if (sel && t && c && s) {
+    {{-- if (sel && t && c && s) {
       sel.addEventListener('change', apply);
       // prefill ครั้งแรก (กรณีมีค่า group เดิม)
       if (sel.value) apply();
-    }
+    } --}}
   })();
 </script>
 @endsection

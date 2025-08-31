@@ -411,7 +411,7 @@
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
                                                     <a class="dropdown-item"
-                                                        href="{{ route('toyota.instead.form', ['spreadsheetId'=>$spreadsheetId,'sheetName'=>$sheetName,'row'=>$m['row']]) }}">
+                                                        href="{{ route('toyota.instead.form', ['spreadsheetId'=>$spreadsheetId,'sheetName'=>$sheetName,'row'=>$m['row'],'Name' => $m['name_th'] ]) }}">
                                                         ผู้มาแทน
                                                     </a>
                                                 </li>
@@ -457,7 +457,7 @@
                             {{ method_exists($members, 'currentPage') ? $members->currentPage() : 1 }}
                             / {{ method_exists($members, 'lastPage') ? $members->lastPage() : 1 }}</span>
                         @if (method_exists($members, 'links'))
-                            {{ $members->onEachSide(1)->links('vendor.pagination.metronic') }}
+                            {{ $members->appends(request()->except('page'))->onEachSide(1)->links('vendor.pagination.metronic') }}
                         @endif
                     </div>
                 </div>

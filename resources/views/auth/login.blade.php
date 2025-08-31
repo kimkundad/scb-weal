@@ -102,7 +102,7 @@
 
               <!--begin::Submit button-->
               <div class="d-grid mb-10">
-                <button type="submit" id="kt_sign_in_submit" class="btn btn-primary">
+                <button type="submit" id="kt_sign_in_submit" class="btn btn-danger">
                   <span class="indicator-label">เข้าสู่ระบบ</span>
                   <span class="indicator-progress">กำลังตรวจสอบ...
                     <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
@@ -135,7 +135,7 @@
 
       <!--begin::Aside (ขวา: รูป/แบรนด์)-->
       <div class="d-flex flex-lg-row-fluid w-lg-50 bgi-size-cover bgi-position-center order-1 order-lg-2"
-           style="background-image: url({{ url('img/bg_login.png') }})">
+           style="background-image: url({{ url('img/report-with-sm.png') }})">
 
       </div>
       <!--end::Aside-->

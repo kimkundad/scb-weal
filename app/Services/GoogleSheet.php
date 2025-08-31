@@ -115,12 +115,29 @@ class GoogleSheet
         return null;
     }
 
-    public function appendRowFlexible(string $spreadsheetId, string $sheetName, array $rowData)
-    {
-        $sheet = $this->quoteSheetName($sheetName);
-        $range = $sheet . '!A:Z'; // ให้ครอบคลุมถึงคอลัมน์ J หรือมากกว่า
-        $body  = new \Google\Service\Sheets\ValueRange(['values' => [$rowData]]);
-        $params = ['valueInputOption' => 'USER_ENTERED'];
-        return $this->service->spreadsheets_values->append($spreadsheetId, $range, $body, $params);
-    }
+public function appendRowFlexible(string $spreadsheetId, string $sheetName, array $rowData)
+{
+    $sheet = $this->quoteSheetName($sheetName);
+    $range = $sheet . '!A:Z';
+
+    // 🔑 รี index ให้เป็น array [0,1,2,...]
+    $row = array_values($rowData);
+
+    $body = new \Google\Service\Sheets\ValueRange([
+        'majorDimension' => 'ROWS',
+        'values' => [ $row ],   // ต้องเป็น array of arrays
+    ]);
+
+    $params = [
+        'valueInputOption' => 'USER_ENTERED',
+        'insertDataOption' => 'INSERT_ROWS',
+    ];
+
+    \Log::info('append payload', ['values' => [ $row ]]);
+
+    return $this->service
+        ->spreadsheets_values
+        ->append($spreadsheetId, $range, $body, $params);
+}
+
 }

@@ -12,7 +12,7 @@
   @endif
 
   <h3 class="mb-1 mt-10">แก้ไขรายชื่อ</h3>
-  <div class="text-muted mb-4">ของ คาร์ล ออฟพินบอร์น</div>
+  <div class="text-dark mb-4" style="font-size:20px">{{ $fields['name_th'] }}</div>
 
   <form method="POST" action="{{ route('toyota.update') }}">
     @csrf
@@ -87,6 +87,7 @@
     'D' => '14.00 - 14.50',
     'E' => '14.55 - 15.45',
     'F' => '15.50 - 16.40',
+    'ไม่มีกลุ่ม' =>''
   ];
   $slotCar = [
     'A' => '10.35 - 11.25',
@@ -111,12 +112,12 @@
   $strategyVal   = old('strategy',   $fields['strategy']   ?? ($slotStrategy[$groupVal] ?? ''));
 @endphp
       <div class="col-md-6">
-  <label class="form-label">Exhibition round / Group</label>
-  <select class="form-select" name="group" id="group-select" required>
+  <label class="form-label">Group</label>
+  <select class="form-select" name="group" id="group-select" >
     <option value="">-- เลือกกลุ่ม --</option>
     @foreach($slotTest as $g => $t)
       <option value="{{ $g }}" {{ $groupVal === $g ? 'selected' : '' }}>
-        {{ $g }} (กลุ่ม) – {{ $t }} (Test Drive)
+        {{ $g }}
       </option>
     @endforeach
   </select>
@@ -152,7 +153,9 @@
       <a href="{{ url('admin/dashboard') }}" class="btn btn-secondary">ยกเลิก</a>
     </div>
   </form>
+  <br><br><br><br>
 </div>
+
 @endsection
 
 @section('scripts')
