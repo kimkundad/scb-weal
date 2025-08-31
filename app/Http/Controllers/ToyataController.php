@@ -276,12 +276,21 @@ class ToyataController extends Controller
         // --- sort: new = ก-ฮ (ASC), old = ฮ-ก (DESC) เทียบ name_th
         $sort = $request->input('sort', 'new');
 
-        $collator = new \Collator('th_TH'); // ใช้ locale ภาษาไทย
-
-        $filtered = $filtered->sort(function ($a, $b) use ($collator, $sort) {
-            $result = $collator->compare($a['name_th'], $b['name_th']);
-            return $sort === 'old' ? -$result : $result;
-        })->values();
+        if (class_exists(\Collator::class)) {
+            // ใช้ collation ภาษาไทยจริง ๆ
+            $collator = new \Collator('th_TH.UTF-8');
+            $filtered = $filtered->sort(function ($a, $b) use ($collator, $sort) {
+                $res = $collator->compare($a['name_th'] ?? '', $b['name_th'] ?? '');
+                return $sort === 'old' ? -$res : $res;
+            })->values();
+        } else {
+            // Fallback: ต้องตั้ง locale ให้เครื่องรองรับก่อน (อาจสู้ Collator ไม่ได้)
+            setlocale(LC_COLLATE, 'th_TH.UTF-8', 'th_TH', 'th');
+            $filtered = $filtered->sort(function ($a, $b) use ($sort) {
+                $res = strcoll($a['name_th'] ?? '', $b['name_th'] ?? '');
+                return $sort === 'old' ? -$res : $res;
+            })->values();
+        }
 
         // --- pagination (พก query string ทั้งหมด ยกเว้น page)
         $perPage = (int) $request->input('per_page', 25);
