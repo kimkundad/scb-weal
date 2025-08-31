@@ -31,8 +31,7 @@ Route::middleware(['auth'])->group(function () {
 
      Route::domain('toyota.idx.co.th')->group(function () {
 
-    Route::get('/', [App\Http\Controllers\ToyataController::class, 'index'])
-        ->name('dashboard.index');
+    Route::get('/', [App\Http\Controllers\ToyataController::class, 'index']);
 
     // Dashboard
     Route::get('/admin/dashboard', [App\Http\Controllers\ToyataController::class, 'index'])
