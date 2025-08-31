@@ -276,21 +276,36 @@ class ToyataController extends Controller
         // --- sort: new = ก-ฮ (ASC), old = ฮ-ก (DESC) เทียบ name_th
         $sort = $request->input('sort', 'new');
 
-        if (class_exists(\Collator::class)) {
-            // ใช้ collation ภาษาไทยจริง ๆ
-            $collator = new \Collator('th_TH.UTF-8');
-            $filtered = $filtered->sort(function ($a, $b) use ($collator, $sort) {
-                $res = $collator->compare($a['name_th'] ?? '', $b['name_th'] ?? '');
+
+            // ไม่มี intl → fallback ด้วย "ไทยคีย์" (ไม่ต้องพึ่ง locale)
+            $thaiKey = function (string $s): string {
+                // ตัวพิมพ์เล็กทั้งหมด
+                $s = mb_strtolower($s, 'UTF-8');
+
+                // 1) เลื่อนสระนำ (เ แ โ ใ ไ) ไปไว้หลังพยัญชนะตัวแรก
+                //    "เก้า" (เ + ก + ้า) -> "เก้า" เปลี่ยนเป็น "เก้า" ที่ key เริ่มด้วย ก
+                if (preg_match('/^([เแโใไ])([ก-ฮ])(.*)$/u', $s, $m)) {
+                    // $m[1]=สระนำ, $m[2]=พยัญชนะตัวแรก, $m[3]=ที่เหลือ
+                    $s = $m[2] . $m[1] . $m[3];
+                }
+
+                // 2) ลบเครื่องหมายประกอบ/วรรณยุกต์ เพื่อไม่ให้มีผลกับลำดับ
+                //    ั ิ ี ึ ื ุ ู ํ ฺ + วรรณยุกต์ ็ ่ ้ ๊ ๋ ฯ ฯลฯ
+                $s = preg_replace('/[\x{0E31}\x{0E34}-\x{0E3A}\x{0E47}-\x{0E4E}]/u', '', $s);
+
+                // 3) ลบช่องว่าง/ขีดกลางทั่วไป (ช่วยให้สม่ำเสมอขึ้น)
+                $s = preg_replace('/[\s\-]+/u', '', $s);
+
+                return $s;
+            };
+
+            $filtered = $filtered->sort(function ($a, $b) use ($thaiKey, $sort) {
+                $ka = $thaiKey((string)($a['name_th'] ?? ''));
+                $kb = $thaiKey((string)($b['name_th'] ?? ''));
+                $res = strcmp($ka, $kb);
                 return $sort === 'old' ? -$res : $res;
             })->values();
-        } else {
-            // Fallback: ต้องตั้ง locale ให้เครื่องรองรับก่อน (อาจสู้ Collator ไม่ได้)
-            setlocale(LC_COLLATE, 'th_TH.UTF-8', 'th_TH', 'th');
-            $filtered = $filtered->sort(function ($a, $b) use ($sort) {
-                $res = strcoll($a['name_th'] ?? '', $b['name_th'] ?? '');
-                return $sort === 'old' ? -$res : $res;
-            })->values();
-        }
+
 
         // --- pagination (พก query string ทั้งหมด ยกเว้น page)
         $perPage = (int) $request->input('per_page', 25);
