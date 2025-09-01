@@ -186,50 +186,59 @@ class ToyataController extends Controller
             return null;
         };
 
-         // index คอลัมน์แทน (เพื่ออ่านผู้มาแทน)
-         $COL_L = 11; // Name (TH) ผู้มาแทน
-         $COL_M = 12; // Name (EN) ผู้มาแทน
-         $COL_N = 13; // Note ผู้มาแทน
+        // index คอลัมน์แทน (เพื่ออ่านผู้มาแทน)
+        $COL_L = 11; // Name (TH) ผู้มาแทน
+        $COL_M = 12; // Name (EN) ผู้มาแทน
+        $COL_N = 13; // Note ผู้มาแทน
 
         // ---- map เป็น ALL MEMBERS + เก็บเบอร์แถวจริงของชีต
         $allMembers = collect($dataRows)
             ->filter(fn($r)=>collect($r)->filter(fn($v)=>trim((string)$v) !== '')->isNotEmpty())
             ->values()
-           // ->map(function($r, $i) use ($pick, $expected, $headerIdx) {
-           ->map(function($r, $i) use ($pick, $expected, $headerIdx, $COL_L, $COL_M, $COL_N) {
+            ->map(function($r, $i) use ($pick, $expected, $headerIdx, $COL_L, $COL_M, $COL_N) {
                 $sheetRow = $headerIdx + 2 + $i; // 1-based + header อีก 1 แถว
                 return [
-                    'row'         => $sheetRow,  // <— ใช้เวลาจะเขียนกลับ (คอลัมน์ J)
+                    'row'         => $sheetRow,
                     'no'          => (int)($pick($r, $expected['no']) ?: $i + 1),
                     'badge'       => (string)($pick($r, $expected['badge']) ?: ''),
-                    'group'       => (string)($pick($r, $expected['group']) ?: ''),
+                    'group'       => strtoupper(trim((string)($pick($r, $expected['group']) ?: ''))),
                     'name_th'     => (string)($pick($r, $expected['name_th']) ?: ''),
                     'name_en'     => (string)($pick($r, $expected['name_en']) ?: ''),
                     'department'  => (string)($pick($r, $expected['department']) ?: ''),
-                    'checkin'     => (string)($pick($r, $expected['checkin']) ?: ''), // <—
+                    'checkin'     => (string)($pick($r, $expected['checkin']) ?: ''),
                     'test_drive'  => (string)($pick($r, $expected['test_drive']) ?: ''),
                     'car_display' => (string)($pick($r, $expected['car_display']) ?: ''),
                     'strategy'    => (string)($pick($r, $expected['strategy']) ?: ''),
                     'new_member'  => (string)($pick($r, ['newmember_status','new_member_status']) ?: ''),
-                    'instead_th'   => (string)($r[$COL_L] ?? ''),   // L
-                    'instead_en'   => (string)($r[$COL_M] ?? ''),   // M
-                    'instead_note' => (string)($r[$COL_N] ?? ''),   // N
+                    'instead_th'   => (string)($r[$COL_L] ?? ''),
+                    'instead_en'   => (string)($r[$COL_M] ?? ''),
+                    'instead_note' => (string)($r[$COL_N] ?? ''),
                     'instead'      => !empty($r[$COL_L]) || !empty($r[$COL_M]) || !empty($r[$COL_N]),
                 ];
             });
 
-        // ---- cards summary (คงเดิมจาก ALL)
+        // ---- cards summary
         $groups = ['A','B','C','D','E','F'];
-        $stats  = [];
+
+        $stats = [];
         foreach ($groups as $g) {
             $stats["group_{$g}"] = $allMembers->where('group', $g)->count();
         }
-        $stats['external_morning']   = ($stats['group_A'] ?? 0) + ($stats['group_B'] ?? 0) + ($stats['group_C'] ?? 0);
-        $stats['external_afternoon'] = ($stats['group_D'] ?? 0) + ($stats['group_E'] ?? 0) + ($stats['group_F'] ?? 0);
-        $totals = ['checkin_all' => $allMembers->count()];
+
+        // กรองเฉพาะที่เช็คอินแล้ว
+        $checked = $allMembers->filter(fn($m) => !empty($m['checkin']));
+
+        $stats['external_morning']   = $checked->whereIn('group', ['A','B','C'])->count();
+        $stats['external_afternoon'] = $checked->whereIn('group', ['D','E','F'])->count();
+
+        $totals = ['checkin_all' => $checked->count()];
 
         // ---- suggestions
-        $suggestions = $allMembers->flatMap(fn($m)=>array_filter([$m['name_th'],$m['name_en'],$m['department']]))->unique()->values()->take(300);
+        $suggestions = $allMembers
+            ->flatMap(fn($m)=>array_filter([$m['name_th'],$m['name_en'],$m['department']]))
+            ->unique()
+            ->values()
+            ->take(300);
 
         // ---- filters (q, badge, group) + sort
         $filtered = $allMembers;
@@ -246,13 +255,9 @@ class ToyataController extends Controller
         if ($badge = trim((string)$request->input('badge'))) {
             $filtered = $filtered->where('badge', $badge)->values();
         }
-        // if ($g = trim((string)$request->input('group'))) {
-        //     $filtered = $filtered->where('group', $g)->values();
-        // }
 
         $status = $request->input('status'); // '', 'checked', 'not_checked'
         if ($status === 'checked') {
-            // เช็คอินแล้ว และไม่ใช่รายชื่อใหม่
             $filtered = $filtered->filter(function($m){
                 $hasCheckin = !empty($m['checkin']);
                 $isNew      = (string)($m['new_member'] ?? '') === '1';
@@ -263,12 +268,12 @@ class ToyataController extends Controller
             $filtered = $filtered->filter(fn($m) => empty($m['checkin']))->values();
 
         } elseif ($status === 'newMember') {
-            // ต้องเป็นรายชื่อใหม่ + มีเวลาเช็คอินด้วย
             $filtered = $filtered->filter(function($m){
                 $isNew      = (string)($m['new_member'] ?? '') === '1';
                 $hasCheckin = !empty($m['checkin']);
                 return $isNew;
             })->values();
+
         } elseif ($status === 'instead') {
             $filtered = $filtered->filter(fn($m) => !empty($m['instead']))->values();
         }
@@ -276,38 +281,24 @@ class ToyataController extends Controller
         // --- sort: new = ก-ฮ (ASC), old = ฮ-ก (DESC) เทียบ name_th
         $sort = $request->input('sort', 'new');
 
+        $thaiKey = function (string $s): string {
+            $s = mb_strtolower($s, 'UTF-8');
+            if (preg_match('/^([เแโใไ])([ก-ฮ])(.*)$/u', $s, $m)) {
+                $s = $m[2] . $m[1] . $m[3];
+            }
+            $s = preg_replace('/[\x{0E31}\x{0E34}-\x{0E3A}\x{0E47}-\x{0E4E}]/u', '', $s);
+            $s = preg_replace('/[\s\-]+/u', '', $s);
+            return $s;
+        };
 
-            // ไม่มี intl → fallback ด้วย "ไทยคีย์" (ไม่ต้องพึ่ง locale)
-            $thaiKey = function (string $s): string {
-                // ตัวพิมพ์เล็กทั้งหมด
-                $s = mb_strtolower($s, 'UTF-8');
+        $filtered = $filtered->sort(function ($a, $b) use ($thaiKey, $sort) {
+            $ka = $thaiKey((string)($a['name_th'] ?? ''));
+            $kb = $thaiKey((string)($b['name_th'] ?? ''));
+            $res = strcmp($ka, $kb);
+            return $sort === 'old' ? -$res : $res;
+        })->values();
 
-                // 1) เลื่อนสระนำ (เ แ โ ใ ไ) ไปไว้หลังพยัญชนะตัวแรก
-                //    "เก้า" (เ + ก + ้า) -> "เก้า" เปลี่ยนเป็น "เก้า" ที่ key เริ่มด้วย ก
-                if (preg_match('/^([เแโใไ])([ก-ฮ])(.*)$/u', $s, $m)) {
-                    // $m[1]=สระนำ, $m[2]=พยัญชนะตัวแรก, $m[3]=ที่เหลือ
-                    $s = $m[2] . $m[1] . $m[3];
-                }
-
-                // 2) ลบเครื่องหมายประกอบ/วรรณยุกต์ เพื่อไม่ให้มีผลกับลำดับ
-                //    ั ิ ี ึ ื ุ ู ํ ฺ + วรรณยุกต์ ็ ่ ้ ๊ ๋ ฯ ฯลฯ
-                $s = preg_replace('/[\x{0E31}\x{0E34}-\x{0E3A}\x{0E47}-\x{0E4E}]/u', '', $s);
-
-                // 3) ลบช่องว่าง/ขีดกลางทั่วไป (ช่วยให้สม่ำเสมอขึ้น)
-                $s = preg_replace('/[\s\-]+/u', '', $s);
-
-                return $s;
-            };
-
-            $filtered = $filtered->sort(function ($a, $b) use ($thaiKey, $sort) {
-                $ka = $thaiKey((string)($a['name_th'] ?? ''));
-                $kb = $thaiKey((string)($b['name_th'] ?? ''));
-                $res = strcmp($ka, $kb);
-                return $sort === 'old' ? -$res : $res;
-            })->values();
-
-
-        // --- pagination (พก query string ทั้งหมด ยกเว้น page)
+        // --- pagination
         $perPage = (int) $request->input('per_page', 25);
         $page    = LengthAwarePaginator::resolveCurrentPage('page');
 
@@ -319,16 +310,15 @@ class ToyataController extends Controller
             $perPage,
             $page,
             [
-                'path'     => $request->url(), // base URL (ไม่ซ้อน query)
-                'pageName' => 'page',          // ชื่อพารามิเตอร์หน้า
+                'path'     => $request->url(),
+                'pageName' => 'page',
             ]
         );
 
-        // ✅ ผูก query string ปัจจุบันทั้งหมด (ยกเว้น page) ให้ลิงก์หน้าอื่น ๆ
         $paginated->appends($request->except('page'));
 
-        $checkedCount    = $allMembers->filter(fn($m) => !empty($m['checkin']))->count();
-        $notCheckedCount = $allMembers->filter(fn($m) => empty($m['checkin']))->count();
+        $checkedCount    = $checked->count();
+        $notCheckedCount = $allMembers->count() - $checkedCount;
 
         return view('admin.dashboard.index', [
             'members'        => $paginated,
@@ -342,6 +332,7 @@ class ToyataController extends Controller
             'notCheckedCount'=> $notCheckedCount,
         ]);
     }
+
 
     public function create()
     {
