@@ -222,7 +222,11 @@ class ToyataController extends Controller
 
         $stats = [];
         foreach ($groups as $g) {
-            $stats["group_{$g}"] = $allMembers->where('group', $g)->count();
+            // นับเฉพาะคนที่อยู่ในกลุ่มนี้ + มีค่า checkin ไม่ว่าง
+            $stats["group_{$g}"] = $allMembers
+                ->where('group', $g)
+                ->filter(fn($m) => !empty($m['checkin']))
+                ->count();
         }
 
         // กรองเฉพาะที่เช็คอินแล้ว
@@ -317,7 +321,12 @@ class ToyataController extends Controller
 
         $paginated->appends($request->except('page'));
 
-        $checkedCount    = $checked->count();
+        $checkedCount = $allMembers
+        ->filter(fn($m) =>
+            !empty($m['checkin']) &&
+            in_array($m['group'], $groups, true)
+        )
+        ->count();
         $notCheckedCount = $allMembers->count() - $checkedCount;
 
         return view('admin.dashboard.index', [
