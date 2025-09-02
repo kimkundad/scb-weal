@@ -260,7 +260,7 @@
                             <div class="text-gray-600 fs-8">คน</div>
                         </div>
                         <div class="symbol symbol-45px">
-                            <div class="symbol-label bg-light-warning">
+                            <div class="symbol-label bg-light">
                                 <i class="fa-solid fa-user fs-2 text-danger"></i>
                             </div>
                         </div>
