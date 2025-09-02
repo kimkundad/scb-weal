@@ -56,7 +56,7 @@
 
               <!--begin::Heading-->
               <div class="text-center mb-11">
-                <img src="{{ url('img/Toyota@1.5x.png') }}" class="img-fluid"/>
+                <img src="{{ url('img/new_logo_toyata.png') }}" class="img-fluid"/>
               </div>
 
 

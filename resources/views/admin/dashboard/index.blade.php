@@ -71,6 +71,12 @@
         }
 
         /* สีเทาที่คุณขอ */
+
+
+        .col-5th {
+  flex: 0 0 20%;
+  max-width: 20%;
+}
     </style>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
@@ -104,7 +110,7 @@
         {{-- Summary cards --}}
         <div class="row g-5 mt-4">
             {{-- Row 1: A, B, C, Morning --}}
-            <div class="col-12 col-sm-6 col-xl-3">
+            <div class="col-5th">
                 <div class="card border card-min hover-elevate-up">
                     <div class="card-body d-flex align-items-center justify-content-between">
                         <div>
@@ -121,7 +127,7 @@
                 </div>
             </div>
 
-            <div class="col-12 col-sm-6 col-xl-3">
+            <div class="col-5th">
                 <div class="card border card-min hover-elevate-up">
                     <div class="card-body d-flex align-items-center justify-content-between">
                         <div>
@@ -138,7 +144,7 @@
                 </div>
             </div>
 
-            <div class="col-12 col-sm-6 col-xl-3">
+            <div class="col-5th">
                 <div class="card border card-min hover-elevate-up">
                     <div class="card-body d-flex align-items-center justify-content-between">
                         <div>
@@ -155,8 +161,25 @@
                 </div>
             </div>
 
+            <div class="col-5th">
+                <div class="card border card-min hover-elevate-up">
+                    <div class="card-body d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="text-gray-600 fs-7">ผู้มาเพิ่มเช้า</div>
+                            <div class="fs-2hx fw-bold">{{ number_format($stats['instead_morning'] ?? 0) }}</div>
+                            <div class="text-gray-600 fs-8">คน</div>
+                        </div>
+                        <div class="symbol symbol-45px">
+                            <div class="symbol-label bg-light-warning">
+                                <i class="fa-solid fa-user fs-2 text-warning"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {{-- Morning total (A–C) --}}
-            <div class="col-12 col-sm-6 col-xl-3">
+            <div class="col-5th">
                 <div class="card border card-min hover-elevate-up">
                     <div class="card-body d-flex align-items-center justify-content-between">
                         <div>
@@ -176,7 +199,7 @@
             </div>
 
             {{-- Row 2: D, E, F, Afternoon --}}
-            <div class="col-12 col-sm-6 col-xl-3">
+            <div class="col-5th">
                 <div class="card border card-min hover-elevate-up">
                     <div class="card-body d-flex align-items-center justify-content-between">
                         <div>
@@ -193,7 +216,7 @@
                 </div>
             </div>
 
-            <div class="col-12 col-sm-6 col-xl-3">
+            <div class="col-5th">
                 <div class="card border card-min hover-elevate-up">
                     <div class="card-body d-flex align-items-center justify-content-between">
                         <div>
@@ -210,7 +233,7 @@
                 </div>
             </div>
 
-            <div class="col-12 col-sm-6 col-xl-3">
+            <div class="col-5th">
                 <div class="card border card-min hover-elevate-up">
                     <div class="card-body d-flex align-items-center justify-content-between">
                         <div>
@@ -227,8 +250,26 @@
                 </div>
             </div>
 
+
+            <div class="col-5th">
+                <div class="card border card-min hover-elevate-up">
+                    <div class="card-body d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="text-gray-600 fs-7">ผู้มาเพิ่มบ่าย</div>
+                            <div class="fs-2hx fw-bold">{{ number_format($stats['instead_afternoon'] ?? 0) }}</div>
+                            <div class="text-gray-600 fs-8">คน</div>
+                        </div>
+                        <div class="symbol symbol-45px">
+                            <div class="symbol-label bg-light-warning">
+                                <i class="fa-solid fa-user fs-2 text-warning"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {{-- Afternoon total (D–F) --}}
-            <div class="col-12 col-sm-6 col-xl-3">
+            <div class="col-5th">
                 <div class="card border card-min hover-elevate-up">
                     <div class="card-body d-flex align-items-center justify-content-between">
                         <div>
@@ -316,7 +357,7 @@
 
                 <div class="col-auto">
                     <a href="{{ url('admin/dashboard') }}"
-                        class="btn btn-outline btn-outline-dashed btn-outline-warning btn-active-light-warning me-2 mt-4">ล้างข้อมูล</a>
+                        class="btn btn-outline btn-outline-dashed btn-outline-warning btn-active-light-warning me-2 mt-4">ล้างตัวกรอง</a>
                 </div>
 
             </div>
