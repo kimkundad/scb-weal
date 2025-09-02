@@ -220,6 +220,8 @@ class ToyataController extends Controller
     // ---- cards summary
     $groups = ['A','B','C','D','E','F'];
 
+
+
     $stats = [];
     foreach ($groups as $g) {
         // นับเฉพาะคนที่อยู่ในกลุ่มนี้ + มีค่า checkin ไม่ว่าง
@@ -228,6 +230,19 @@ class ToyataController extends Controller
             ->filter(fn($m) => !empty($m['checkin']))
             ->count();
     }
+
+    $normalizeGroup = function($g) {
+        $g = trim((string)$g);
+        return strtoupper($g);
+    };
+
+    // คนที่ไม่มีกลุ่ม (group ว่าง หรือ "NO GROUP")
+    $stats['no_group_total'] = $allMembers
+        ->filter(function($m) use ($groups, $normalizeGroup) {
+            $g = $normalizeGroup($m['group']);
+            return $g === 'NO GROUP';
+        })
+        ->count();
 
     // กรองเฉพาะที่เช็คอินแล้ว (ใช้ซ้ำ)
     $checked = $allMembers->filter(fn($m) => !empty($m['checkin']));
@@ -348,7 +363,7 @@ class ToyataController extends Controller
 
     $insteadChecked = $allMembers->filter(function ($m) {
     // ต้องมีเช็คอิน และคอลัมน์ L (instead_th) ไม่ว่าง
-    return !empty($m['checkin']) && !empty($m['instead_th']);
+    return !empty($m['checkin']) && !empty($m['new_member']);
 });
 
 // แยกตามรอบเวลา

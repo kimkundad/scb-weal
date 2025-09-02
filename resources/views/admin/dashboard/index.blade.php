@@ -45,8 +45,8 @@
     <style>
         .dot {
             display: inline-block;
-            width: 12px;
-            height: 12px;
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
             vertical-align: middle;
         }
@@ -108,6 +108,24 @@
         @php($groups = $groups ?? ['A', 'B', 'C', 'D', 'E', 'F'])
 
         {{-- Summary cards --}}
+        <div class="row g-5 mt-4">
+            <div class="col-5th">
+                <div class="card border card-min hover-elevate-up">
+                    <div class="card-body d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="text-gray-600 fs-7">ไม่มีกลุ่ม</div>
+                            <div class="fs-2hx fw-bold">{{ number_format($stats['no_group_total'] ?? 0) }}</div>
+                            <div class="text-gray-600 fs-8">คน</div>
+                        </div>
+                        <div class="symbol symbol-45px">
+                            <div class="symbol-label bg-light-warning">
+                                <i class="fa-solid fa-user fs-2 text-warning"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="row g-5 mt-4">
             {{-- Row 1: A, B, C, Morning --}}
             <div class="col-5th">
@@ -399,9 +417,8 @@
                                         </td> -->
 
                                     <td>
-                                        <span class="badge badge-light me-2">{{ $m['badge'] ?: '—' }}</span>
 
-                                        <span class="status-dot" id="status-dot-{{ $m['row'] }}">
+                                    <span class="status-dot" id="status-dot-{{ $m['row'] }}">
                                             @if((string)($m['new_member'] ?? '') === '1')
                                              <span class="dot dot-navy"></span>     {{-- รายชื่อใหม่ --}}
                                            @elseif(!empty($m['instead']))
@@ -410,6 +427,11 @@
                                              <span class="dot dot-green"></span>    {{-- เช็คอินทั่วไป --}}
                                            @endif
                                         </span>
+
+
+                                        <span class="badge badge-light me-2">{{ $m['badge'] ?: '—' }}</span>
+
+
                                     </td>
 
                                     <td>Group {{ $m['group'] ?? 'A' }}</td>

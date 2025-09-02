@@ -79,46 +79,40 @@
 
       <div class="col-md-12"> <h3 class="mb-1 mt-10">รายละเอียดกิจกรรม</h3></div>
 @php
-  // ตารางเวลา (อ้างอิงจากชีตที่แนบ)
+  // ใช้ค่าว่าง '' เป็นคีย์ของ "ไม่มีกลุ่ม"
   $slotTest = [
-    'A' => '9.40 - 10.30',
-    'B' => '10.35 - 11.25',
-    'C' => '11.30 - 12.20',
-    'D' => '14.00 - 14.50',
-    'E' => '14.55 - 15.45',
-    'F' => '15.50 - 16.40',
-    'ไม่มีกลุ่ม' =>''
+    'A'=>'9.40 - 10.30','B'=>'10.35 - 11.25','C'=>'11.30 - 12.20',
+    'D'=>'14.00 - 14.50','E'=>'14.55 - 15.45','F'=>'15.50 - 16.40',
+    '' => '9.40 - 10.30', // ไม่มีกลุ่ม
   ];
   $slotCar = [
-    'A' => '10.35 - 11.25',
-    'B' => '11.30 - 12.20',
-    'C' => '9.40 - 10.30',
-    'D' => '14.55 - 15.45',
-    'E' => '15.50 - 16.40',
-    'F' => '14.00 - 14.50',
+    'A'=>'10.35 - 11.25','B'=>'11.30 - 12.20','C'=>'9.40 - 10.30',
+    'D'=>'14.55 - 15.45','E'=>'15.50 - 16.40','F'=>'14.00 - 14.50',
+    '' => '10.35 - 11.25', // ไม่มีกลุ่ม
   ];
   $slotStrategy = [
-    'A' => '11.30 - 12.20',
-    'B' => '9.40 - 10.30',
-    'C' => '10.35 - 11.25',
-    'D' => '15.50 - 16.40',
-    'E' => '14.00 - 14.50',
-    'F' => '14.55 - 15.45',
+    'A'=>'11.30 - 12.20','B'=>'9.40 - 10.30','C'=>'10.35 - 11.25',
+    'D'=>'15.50 - 16.40','E'=>'14.00 - 14.50','F'=>'14.55 - 15.45',
+    '' => '11.30 - 12.20', // ไม่มีกลุ่ม
   ];
 
-  $groupVal      = old('group', $fields['group'] ?? '');
+  // กรณีในชีตเคยบันทึกเป็นคำว่า "ไม่มีกลุ่ม" ให้ map เป็นค่าว่าง
+  $groupRaw = old('group', $fields['group'] ?? '');
+  $groupVal = ($groupRaw === 'ไม่มีกลุ่ม') ? '' : $groupRaw;
+
   $testdriveVal  = old('testdrive',  $fields['testdrive']  ?? ($slotTest[$groupVal]     ?? ''));
   $cardisplayVal = old('cardisplay', $fields['cardisplay'] ?? ($slotCar[$groupVal]      ?? ''));
   $strategyVal   = old('strategy',   $fields['strategy']   ?? ($slotStrategy[$groupVal] ?? ''));
 @endphp
-      <div class="col-md-6">
+
+
+<div class="col-md-6">
   <label class="form-label">Group</label>
-  <select class="form-select" name="group" id="group-select" >
-    <option value="">-- เลือกกลุ่ม --</option>
-    @foreach($slotTest as $g => $t)
-      <option value="{{ $g }}" {{ $groupVal === $g ? 'selected' : '' }}>
-        {{ $g }}
-      </option>
+  <select class="form-select" name="group" id="group-select">
+    {{-- ตัวเลือก "ไม่มีกลุ่ม" (value = '') --}}
+    <option value="" {{ $groupVal === '' ? 'selected' : '' }}>ไม่มีกลุ่ม</option>
+    @foreach(['A','B','C','D','E','F'] as $g)
+      <option value="{{ $g }}" {{ $groupVal === $g ? 'selected' : '' }}>{{ $g }}</option>
     @endforeach
   </select>
 </div>
@@ -159,12 +153,12 @@
 @endsection
 
 @section('scripts')
-
 <script>
   (function(){
-    const slotTest =     {A:'9.40 - 10.30', B:'10.35 - 11.25', C:'11.30 - 12.20', D:'14.00 - 14.50', E:'14.55 - 15.45', F:'15.50 - 16.40'};
-    const slotCar =      {A:'10.35 - 11.25', B:'11.30 - 12.20', C:'9.40 - 10.30',  D:'14.55 - 15.45', E:'15.50 - 16.40', F:'14.00 - 14.50'};
-    const slotStrategy = {A:'11.30 - 12.20', B:'9.40 - 10.30',  C:'10.35 - 11.25', D:'15.50 - 16.40', E:'14.00 - 14.50', F:'14.55 - 15.45'};
+    // คีย์ '' แทน "ไม่มีกลุ่ม" ให้ตรงกับฝั่ง PHP
+    const slotTest     = {A:'9.40 - 10.30', B:'10.35 - 11.25', C:'11.30 - 12.20', D:'14.00 - 14.50', E:'14.55 - 15.45', F:'15.50 - 16.40', '':'9.40 - 10.30'};
+    const slotCar      = {A:'10.35 - 11.25', B:'11.30 - 12.20', C:'9.40 - 10.30',  D:'14.55 - 15.45', E:'15.50 - 16.40', F:'14.00 - 14.50', '':'10.35 - 11.25'};
+    const slotStrategy = {A:'11.30 - 12.20', B:'9.40 - 10.30',  C:'10.35 - 11.25', D:'15.50 - 16.40', E:'14.00 - 14.50', F:'14.55 - 15.45', '':'11.30 - 12.20'};
 
     const sel  = document.getElementById('group-select');
     const tInp = document.getElementById('testdrive-input');
@@ -172,14 +166,16 @@
     const sInp = document.getElementById('strategy-input');
 
     function apply(g){
-      if (!g) return;
-      if (slotTest[g])     tInp.value = slotTest[g];
-      if (slotCar[g])      cInp.value = slotCar[g];
-      if (slotStrategy[g]) sInp.value = slotStrategy[g];
+      // อย่า return เมื่อ g ว่าง — ให้ใช้คีย์ ''
+      if (g in slotTest)     tInp.value = slotTest[g];
+      if (g in slotCar)      cInp.value = slotCar[g];
+      if (g in slotStrategy) sInp.value = slotStrategy[g];
     }
 
     if (sel && tInp && cInp && sInp) {
       sel.addEventListener('change', () => apply(sel.value));
+      // prefill ครั้งแรกตามค่าปัจจุบัน (รวมกรณี '')
+      apply(sel.value);
     }
   })();
 </script>

@@ -43,26 +43,39 @@
       <div class="col-md-12"><h3 class="mb-1 mt-10">รายละเอียดกิจกรรม</h3></div>
 
       @php
-        $slotTest = ['A'=>'9.40 - 10.30','B'=>'10.35 - 11.25','C'=>'11.30 - 12.20','D'=>'14.00 - 14.50','E'=>'14.55 - 15.45','F'=>'15.50 - 16.40', 'ไม่มีกลุ่ม' =>''];
-        $slotCar  = ['A'=>'10.35 - 11.25','B'=>'11.30 - 12.20','C'=>'9.40 - 10.30','D'=>'14.55 - 15.45','E'=>'15.50 - 16.40','F'=>'14.00 - 14.50'];
-        $slotStr  = ['A'=>'11.30 - 12.20','B'=>'9.40 - 10.30','C'=>'10.35 - 11.25','D'=>'15.50 - 16.40','E'=>'14.00 - 14.50','F'=>'14.55 - 15.45'];
-        $groupVal = old('group','');
+        // ใช้ '' เป็นคีย์ของ "ไม่มีกลุ่ม"
+        $slotTest = [
+            'A'=>'9.40 - 10.30','B'=>'10.35 - 11.25','C'=>'11.30 - 12.20',
+            'D'=>'14.00 - 14.50','E'=>'14.55 - 15.45','F'=>'15.50 - 16.40',
+            '' =>'9.40 - 10.30' // ไม่มีกลุ่ม
+        ];
+        $slotCar  = [
+            'A'=>'10.35 - 11.25','B'=>'11.30 - 12.20','C'=>'9.40 - 10.30',
+            'D'=>'14.55 - 15.45','E'=>'15.50 - 16.40','F'=>'14.00 - 14.50',
+            '' =>'10.35 - 11.25' // ไม่มีกลุ่ม
+        ];
+        $slotStr  = [
+            'A'=>'11.30 - 12.20','B'=>'9.40 - 10.30','C'=>'10.35 - 11.25',
+            'D'=>'15.50 - 16.40','E'=>'14.00 - 14.50','F'=>'14.55 - 15.45',
+            '' =>'11.30 - 12.20' // ไม่มีกลุ่ม
+        ];
+
+        $groupVal = old('group',''); // ค่าว่าง = ไม่มีกลุ่ม
         $testVal  = old('testdrive',  $slotTest[$groupVal] ?? '');
         $carVal   = old('cardisplay', $slotCar[$groupVal]  ?? '');
         $strVal   = old('strategy',   $slotStr[$groupVal]  ?? '');
-      @endphp
+        @endphp
 
       <div class="col-md-6">
         <label class="form-label">Group</label>
         <select class="form-select" name="group" id="group-select">
-          <option value="">-- เลือกกลุ่ม --</option>
-          @foreach($slotTest as $g => $t)
-            <option value="{{ $g }}" {{ $groupVal === $g ? 'selected' : '' }}>
-              {{ $g }}
-            </option>
-          @endforeach
+            {{-- แสดง "ไม่มีกลุ่ม" เป็นตัวเลือกจริง (value = '') --}}
+            <option value="" {{ $groupVal === '' ? 'selected' : '' }}>ไม่มีกลุ่ม</option>
+            @foreach(['A','B','C','D','E','F'] as $g)
+            <option value="{{ $g }}" {{ $groupVal === $g ? 'selected' : '' }}>{{ $g }}</option>
+            @endforeach
         </select>
-      </div>
+        </div>
 
       <div class="col-md-6">
         <label class="form-label">Test Drive</label>
@@ -90,28 +103,34 @@
 
 @section('scripts')
 <script>
-  (function(){
-    const slotTest     = {A:'9.40 - 10.30', B:'10.35 - 11.25', C:'11.30 - 12.20', D:'14.00 - 14.50', E:'14.55 - 15.45', F:'15.50 - 16.40'};
-    const slotCar      = {A:'10.35 - 11.25', B:'11.30 - 12.20', C:'9.40 - 10.30',  D:'14.55 - 15.45', E:'15.50 - 16.40', F:'14.00 - 14.50'};
-    const slotStrategy = {A:'11.30 - 12.20', B:'9.40 - 10.30',  C:'10.35 - 11.25', D:'15.50 - 16.40', E:'14.00 - 14.50', F:'14.55 - 15.45'};
+(function(){
+  const slotTest     = {A:'9.40 - 10.30', B:'10.35 - 11.25', C:'11.30 - 12.20',
+                        D:'14.00 - 14.50', E:'14.55 - 15.45', F:'15.50 - 16.40',
+                        '':'9.40 - 10.30'}; // ไม่มีกลุ่ม
+  const slotCar      = {A:'10.35 - 11.25', B:'11.30 - 12.20', C:'9.40 - 10.30',
+                        D:'14.55 - 15.45', E:'15.50 - 16.40', F:'14.00 - 14.50',
+                        '':'10.35 - 11.25'}; // ไม่มีกลุ่ม
+  const slotStrategy = {A:'11.30 - 12.20', B:'9.40 - 10.30',  C:'10.35 - 11.25',
+                        D:'15.50 - 16.40', E:'14.00 - 14.50', F:'14.55 - 15.45',
+                        '':'11.30 - 12.20'}; // ไม่มีกลุ่ม
 
-    const sel = document.getElementById('group-select');
-    const t   = document.getElementById('testdrive-input');
-    const c   = document.getElementById('cardisplay-input');
-    const s   = document.getElementById('strategy-input');
+  const sel = document.getElementById('group-select');
+  const t   = document.getElementById('testdrive-input');
+  const c   = document.getElementById('cardisplay-input');
+  const s   = document.getElementById('strategy-input');
 
-    function apply() {
-      const g = sel.value;
-      if (slotTest[g])     t.value = slotTest[g];
-      if (slotCar[g])      c.value = slotCar[g];
-      if (slotStrategy[g]) s.value = slotStrategy[g];
-    }
+  function apply() {
+    const g = sel.value; // '' = ไม่มีกลุ่ม
+    if (g in slotTest)     t.value = slotTest[g];
+    if (g in slotCar)      c.value = slotCar[g];
+    if (g in slotStrategy) s.value = slotStrategy[g];
+  }
 
-    {{-- if (sel && t && c && s) {
-      sel.addEventListener('change', apply);
-      // prefill ครั้งแรก (กรณีมีค่า group เดิม)
-      if (sel.value) apply();
-    } --}}
-  })();
+  if (sel && t && c && s) {
+    sel.addEventListener('change', apply);
+    // prefill ครั้งแรก
+    apply();
+  }
+})();
 </script>
 @endsection

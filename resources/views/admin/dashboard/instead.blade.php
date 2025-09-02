@@ -77,7 +77,7 @@
 
 
     <div class="col-12 mt-3">
-      <button type="submit" class="btn btn-danger btn-lg">บันทึกข้อมูลผู้ติดตาม</button>
+      <button type="submit" class="btn btn-danger btn-lg">บันทึกข้อมูลผู้มาแทน</button>
       <a href="{{ url('admin/dashboard') }}" class="btn btn-secondary">ยกเลิก</a>
     </div>
   </form>
