@@ -261,7 +261,7 @@
                         </div>
                         <div class="symbol symbol-45px">
                             <div class="symbol-label bg-light-warning">
-                                <i class="fa-solid fa-user fs-2 text-warning"></i>
+                                <i class="fa-solid fa-user fs-2 text-danger"></i>
                             </div>
                         </div>
                     </div>
