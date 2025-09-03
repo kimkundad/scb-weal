@@ -39,7 +39,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/members/create', [ToyataController::class, 'create'])->name('members.create');
 
-
     // AJAX check-in
     Route::post('/toyota/checkin', [ToyataController::class, 'checkIn'])->name('toyota.checkin');
 

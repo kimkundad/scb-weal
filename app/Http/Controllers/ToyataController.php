@@ -237,10 +237,14 @@ class ToyataController extends Controller
     };
 
     // คนที่ไม่มีกลุ่ม (group ว่าง หรือ "NO GROUP")
+    $normalizeGroup = function($g) {
+        return strtoupper(trim((string)$g));
+    };
+
     $stats['no_group_total'] = $allMembers
-        ->filter(function($m) use ($groups, $normalizeGroup) {
+        ->filter(function($m) use ($normalizeGroup) {
             $g = $normalizeGroup($m['group']);
-            return $g === 'NO GROUP';
+            return $g === 'NO GROUP' && !empty($m['checkin']);
         })
         ->count();
 
@@ -354,8 +358,7 @@ class ToyataController extends Controller
     // นับเฉพาะเช็คอินและมีกลุ่ม A-F
     $checkedCount = $allMembers
         ->filter(fn($m) =>
-            !empty($m['checkin']) &&
-            in_array($m['group'], $groups, true)
+            !empty($m['checkin'])
         )
         ->count();
     $notCheckedCount = $allMembers->count() - $checkedCount;
@@ -431,6 +434,8 @@ $stats['instead_afternoon'] = $insteadChecked->whereIn('group', ['D','E','F'])->
 
         $stamp = Carbon::now('Asia/Bangkok')->format('Y-m-d H:i:s');
 
+       // dd($stamp)
+
         $rowData = [
             '',                      // A
             $v['badge']   ?? '',     // B
@@ -441,7 +446,7 @@ $stats['instead_afternoon'] = $insteadChecked->whereIn('group', ['D','E','F'])->
             $test,                   // G
             $car,                    // H
             $strategy,               // I
-            $stamp,                  // J
+            "'".$stamp,                // J
             1,                       // K
         ];
 
