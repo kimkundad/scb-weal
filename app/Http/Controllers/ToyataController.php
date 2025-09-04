@@ -398,6 +398,7 @@ class ToyataController extends Controller
         return (int)$dt->format('H');
     };
 
+    
     // กรอง "ไม่มีกลุ่ม"
     $noGroup = $allMembers->filter(function ($m) use ($normalizeGroup) {
         $g = $normalizeGroup($m['group']);
