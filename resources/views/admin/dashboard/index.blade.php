@@ -188,7 +188,7 @@
                     <div class="card-body d-flex align-items-center justify-content-between">
                         <div>
                             <div class="text-gray-600 fs-7">ไม่มีกลุ่มช่วงเช้า</div>
-                            <div class="fs-2hx fw-bold">{{ number_format($stats['no_group_morning'] ?? 0) }}</div> 
+                            <div class="fs-2hx fw-bold">{{ number_format($stats['no_group_morning'] ?? 0) }}</div>
                             <div class="text-gray-600 fs-8">คน</div>
                         </div>
                         <div class="symbol symbol-45px">
@@ -291,7 +291,7 @@
                         </div>
                     </div>
                 </div>
-            </div> 
+            </div>
 
             {{-- Afternoon total (D–F) --}}
             <div class="col-5th">
