@@ -95,7 +95,7 @@
 
     <div class="mt-4">
       <button type="submit" class="btn btn-danger btn-lg">เพิ่มรายชื่อ</button>
-      <a href="{{ url('admin/dashboard') }}" class="btn btn-secondary">ยกเลิก</a>
+      <a href="{{ url('admin/dashboard') }}" class="btn btn-secondary">กลับหน้าหลัก</a>
     </div>
   </form>
 </div>

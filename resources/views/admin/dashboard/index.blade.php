@@ -114,7 +114,7 @@
         <div class="row g-5 mt-4">
             {{-- Row 1: A, B, C, Morning --}}
 
-            <div class="col-5th">
+            <!-- <div class="col-5th">
                 <div class="card border card-min hover-elevate-up">
                     <div class="card-body d-flex align-items-center justify-content-between">
                         <div>
@@ -129,7 +129,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <div class="col-5th">
                 <div class="card border card-min hover-elevate-up">
@@ -183,6 +183,24 @@
             </div>
 
 
+            <div class="col-5th">
+                <div class="card border card-min hover-elevate-up">
+                    <div class="card-body d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="text-gray-600 fs-7">ไม่มีกลุ่มช่วงเช้า</div>
+                            <div class="fs-2hx fw-bold">{{ number_format($stats['no_group_morning'] ?? 0) }}</div> 
+                            <div class="text-gray-600 fs-8">คน</div>
+                        </div>
+                        <div class="symbol symbol-45px">
+                            <div class="symbol-label bg-light-warning">
+                                <i class="fa-solid fa-user fs-2 text-warning"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
 
 
             {{-- Morning total (A–C) --}}
@@ -206,7 +224,7 @@
             </div>
 
             {{-- Row 2: D, E, F, Afternoon --}}
-            <div class="col-12 col-sm-6 col-xl-3">
+            <div class="col-5th">
                 <div class="card border card-min hover-elevate-up">
                     <div class="card-body d-flex align-items-center justify-content-between">
                         <div>
@@ -223,7 +241,7 @@
                 </div>
             </div>
 
-            <div class="col-12 col-sm-6 col-xl-3">
+            <div class="col-5th">
                 <div class="card border card-min hover-elevate-up">
                     <div class="card-body d-flex align-items-center justify-content-between">
                         <div>
@@ -240,7 +258,7 @@
                 </div>
             </div>
 
-            <div class="col-12 col-sm-6 col-xl-3">
+            <div class="col-5th">
                 <div class="card border card-min hover-elevate-up">
                     <div class="card-body d-flex align-items-center justify-content-between">
                         <div>
@@ -258,12 +276,12 @@
             </div>
 
 
-            {{-- <div class="col-5th">
+            <div class="col-5th">
                 <div class="card border card-min hover-elevate-up">
                     <div class="card-body d-flex align-items-center justify-content-between">
                         <div>
-                            <div class="text-gray-600 fs-7">ผู้มาเพิ่มบ่าย</div>
-                            <div class="fs-2hx fw-bold">{{ number_format($stats['instead_afternoon'] ?? 0) }}</div>
+                            <div class="text-gray-600 fs-7">ไม่มีกลุ่มช่วงบ่าย</div>
+                            <div class="fs-2hx fw-bold">{{ number_format($stats['no_group_afternoon'] ?? 0) }}</div>
                             <div class="text-gray-600 fs-8">คน</div>
                         </div>
                         <div class="symbol symbol-45px">
@@ -273,10 +291,10 @@
                         </div>
                     </div>
                 </div>
-            </div> --}}
+            </div> 
 
             {{-- Afternoon total (D–F) --}}
-            <div class="col-12 col-sm-6 col-xl-3">
+            <div class="col-5th">
                 <div class="card border card-min hover-elevate-up">
                     <div class="card-body d-flex align-items-center justify-content-between">
                         <div>

@@ -373,6 +373,52 @@ class ToyataController extends Controller
 $stats['instead_morning']   = $insteadChecked->whereIn('group', ['A','B','C'])->count();
 $stats['instead_afternoon'] = $insteadChecked->whereIn('group', ['D','E','F'])->count();
 
+
+// helper: ปกติให้ group เป็นตัวพิมพ์ใหญ่ ตัดช่องว่าง
+$normalizeGroup = function($g) {
+    return strtoupper(trim((string)$g));
+};
+
+// helper: แปลงค่า checkin เป็น "ชั่วโมง 0-23"
+// รองรับทั้ง string datetime และ Excel/Sheets serial number
+$checkinHour = function($val) {
+    if ($val === null || $val === '') return null;
+
+    if (is_numeric($val)) {
+        // Excel serial → UNIX
+        $unix = ((float)$val - 25569) * 86400;  // origin 1899-12-30
+    } else {
+        $unix = strtotime((string)$val);
+        if ($unix === false) return null;
+    }
+
+    // ปรับ timezone ให้ตรงตามระบบที่ใช้บันทึก (เช่น Asia/Bangkok)
+    $dt = new \DateTime("@{$unix}");
+    $dt->setTimezone(new \DateTimeZone('Asia/Bangkok'));
+    return (int)$dt->format('H');
+};
+
+// กรอง "ไม่มีกลุ่ม"
+$noGroup = $allMembers->filter(function ($m) use ($normalizeGroup) {
+    $g = $normalizeGroup($m['group']);
+    return $g === '' || $g === 'NO GROUP' || $g === 'No Group';
+});
+
+// นับตามช่วงเวลา (ยึด checkin)
+$stats['no_group_morning'] = $noGroup
+    ->filter(function ($m) use ($checkinHour) {
+        $h = $checkinHour($m['checkin'] ?? null);
+        return $h !== null && $h < 12;       // ก่อน 12:00
+    })
+    ->count();
+
+$stats['no_group_afternoon'] = $noGroup
+    ->filter(function ($m) use ($checkinHour) {
+        $h = $checkinHour($m['checkin'] ?? null);
+        return $h !== null && $h >= 12;      // ตั้งแต่ 12:00 ขึ้นไป
+    })
+    ->count();
+
     return view('admin.dashboard.index', [
         'members'        => $paginated,
         'stats'          => $stats,
