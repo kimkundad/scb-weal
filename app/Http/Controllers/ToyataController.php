@@ -130,307 +130,334 @@ class ToyataController extends Controller
         }
 
     public function index(Request $request)
-{
-    $spreadsheetId = '1RJngja-8UUhudo161oGVvb8s4Vn4Vw-tECbSEx02lPc';
-    $sheetName     = 'mock up name list';   // ใช้ชื่อนี้ทำ A1 notation
-    $range         = $sheetName;
+    {
+        $spreadsheetId = '1RJngja-8UUhudo161oGVvb8s4Vn4Vw-tECbSEx02lPc';
+        $sheetName     = 'mock up name list';   // ใช้ชื่อนี้ทำ A1 notation
+        $range         = $sheetName;
 
-    $rows = $this->googleSheet->getSheetData($spreadsheetId, $range) ?? [];
-    if (empty($rows)) {
-        return view('admin.dashboard.index', [
-            'members'     => new LengthAwarePaginator([], 0, 25),
-            'stats'       => [],
-            'totals'      => ['checkin_all' => 0],
-            'groups'      => ['A','B','C','D','E','F'],
-            'suggestions' => collect(),
-        ]);
-    }
+        $rows = $this->googleSheet->getSheetData($spreadsheetId, $range) ?? [];
+        if (empty($rows)) {
+            return view('admin.dashboard.index', [
+                'members'     => new LengthAwarePaginator([], 0, 25),
+                'stats'       => [],
+                'totals'      => ['checkin_all' => 0],
+                'groups'      => ['A','B','C','D','E','F'],
+                'suggestions' => collect(),
+            ]);
+        }
 
-    // ---- หา header
-    $headerIdx = null;
-    $expected  = [
-        'no'          => ['no','หมายเลข','no.'],
-        'badge'       => ['badge'],
-        'group'       => ['group'],
-        'name_th'     => ['name (th)','ชื่อ (th)','ชื่อ-นามสกุล','name th'],
-        'name_en'     => ['name (en)','name en'],
-        'department'  => ['department'],
-        'checkin'     => ['check-in','check in','checkin'],   // คอลัมน์เวลาเช็คอิน
-        'test_drive'  => ['test drive','testdrive'],
-        'car_display' => ['car display','cardisplay'],
-        'strategy'    => ['strategy sharing','strategy','strategy sharing time'],
-    ];
+        // ---- หา header
+        $headerIdx = null;
+        $expected  = [
+            'no'          => ['no','หมายเลข','no.'],
+            'badge'       => ['badge'],
+            'group'       => ['group'],
+            'name_th'     => ['name (th)','ชื่อ (th)','ชื่อ-นามสกุล','name th'],
+            'name_en'     => ['name (en)','name en'],
+            'department'  => ['department'],
+            'checkin'     => ['check-in','check in','checkin'],   // คอลัมน์เวลาเช็คอิน
+            'test_drive'  => ['test drive','testdrive'],
+            'car_display' => ['car display','cardisplay'],
+            'strategy'    => ['strategy sharing','strategy','strategy sharing time'],
+        ];
 
-    foreach ($rows as $i => $r) {
-        $line = array_map(fn($v)=>mb_strtolower(trim((string)$v)), $r);
-        $hits = 0;
-        foreach ($expected as $alts) {
-            foreach ($alts as $w) {
-                if (in_array($w, $line, true)) { $hits++; break; }
+        foreach ($rows as $i => $r) {
+            $line = array_map(fn($v)=>mb_strtolower(trim((string)$v)), $r);
+            $hits = 0;
+            foreach ($expected as $alts) {
+                foreach ($alts as $w) {
+                    if (in_array($w, $line, true)) { $hits++; break; }
+                }
             }
+            if ($hits >= 4) { $headerIdx = $i; break; }
         }
-        if ($hits >= 4) { $headerIdx = $i; break; }
-    }
-    $headerIdx = $headerIdx ?? 0;
+        $headerIdx = $headerIdx ?? 0;
 
-    $headers  = array_map(fn($v)=>trim((string)$v), $rows[$headerIdx] ?? []);
-    $headersL = array_map(fn($h)=>mb_strtolower($h), $headers);
-    $dataRows = array_slice($rows, $headerIdx + 1);
+        $headers  = array_map(fn($v)=>trim((string)$v), $rows[$headerIdx] ?? []);
+        $headersL = array_map(fn($h)=>mb_strtolower($h), $headers);
+        $dataRows = array_slice($rows, $headerIdx + 1);
 
-    // helper หา index จากชื่อหัวคอลัมน์
-    $pick = function(array $row, array $keys) use ($headersL) {
-        foreach ($keys as $k) {
-            $idx = array_search($k, $headersL, true);
-            if ($idx !== false) return $row[$idx] ?? null;
+        // helper หา index จากชื่อหัวคอลัมน์
+        $pick = function(array $row, array $keys) use ($headersL) {
+            foreach ($keys as $k) {
+                $idx = array_search($k, $headersL, true);
+                if ($idx !== false) return $row[$idx] ?? null;
+            }
+            return null;
+        };
+
+        // index คอลัมน์แทน (เพื่ออ่านผู้มาแทน)
+        $COL_L = 11; // Name (TH) ผู้มาแทน
+        $COL_M = 12; // Name (EN) ผู้มาแทน
+        $COL_N = 13; // Note ผู้มาแทน
+
+        // ---- map เป็น ALL MEMBERS + เก็บเบอร์แถวจริงของชีต
+        $allMembers = collect($dataRows)
+            ->filter(fn($r)=>collect($r)->filter(fn($v)=>trim((string)$v) !== '')->isNotEmpty())
+            ->values()
+            ->map(function($r, $i) use ($pick, $expected, $headerIdx, $COL_L, $COL_M, $COL_N) {
+                $sheetRow = $headerIdx + 2 + $i; // 1-based + header อีก 1 แถว
+                return [
+                    'row'         => $sheetRow,
+                    'no'          => (int)($pick($r, $expected['no']) ?: $i + 1),
+                    'badge'       => (string)($pick($r, $expected['badge']) ?: ''),
+                    'group'       => strtoupper(trim((string)($pick($r, $expected['group']) ?: ''))),
+                    'name_th'     => (string)($pick($r, $expected['name_th']) ?: ''),
+                    'name_en'     => (string)($pick($r, $expected['name_en']) ?: ''),
+                    'department'  => (string)($pick($r, $expected['department']) ?: ''),
+                    'checkin'     => (string)($pick($r, $expected['checkin']) ?: ''),
+                    'test_drive'  => (string)($pick($r, $expected['test_drive']) ?: ''),
+                    'car_display' => (string)($pick($r, $expected['car_display']) ?: ''),
+                    'strategy'    => (string)($pick($r, $expected['strategy']) ?: ''),
+                    'new_member'  => (string)($pick($r, ['newmember_status','new_member_status']) ?: ''),
+                    'instead_th'   => (string)($r[$COL_L] ?? ''),
+                    'instead_en'   => (string)($r[$COL_M] ?? ''),
+                    'instead_note' => (string)($r[$COL_N] ?? ''),
+                    'instead'      => !empty($r[$COL_L]) || !empty($r[$COL_M]) || !empty($r[$COL_N]),
+                ];
+            });
+
+        // ---- cards summary
+        $groups = ['A','B','C','D','E','F'];
+
+
+
+        $stats = [];
+        foreach ($groups as $g) {
+            // นับเฉพาะคนที่อยู่ในกลุ่มนี้ + มีค่า checkin ไม่ว่าง
+            $stats["group_{$g}"] = $allMembers
+                ->where('group', $g)
+                ->filter(fn($m) => !empty($m['checkin']))
+                ->count();
         }
-        return null;
-    };
 
-    // index คอลัมน์แทน (เพื่ออ่านผู้มาแทน)
-    $COL_L = 11; // Name (TH) ผู้มาแทน
-    $COL_M = 12; // Name (EN) ผู้มาแทน
-    $COL_N = 13; // Note ผู้มาแทน
+        $normalizeGroup = function($g) {
+            $g = trim((string)$g);
+            return strtoupper($g);
+        };
 
-    // ---- map เป็น ALL MEMBERS + เก็บเบอร์แถวจริงของชีต
-    $allMembers = collect($dataRows)
-        ->filter(fn($r)=>collect($r)->filter(fn($v)=>trim((string)$v) !== '')->isNotEmpty())
-        ->values()
-        ->map(function($r, $i) use ($pick, $expected, $headerIdx, $COL_L, $COL_M, $COL_N) {
-            $sheetRow = $headerIdx + 2 + $i; // 1-based + header อีก 1 แถว
-            return [
-                'row'         => $sheetRow,
-                'no'          => (int)($pick($r, $expected['no']) ?: $i + 1),
-                'badge'       => (string)($pick($r, $expected['badge']) ?: ''),
-                'group'       => strtoupper(trim((string)($pick($r, $expected['group']) ?: ''))),
-                'name_th'     => (string)($pick($r, $expected['name_th']) ?: ''),
-                'name_en'     => (string)($pick($r, $expected['name_en']) ?: ''),
-                'department'  => (string)($pick($r, $expected['department']) ?: ''),
-                'checkin'     => (string)($pick($r, $expected['checkin']) ?: ''),
-                'test_drive'  => (string)($pick($r, $expected['test_drive']) ?: ''),
-                'car_display' => (string)($pick($r, $expected['car_display']) ?: ''),
-                'strategy'    => (string)($pick($r, $expected['strategy']) ?: ''),
-                'new_member'  => (string)($pick($r, ['newmember_status','new_member_status']) ?: ''),
-                'instead_th'   => (string)($r[$COL_L] ?? ''),
-                'instead_en'   => (string)($r[$COL_M] ?? ''),
-                'instead_note' => (string)($r[$COL_N] ?? ''),
-                'instead'      => !empty($r[$COL_L]) || !empty($r[$COL_M]) || !empty($r[$COL_N]),
-            ];
-        });
+        // คนที่ไม่มีกลุ่ม (group ว่าง หรือ "NO GROUP")
+        $normalizeGroup = function($g) {
+            return strtoupper(trim((string)$g));
+        };
 
-    // ---- cards summary
-    $groups = ['A','B','C','D','E','F'];
-
-
-
-    $stats = [];
-    foreach ($groups as $g) {
-        // นับเฉพาะคนที่อยู่ในกลุ่มนี้ + มีค่า checkin ไม่ว่าง
-        $stats["group_{$g}"] = $allMembers
-            ->where('group', $g)
-            ->filter(fn($m) => !empty($m['checkin']))
+        $stats['no_group_total'] = $allMembers
+            ->filter(function($m) use ($normalizeGroup) {
+                $g = $normalizeGroup($m['group']);
+                return $g === 'NO GROUP' && !empty($m['checkin']);
+            })
             ->count();
-    }
 
-    $normalizeGroup = function($g) {
-        $g = trim((string)$g);
-        return strtoupper($g);
-    };
+        // กรองเฉพาะที่เช็คอินแล้ว (ใช้ซ้ำ)
+        $checked = $allMembers->filter(fn($m) => !empty($m['checkin']));
 
-    // คนที่ไม่มีกลุ่ม (group ว่าง หรือ "NO GROUP")
+        // $stats['external_morning']   = $checked->whereIn('group', ['A','B','C'])->count();
+        // $stats['external_afternoon'] = $checked->whereIn('group', ['D','E','F'])->count();
+
+        $totals = ['checkin_all' => $checked->count()];
+
+        // ---- suggestions
+        $suggestions = $allMembers
+            ->flatMap(fn($m)=>array_filter([$m['name_th'],$m['name_en'],$m['department']]))
+            ->unique()
+            ->values()
+            ->take(300);
+
+        // ---- filters (q, badge, group/status)
+        $filtered = $allMembers;
+
+        if ($q = trim((string)$request->input('q'))) {
+            $qLower = mb_strtolower($q);
+            $filtered = $filtered->filter(fn($m)=>
+                str_contains(mb_strtolower($m['name_th']), $qLower) ||
+                str_contains(mb_strtolower($m['name_en']), $qLower) ||
+                str_contains(mb_strtolower($m['department']), $qLower)
+            )->values();
+        }
+
+        if ($badge = trim((string)$request->input('badge'))) {
+            $filtered = $filtered->where('badge', $badge)->values();
+        }
+
+        $status = $request->input('status'); // '', 'checked', 'not_checked', 'newMember', 'instead'
+        if ($status === 'checked') {
+            $filtered = $filtered->filter(function($m){
+                $hasCheckin = !empty($m['checkin']);
+                $isNew      = (string)($m['new_member'] ?? '') === '1';
+                return $hasCheckin && !$isNew;
+            })->values();
+
+        } elseif ($status === 'not_checked') {
+            $filtered = $filtered->filter(fn($m) => empty($m['checkin']))->values();
+
+        } elseif ($status === 'newMember') {
+            $filtered = $filtered->filter(function($m){
+                $isNew      = (string)($m['new_member'] ?? '') === '1';
+                return $isNew;
+            })->values();
+
+        } elseif ($status === 'instead') {
+            $filtered = $filtered->filter(fn($m) => !empty($m['instead']))->values();
+        }
+
+        // ---- sorting (ค่าเริ่มต้น = ตามเวลาเช็คอิน ล่าสุดก่อน)
+        $sortParam = $request->input('sort');      // ถ้าไม่ส่งมา ให้ default = checkin
+        $sortMode  = $sortParam ?: 'checkin';
+
+        // แปลงค่า checkin เป็น timestamp อย่างยืดหยุ่น
+        $getTs = function ($m) {
+            $v = trim((string)($m['checkin'] ?? ''));
+            if ($v === '') return 0;
+            // รองรับ "YYYY-mm-dd HH:ii:ss", "d/m/Y H:i", หรือเป็นตัวเลข timestamp อยู่แล้ว
+            $normalized = preg_match('#\d{1,2}/\d{1,2}/\d{2,4}#', $v) ? str_replace('/', '-', $v) : $v;
+            $ts = is_numeric($v) ? (int)$v : strtotime($normalized);
+            return $ts ?: 0;
+        };
+
+        if ($sortMode === 'checkin') {
+            // เรียงตามเวลาเช็คอิน (ล่าสุดก่อน) — คนที่ยังไม่เช็คอินจะถูกจัดท้ายสุดโดยอัตโนมัติ (ts=0)
+            $filtered = $filtered->sortByDesc(fn($m) => $getTs($m))->values();
+        } else {
+            // ตกกลับไปใช้การเรียงตามชื่อแบบเดิม (new/old)
+            $thaiKey = function (string $s): string {
+                $s = mb_strtolower($s, 'UTF-8');
+                if (preg_match('/^([เแโใไ])([ก-ฮ])(.*)$/u', $s, $m)) {
+                    $s = $m[2] . $m[1] . $m[3];
+                }
+                $s = preg_replace('/[\x{0E31}\x{0E34}-\x{0E3A}\x{0E47}-\x{0E4E}]/u', '', $s);
+                $s = preg_replace('/[\s\-]+/u', '', $s);
+                return $s;
+            };
+            $order = $sortParam ?: 'new'; // 'new' = ก-ฮ, 'old' = ฮ-ก
+            $filtered = $filtered->sort(function ($a, $b) use ($thaiKey, $order) {
+                $ka = $thaiKey((string)($a['name_th'] ?? ''));
+                $kb = $thaiKey((string)($b['name_th'] ?? ''));
+                $res = strcmp($ka, $kb);
+                return $order === 'old' ? -$res : $res;
+            })->values();
+        }
+
+        // --- pagination
+        $perPage = (int) $request->input('per_page', 25);
+        $page    = LengthAwarePaginator::resolveCurrentPage('page');
+
+        $items = $filtered->forPage($page, $perPage)->values();
+
+        $paginated = new LengthAwarePaginator(
+            $items,
+            $filtered->count(),
+            $perPage,
+            $page,
+            [
+                'path'     => $request->url(),
+                'pageName' => 'page',
+            ]
+        );
+        $paginated->appends($request->except('page'));
+
+        // นับเฉพาะเช็คอินและมีกลุ่ม A-F
+        $checkedCount = $allMembers
+            ->filter(fn($m) =>
+                !empty($m['checkin'])
+            )
+            ->count();
+        $notCheckedCount = $allMembers->count() - $checkedCount;
+
+
+        $insteadChecked = $allMembers->filter(function ($m) {
+        // ต้องมีเช็คอิน และคอลัมน์ L (instead_th) ไม่ว่าง
+        return !empty($m['checkin']) && !empty($m['new_member']);
+    });
+
+    // แยกตามรอบเวลา
+    $stats['instead_morning']   = $insteadChecked->whereIn('group', ['A','B','C'])->count();
+    $stats['instead_afternoon'] = $insteadChecked->whereIn('group', ['D','E','F'])->count();
+
+
+    // helper: ปกติให้ group เป็นตัวพิมพ์ใหญ่ ตัดช่องว่าง
     $normalizeGroup = function($g) {
         return strtoupper(trim((string)$g));
     };
 
-    $stats['no_group_total'] = $allMembers
-        ->filter(function($m) use ($normalizeGroup) {
-            $g = $normalizeGroup($m['group']);
-            return $g === 'NO GROUP' && !empty($m['checkin']);
+    // helper: แปลงค่า checkin เป็น "ชั่วโมง 0-23"
+    // รองรับทั้ง string datetime และ Excel/Sheets serial number
+    $checkinHour = function($val) {
+        if ($val === null || $val === '') return null;
+
+        if (is_numeric($val)) {
+            // Excel serial → UNIX
+            $unix = ((float)$val - 25569) * 86400;  // origin 1899-12-30
+        } else {
+            $unix = strtotime((string)$val);
+            if ($unix === false) return null;
+        }
+
+        // ปรับ timezone ให้ตรงตามระบบที่ใช้บันทึก (เช่น Asia/Bangkok)
+        $dt = new \DateTime("@{$unix}");
+        $dt->setTimezone(new \DateTimeZone('Asia/Bangkok'));
+        return (int)$dt->format('H');
+    };
+
+    // กรอง "ไม่มีกลุ่ม"
+    $noGroup = $allMembers->filter(function ($m) use ($normalizeGroup) {
+        $g = $normalizeGroup($m['group']);
+        return $g === '' || $g === 'NO GROUP' || $g === 'No Group';
+    });
+
+    // นับตามช่วงเวลา (ยึด checkin)
+    $stats['no_group_morning'] = $noGroup
+        ->filter(function ($m) use ($checkinHour) {
+            $h = $checkinHour($m['checkin'] ?? null);
+            return $h !== null && $h < 12;       // ก่อน 12:00
         })
         ->count();
 
-    // กรองเฉพาะที่เช็คอินแล้ว (ใช้ซ้ำ)
-    $checked = $allMembers->filter(fn($m) => !empty($m['checkin']));
-
-    $stats['external_morning']   = $checked->whereIn('group', ['A','B','C'])->count();
-    $stats['external_afternoon'] = $checked->whereIn('group', ['D','E','F'])->count();
-
-    $totals = ['checkin_all' => $checked->count()];
-
-    // ---- suggestions
-    $suggestions = $allMembers
-        ->flatMap(fn($m)=>array_filter([$m['name_th'],$m['name_en'],$m['department']]))
-        ->unique()
-        ->values()
-        ->take(300);
-
-    // ---- filters (q, badge, group/status)
-    $filtered = $allMembers;
-
-    if ($q = trim((string)$request->input('q'))) {
-        $qLower = mb_strtolower($q);
-        $filtered = $filtered->filter(fn($m)=>
-            str_contains(mb_strtolower($m['name_th']), $qLower) ||
-            str_contains(mb_strtolower($m['name_en']), $qLower) ||
-            str_contains(mb_strtolower($m['department']), $qLower)
-        )->values();
-    }
-
-    if ($badge = trim((string)$request->input('badge'))) {
-        $filtered = $filtered->where('badge', $badge)->values();
-    }
-
-    $status = $request->input('status'); // '', 'checked', 'not_checked', 'newMember', 'instead'
-    if ($status === 'checked') {
-        $filtered = $filtered->filter(function($m){
-            $hasCheckin = !empty($m['checkin']);
-            $isNew      = (string)($m['new_member'] ?? '') === '1';
-            return $hasCheckin && !$isNew;
-        })->values();
-
-    } elseif ($status === 'not_checked') {
-        $filtered = $filtered->filter(fn($m) => empty($m['checkin']))->values();
-
-    } elseif ($status === 'newMember') {
-        $filtered = $filtered->filter(function($m){
-            $isNew      = (string)($m['new_member'] ?? '') === '1';
-            return $isNew;
-        })->values();
-
-    } elseif ($status === 'instead') {
-        $filtered = $filtered->filter(fn($m) => !empty($m['instead']))->values();
-    }
-
-    // ---- sorting (ค่าเริ่มต้น = ตามเวลาเช็คอิน ล่าสุดก่อน)
-    $sortParam = $request->input('sort');      // ถ้าไม่ส่งมา ให้ default = checkin
-    $sortMode  = $sortParam ?: 'checkin';
-
-    // แปลงค่า checkin เป็น timestamp อย่างยืดหยุ่น
-    $getTs = function ($m) {
-        $v = trim((string)($m['checkin'] ?? ''));
-        if ($v === '') return 0;
-        // รองรับ "YYYY-mm-dd HH:ii:ss", "d/m/Y H:i", หรือเป็นตัวเลข timestamp อยู่แล้ว
-        $normalized = preg_match('#\d{1,2}/\d{1,2}/\d{2,4}#', $v) ? str_replace('/', '-', $v) : $v;
-        $ts = is_numeric($v) ? (int)$v : strtotime($normalized);
-        return $ts ?: 0;
-    };
-
-    if ($sortMode === 'checkin') {
-        // เรียงตามเวลาเช็คอิน (ล่าสุดก่อน) — คนที่ยังไม่เช็คอินจะถูกจัดท้ายสุดโดยอัตโนมัติ (ts=0)
-        $filtered = $filtered->sortByDesc(fn($m) => $getTs($m))->values();
-    } else {
-        // ตกกลับไปใช้การเรียงตามชื่อแบบเดิม (new/old)
-        $thaiKey = function (string $s): string {
-            $s = mb_strtolower($s, 'UTF-8');
-            if (preg_match('/^([เแโใไ])([ก-ฮ])(.*)$/u', $s, $m)) {
-                $s = $m[2] . $m[1] . $m[3];
-            }
-            $s = preg_replace('/[\x{0E31}\x{0E34}-\x{0E3A}\x{0E47}-\x{0E4E}]/u', '', $s);
-            $s = preg_replace('/[\s\-]+/u', '', $s);
-            return $s;
-        };
-        $order = $sortParam ?: 'new'; // 'new' = ก-ฮ, 'old' = ฮ-ก
-        $filtered = $filtered->sort(function ($a, $b) use ($thaiKey, $order) {
-            $ka = $thaiKey((string)($a['name_th'] ?? ''));
-            $kb = $thaiKey((string)($b['name_th'] ?? ''));
-            $res = strcmp($ka, $kb);
-            return $order === 'old' ? -$res : $res;
-        })->values();
-    }
-
-    // --- pagination
-    $perPage = (int) $request->input('per_page', 25);
-    $page    = LengthAwarePaginator::resolveCurrentPage('page');
-
-    $items = $filtered->forPage($page, $perPage)->values();
-
-    $paginated = new LengthAwarePaginator(
-        $items,
-        $filtered->count(),
-        $perPage,
-        $page,
-        [
-            'path'     => $request->url(),
-            'pageName' => 'page',
-        ]
-    );
-    $paginated->appends($request->except('page'));
-
-    // นับเฉพาะเช็คอินและมีกลุ่ม A-F
-    $checkedCount = $allMembers
-        ->filter(fn($m) =>
-            !empty($m['checkin'])
-        )
+    $stats['no_group_afternoon'] = $noGroup
+        ->filter(function ($m) use ($checkinHour) {
+            $h = $checkinHour($m['checkin'] ?? null);
+            return $h !== null && $h >= 12;      // ตั้งแต่ 12:00 ขึ้นไป
+        })
         ->count();
-    $notCheckedCount = $allMembers->count() - $checkedCount;
 
 
-    $insteadChecked = $allMembers->filter(function ($m) {
-    // ต้องมีเช็คอิน และคอลัมน์ L (instead_th) ไม่ว่าง
-    return !empty($m['checkin']) && !empty($m['new_member']);
-});
-
-// แยกตามรอบเวลา
-$stats['instead_morning']   = $insteadChecked->whereIn('group', ['A','B','C'])->count();
-$stats['instead_afternoon'] = $insteadChecked->whereIn('group', ['D','E','F'])->count();
-
-
-// helper: ปกติให้ group เป็นตัวพิมพ์ใหญ่ ตัดช่องว่าง
-$normalizeGroup = function($g) {
-    return strtoupper(trim((string)$g));
-};
-
-// helper: แปลงค่า checkin เป็น "ชั่วโมง 0-23"
-// รองรับทั้ง string datetime และ Excel/Sheets serial number
-$checkinHour = function($val) {
-    if ($val === null || $val === '') return null;
-
-    if (is_numeric($val)) {
-        // Excel serial → UNIX
-        $unix = ((float)$val - 25569) * 86400;  // origin 1899-12-30
-    } else {
-        $unix = strtotime((string)$val);
-        if ($unix === false) return null;
+        // ✅ external_morning = กลุ่ม A,B,C + ไม่มีกลุ่มที่เช็คอินก่อนเที่ยง
+$stats['external_morning'] = $checked->filter(function($m) use ($checkinHour) {
+    if (in_array($m['group'], ['A','B','C'], true)) {
+        return true;
     }
-
-    // ปรับ timezone ให้ตรงตามระบบที่ใช้บันทึก (เช่น Asia/Bangkok)
-    $dt = new \DateTime("@{$unix}");
-    $dt->setTimezone(new \DateTimeZone('Asia/Bangkok'));
-    return (int)$dt->format('H');
-};
-
-// กรอง "ไม่มีกลุ่ม"
-$noGroup = $allMembers->filter(function ($m) use ($normalizeGroup) {
-    $g = $normalizeGroup($m['group']);
-    return $g === '' || $g === 'NO GROUP' || $g === 'No Group';
-});
-
-// นับตามช่วงเวลา (ยึด checkin)
-$stats['no_group_morning'] = $noGroup
-    ->filter(function ($m) use ($checkinHour) {
+    // ถ้าไม่มีกลุ่ม
+    if (in_array(strtoupper(trim($m['group'])), ['', 'NO GROUP', 'ไม่มีกลุ่ม'], true)) {
         $h = $checkinHour($m['checkin'] ?? null);
-        return $h !== null && $h < 12;       // ก่อน 12:00
-    })
-    ->count();
+        return $h !== null && $h < 12;
+    }
+    return false;
+})->count();
 
-$stats['no_group_afternoon'] = $noGroup
-    ->filter(function ($m) use ($checkinHour) {
+// ✅ external_afternoon = กลุ่ม D,E,F + ไม่มีกลุ่มที่เช็คอินตอนบ่าย
+$stats['external_afternoon'] = $checked->filter(function($m) use ($checkinHour) {
+    if (in_array($m['group'], ['D','E','F'], true)) {
+        return true;
+    }
+    // ถ้าไม่มีกลุ่ม
+    if (in_array(strtoupper(trim($m['group'])), ['', 'NO GROUP', 'ไม่มีกลุ่ม'], true)) {
         $h = $checkinHour($m['checkin'] ?? null);
-        return $h !== null && $h >= 12;      // ตั้งแต่ 12:00 ขึ้นไป
-    })
-    ->count();
+        return $h !== null && $h >= 12;
+    }
+    return false;
+})->count();
 
-    return view('admin.dashboard.index', [
-        'members'        => $paginated,
-        'stats'          => $stats,
-        'totals'         => $totals,
-        'groups'         => $groups,
-        'suggestions'    => $suggestions,
-        'sheetName'      => $sheetName,
-        'spreadsheetId'  => $spreadsheetId,
-        'checkedCount'   => $checkedCount,
-        'notCheckedCount'=> $notCheckedCount,
-    ]);
-}
+        return view('admin.dashboard.index', [
+            'members'        => $paginated,
+            'stats'          => $stats,
+            'totals'         => $totals,
+            'groups'         => $groups,
+            'suggestions'    => $suggestions,
+            'sheetName'      => $sheetName,
+            'spreadsheetId'  => $spreadsheetId,
+            'checkedCount'   => $checkedCount,
+            'notCheckedCount'=> $notCheckedCount,
+        ]);
+    }
 
 
 
