@@ -655,7 +655,7 @@ private function rowToFields(array $r): array
             // );
 
             return redirect()
-                ->route('toyota.edit', ['spreadsheetId'=>$spreadsheetId,'sheetName'=>$sheetName,'row'=>$row])
+                ->route('dashboard.index', ['spreadsheetId'=>$spreadsheetId,'sheetName'=>$sheetName,'row'=>$row])
                 ->with('status', 'บันทึกข้อมูลสำเร็จ');
         } catch (\Throwable $e) {
             \Log::error('update row failed', ['row'=>$row,'sheet'=>$sheetName,'e'=>$e->getMessage()]);
