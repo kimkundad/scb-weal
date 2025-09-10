@@ -279,25 +279,22 @@ class ToyataController extends Controller
             $filtered = $filtered->where('badge', $badge)->values();
         }
 
-        $status = $request->input('status'); // '', 'checked', 'not_checked', 'newMember', 'instead'
+        $status = $request->input('status'); // '', 'checked', 'not_checked', 'newMember', 'instead', 'instead_not_checked'
+
+        $hasCheckin = fn($m) => !empty(trim((string)($m['checkin'] ?? '')));
+        $isInstead  = fn($m) => !empty($m['instead']);
+        $isNew      = fn($m) => (string)($m['new_member'] ?? '') === '1';
+
         if ($status === 'checked') {
-            $filtered = $filtered->filter(function($m){
-                $hasCheckin = !empty($m['checkin']);
-                $isNew      = (string)($m['new_member'] ?? '') === '1';
-                return $hasCheckin && !$isNew;
-            })->values();
-
+            $filtered = $filtered->filter(fn($m) => $hasCheckin($m) && !$isNew($m))->values();
         } elseif ($status === 'not_checked') {
-            $filtered = $filtered->filter(fn($m) => empty($m['checkin']))->values();
-
+            $filtered = $filtered->filter(fn($m) => !$hasCheckin($m))->values();
         } elseif ($status === 'newMember') {
-            $filtered = $filtered->filter(function($m){
-                $isNew      = (string)($m['new_member'] ?? '') === '1';
-                return $isNew;
-            })->values();
-
+            $filtered = $filtered->filter(fn($m) => $isNew($m))->values();
         } elseif ($status === 'instead') {
-            $filtered = $filtered->filter(fn($m) => !empty($m['instead']))->values();
+            $filtered = $filtered->filter(fn($m) => $isInstead($m) && $hasCheckin($m))->values();
+        } elseif ($status === 'instead_not_checked') {
+            $filtered = $filtered->filter(fn($m) => $isInstead($m) && !$hasCheckin($m))->values();
         }
 
         // ---- sorting (ค่าเริ่มต้น = ตามเวลาเช็คอิน ล่าสุดก่อน)
@@ -365,87 +362,87 @@ class ToyataController extends Controller
 
 
         $insteadChecked = $allMembers->filter(function ($m) {
-        // ต้องมีเช็คอิน และคอลัมน์ L (instead_th) ไม่ว่าง
-        return !empty($m['checkin']) && !empty($m['new_member']);
-    });
+            // ต้องมีเช็คอิน และคอลัมน์ L (instead_th) ไม่ว่าง
+            return !empty($m['checkin']) && !empty($m['new_member']);
+        });
 
-    // แยกตามรอบเวลา
-    $stats['instead_morning']   = $insteadChecked->whereIn('group', ['A','B','C'])->count();
-    $stats['instead_afternoon'] = $insteadChecked->whereIn('group', ['D','E','F'])->count();
-
-
-    // helper: ปกติให้ group เป็นตัวพิมพ์ใหญ่ ตัดช่องว่าง
-    $normalizeGroup = function($g) {
-        return strtoupper(trim((string)$g));
-    };
-
-    // helper: แปลงค่า checkin เป็น "ชั่วโมง 0-23"
-    // รองรับทั้ง string datetime และ Excel/Sheets serial number
-    $checkinHour = function($val) {
-        if ($val === null || $val === '') return null;
-
-        if (is_numeric($val)) {
-            // Excel serial → UNIX
-            $unix = ((float)$val - 25569) * 86400;  // origin 1899-12-30
-        } else {
-            $unix = strtotime((string)$val);
-            if ($unix === false) return null;
-        }
-
-        // ปรับ timezone ให้ตรงตามระบบที่ใช้บันทึก (เช่น Asia/Bangkok)
-        $dt = new \DateTime("@{$unix}");
-        $dt->setTimezone(new \DateTimeZone('Asia/Bangkok'));
-        return (int)$dt->format('H');
-    };
+            // แยกตามรอบเวลา
+            $stats['instead_morning']   = $insteadChecked->whereIn('group', ['A','B','C'])->count();
+            $stats['instead_afternoon'] = $insteadChecked->whereIn('group', ['D','E','F'])->count();
 
 
-    // กรอง "ไม่มีกลุ่ม"
-    $noGroup = $allMembers->filter(function ($m) use ($normalizeGroup) {
-        $g = $normalizeGroup($m['group']);
-        return $g === '' || $g === 'NO GROUP' || $g === 'No Group';
-    });
+            // helper: ปกติให้ group เป็นตัวพิมพ์ใหญ่ ตัดช่องว่าง
+            $normalizeGroup = function($g) {
+                return strtoupper(trim((string)$g));
+            };
 
-    // นับตามช่วงเวลา (ยึด checkin)
-    $stats['no_group_morning'] = $noGroup
-        ->filter(function ($m) use ($checkinHour) {
-            $h = $checkinHour($m['checkin'] ?? null);
-            return $h !== null && $h < 12;       // ก่อน 12:00
-        })
-        ->count();
+            // helper: แปลงค่า checkin เป็น "ชั่วโมง 0-23"
+            // รองรับทั้ง string datetime และ Excel/Sheets serial number
+            $checkinHour = function($val) {
+                if ($val === null || $val === '') return null;
 
-    $stats['no_group_afternoon'] = $noGroup
-        ->filter(function ($m) use ($checkinHour) {
-            $h = $checkinHour($m['checkin'] ?? null);
-            return $h !== null && $h >= 12;      // ตั้งแต่ 12:00 ขึ้นไป
-        })
-        ->count();
+                if (is_numeric($val)) {
+                    // Excel serial → UNIX
+                    $unix = ((float)$val - 25569) * 86400;  // origin 1899-12-30
+                } else {
+                    $unix = strtotime((string)$val);
+                    if ($unix === false) return null;
+                }
+
+                // ปรับ timezone ให้ตรงตามระบบที่ใช้บันทึก (เช่น Asia/Bangkok)
+                $dt = new \DateTime("@{$unix}");
+                $dt->setTimezone(new \DateTimeZone('Asia/Bangkok'));
+                return (int)$dt->format('H');
+            };
 
 
-        // ✅ external_morning = กลุ่ม A,B,C + ไม่มีกลุ่มที่เช็คอินก่อนเที่ยง
-$stats['external_morning'] = $checked->filter(function($m) use ($checkinHour) {
-    if (in_array($m['group'], ['A','B','C'], true)) {
-        return true;
-    }
-    // ถ้าไม่มีกลุ่ม
-    if (in_array(strtoupper(trim($m['group'])), ['', 'NO GROUP', 'ไม่มีกลุ่ม'], true)) {
-        $h = $checkinHour($m['checkin'] ?? null);
-        return $h !== null && $h < 12;
-    }
-    return false;
-})->count();
+            // กรอง "ไม่มีกลุ่ม"
+            $noGroup = $allMembers->filter(function ($m) use ($normalizeGroup) {
+                $g = $normalizeGroup($m['group']);
+                return $g === '' || $g === 'NO GROUP' || $g === 'No Group';
+            });
 
-// ✅ external_afternoon = กลุ่ม D,E,F + ไม่มีกลุ่มที่เช็คอินตอนบ่าย
-$stats['external_afternoon'] = $checked->filter(function($m) use ($checkinHour) {
-    if (in_array($m['group'], ['D','E','F'], true)) {
-        return true;
-    }
-    // ถ้าไม่มีกลุ่ม
-    if (in_array(strtoupper(trim($m['group'])), ['', 'NO GROUP', 'ไม่มีกลุ่ม'], true)) {
-        $h = $checkinHour($m['checkin'] ?? null);
-        return $h !== null && $h >= 12;
-    }
-    return false;
-})->count();
+            // นับตามช่วงเวลา (ยึด checkin)
+            $stats['no_group_morning'] = $noGroup
+                ->filter(function ($m) use ($checkinHour) {
+                    $h = $checkinHour($m['checkin'] ?? null);
+                    return $h !== null && $h < 12;       // ก่อน 12:00
+                })
+                ->count();
+
+            $stats['no_group_afternoon'] = $noGroup
+                ->filter(function ($m) use ($checkinHour) {
+                    $h = $checkinHour($m['checkin'] ?? null);
+                    return $h !== null && $h >= 12;      // ตั้งแต่ 12:00 ขึ้นไป
+                })
+                ->count();
+
+
+                // ✅ external_morning = กลุ่ม A,B,C + ไม่มีกลุ่มที่เช็คอินก่อนเที่ยง
+        $stats['external_morning'] = $checked->filter(function($m) use ($checkinHour) {
+            if (in_array($m['group'], ['A','B','C'], true)) {
+                return true;
+            }
+            // ถ้าไม่มีกลุ่ม
+            if (in_array(strtoupper(trim($m['group'])), ['', 'NO GROUP', 'ไม่มีกลุ่ม'], true)) {
+                $h = $checkinHour($m['checkin'] ?? null);
+                return $h !== null && $h < 12;
+            }
+            return false;
+        })->count();
+
+        // ✅ external_afternoon = กลุ่ม D,E,F + ไม่มีกลุ่มที่เช็คอินตอนบ่าย
+        $stats['external_afternoon'] = $checked->filter(function($m) use ($checkinHour) {
+            if (in_array($m['group'], ['D','E','F'], true)) {
+                return true;
+            }
+            // ถ้าไม่มีกลุ่ม
+            if (in_array(strtoupper(trim($m['group'])), ['', 'NO GROUP', 'ไม่มีกลุ่ม'], true)) {
+                $h = $checkinHour($m['checkin'] ?? null);
+                return $h !== null && $h >= 12;
+            }
+            return false;
+        })->count();
 
         return view('admin.dashboard.index', [
             'members'        => $paginated,
@@ -492,9 +489,9 @@ $stats['external_afternoon'] = $checked->filter(function($m) use ($checkinHour) 
             'dept'       => ['nullable','string'],
             'badge'      => ['nullable','string'],
             'group'      => ['nullable','string'],
-            'testdrive'  => ['nullable','string'],
-            'cardisplay' => ['nullable','string'],
-            'strategy'   => ['nullable','string'],
+            'position'  => ['nullable','string'],
+            'Region' => ['nullable','string'],
+            'Phone'   => ['nullable','string'],
         ]);
 
         // $test     = $this->slotTest[$v['group']]     ?? '';
@@ -502,9 +499,9 @@ $stats['external_afternoon'] = $checked->filter(function($m) use ($checkinHour) 
         // $strategy = $this->slotStrategy[$v['group']] ?? '';
 
        $group    = $v['group']      ?? '';     // เดิมอาจเป็น null
-        $test     = $v['testdrive']  ?? '';
-        $car      = $v['cardisplay'] ?? '';
-        $strategy = $v['strategy']   ?? '';
+        $position     = $v['position']  ?? '';
+        $Region      = $v['Region'] ?? '';
+        $Phone = $v['Phone']   ?? '';
 
         $stamp = Carbon::now('Asia/Bangkok')->format('Y-m-d H:i:s');
 
@@ -517,9 +514,9 @@ $stats['external_afternoon'] = $checked->filter(function($m) use ($checkinHour) 
             $v['name_th'] ?? '',     // D
             $v['name_en'] ?? '',     // E
             $v['dept']    ?? '',     // F
-            $test,                   // G
-            $car,                    // H
-            $strategy,               // I
+            $Region,                   // G
+            $position,                    // H
+            $Phone,               // I
             "'".$stamp,                // J
             1,                       // K
         ];
@@ -559,7 +556,7 @@ $stats['external_afternoon'] = $checked->filter(function($m) use ($checkinHour) 
         : $sheetName;
 
     // ✅ ดึง A..N ของแถวนั้น (รวม J=Check-in, K=newMember_status, L/M/N=ผู้มาแทน)
-    $range  = "{$sheet}!A{$row}:N{$row}";
+    $range  = "{$sheet}!A{$row}:R{$row}";
     $values = $gs->getSheetData($spreadsheetId, $range) ?? [[]];
 
     $fields = $this->rowToFields($values[0] ?? []);
@@ -580,9 +577,9 @@ private function rowToFields(array $r): array
         'name_th'     => (string)($r[3]  ?? ''), // D
         'name_en'     => (string)($r[4]  ?? ''), // E
         'dept'        => (string)($r[5]  ?? ''), // F
-        'testdrive'   => (string)($r[6]  ?? ''), // G
-        'cardisplay'  => (string)($r[7]  ?? ''), // H
-        'strategy'    => (string)($r[8]  ?? ''), // I
+        'region'   => (string)($r[6]  ?? ''), // G
+        'position'  => (string)($r[7]  ?? ''), // H
+        'phone'    => (string)($r[8]  ?? ''), // I
         'checkin'     => (string)($r[9]  ?? ''), // J
         'new_member'  => (string)($r[10] ?? ''), // K = newMember_status
 
@@ -590,6 +587,8 @@ private function rowToFields(array $r): array
         'instead_th'   => (string)($r[11] ?? ''), // L
         'instead_en'   => (string)($r[12] ?? ''), // M
         'instead_note' => (string)($r[13] ?? ''), // N
+        'instead_position' => (string)($r[16] ?? ''), // Q
+        'instead_phone' => (string)($r[17] ?? ''), // R
     ];
 }
 
@@ -604,14 +603,16 @@ private function rowToFields(array $r): array
             'name_th'       => ['nullable','string'],
             'name_en'       => ['nullable','string'],
             'dept'          => ['nullable','string'],
-            'cardisplay'    => ['nullable','string'],
-            'strategy'      => ['nullable','string'],
-            'testdrive'     => ['nullable','string'],
+            'position'    => ['nullable','string'],
+            'region'      => ['nullable','string'],
+            'phone'     => ['nullable','string'],
 
             // ผู้มาแทน
             'instead_th'    => ['nullable','string'],
             'instead_en'    => ['nullable','string'],
             'instead_note'  => ['nullable','string'],
+            'instead_position'  => ['nullable','string'],
+            'instead_phone'  => ['nullable','string'],
             'clear_instead' => ['nullable','in:1'],
         ]);
 
@@ -650,9 +651,9 @@ private function rowToFields(array $r): array
             'name_th'   => 'D',
             'name_en'   => 'E',
             'dept'      => 'F',
-            'testdrive' => 'G',
-            'cardisplay'=> 'H',
-            'strategy'  => 'I',
+            'region' => 'G',
+            'position'=> 'H',
+            'phone'  => 'I',
         ];
 
         try {
@@ -672,6 +673,9 @@ private function rowToFields(array $r): array
                 $gs->updateCell($spreadsheetId, "{$sheet}!L{$row}", (string)$request->input('instead_th', ''),   'USER_ENTERED');
                 $gs->updateCell($spreadsheetId, "{$sheet}!M{$row}", (string)$request->input('instead_en', ''),   'USER_ENTERED');
                 $gs->updateCell($spreadsheetId, "{$sheet}!N{$row}", (string)$request->input('instead_note', ''), 'USER_ENTERED');
+
+                $gs->updateCell($spreadsheetId, "{$sheet}!Q{$row}", (string)$request->input('instead_position', ''), 'USER_ENTERED');
+                $gs->updateCell($spreadsheetId, "{$sheet}!R{$row}", (string)$request->input('instead_phone', ''), 'USER_ENTERED');
             }
 
             // ✅ เช็คอินด้วย (เขียนเวลาลงคอลัมน์ J)
@@ -697,26 +701,37 @@ private function rowToFields(array $r): array
             string $spreadsheetId,
             string $sheetName,
             int $row,
-            string $Name // ยังรับไว้ได้ เผื่อใช้เทียบ/โชว์
+            string $Name
         ) {
-            // อ่านช่วง A..K เฉพาะแถวที่สนใจ
-            $range = $sheetName.'!A'.$row.':K'.$row;
-            $values = $gs->getSheetData($spreadsheetId, $range);
+            // ดึงแถวเดียว ช่วงกว้างพอ (A:Z) หรือจะระบุเท่าที่ใช้จริงก็ได้
+            $range  = $sheetName . '!A' . $row . ':Z' . $row;
+            $values = $gs->getSheetData($spreadsheetId, $range) ?? [];
 
-            // เผื่อคอลัมน์ว่าง ให้ pad ให้ครบ 11 คอลัมน์
-            $rowValues = array_pad($values[0] ?? [], 11, '');
-
-            // map เป็น key ชัด ๆ เพื่อใช้ใน blade
+            // คีย์ที่ต้องการ map (นับจำนวนให้ตรงกับ values)
             $cols = [
-                'no','badge','group','name_th','name_en','dept',
-                'testdrive','cardisplay','strategy','checkin','newMember_status'
+                'no', 'badge', 'group', 'name_th', 'name_en', 'dept',
+                'region', 'position', 'phone', 'checkin', 'newMember_status',
+                'instead_position', 'instead_phone',
             ];
+            $need = count($cols);
+
+            // แถวจริงจากชีต (ถ้าไม่มี ให้เป็น [])
+            $raw = $values[0] ?? [];
+
+            // ปรับความยาวให้ "เท่ากับ" จำนวนคีย์เสมอ: ถ้ายาวเกินตัด, ถ้าสั้นกว่าเติมค่าว่าง
+            $rowValues = array_slice($raw, 0, $need);
+            if (count($rowValues) < $need) {
+                $rowValues = array_pad($rowValues, $need, '');
+            }
+
+            // map เป็น associative array
             $member = array_combine($cols, $rowValues);
 
             return view('admin.dashboard.instead', compact(
-                'spreadsheetId','sheetName','row','Name','member'
+                'spreadsheetId', 'sheetName', 'row', 'Name', 'member'
             ));
         }
+
 
     public function insteadStore(Request $request)
     {
@@ -727,6 +742,8 @@ private function rowToFields(array $r): array
             'name_th'       => ['required','string'],
             'name_en'       => ['nullable','string'],
             'note'          => ['nullable','string'],
+            'position'          => ['nullable','string'],
+            'phone'          => ['nullable','string'],
         ]);
 
         $row           = (int)$v['row'];
@@ -743,6 +760,9 @@ private function rowToFields(array $r): array
             $this->googleSheet->updateCell($spreadsheetId, "{$sheet}!L{$row}", (string)$v['name_th'], 'USER_ENTERED');
             $this->googleSheet->updateCell($spreadsheetId, "{$sheet}!M{$row}", (string)($v['name_en'] ?? ''), 'USER_ENTERED');
             $this->googleSheet->updateCell($spreadsheetId, "{$sheet}!N{$row}", (string)($v['note'] ?? ''), 'USER_ENTERED');
+
+            $this->googleSheet->updateCell($spreadsheetId, "{$sheet}!Q{$row}", (string)($v['position'] ?? ''), 'USER_ENTERED');
+            $this->googleSheet->updateCell($spreadsheetId, "{$sheet}!R{$row}", (string)($v['phone'] ?? ''), 'USER_ENTERED');
 
             // 2) เช็คอินทันที (ใส่เวลา Asia/Bangkok ลงคอลัมน์ J)
             $stamp = Carbon::now('Asia/Bangkok')->format('Y-m-d H:i:s');

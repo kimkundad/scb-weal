@@ -30,7 +30,11 @@
         <label class="form-label">Department</label>
         <input type="text" class="form-control" name="dept" value="{{ old('dept') }}" placeholder="รายชื่อบริษัท">
       </div>
-      <div class="col-md-6">
+       <div class="col-md-6">
+        <label class="form-label">Position</label>
+        <input type="text" class="form-control" name="position" value="{{ old('position') }}" placeholder="ตำแหน่ง">
+      </div>
+      {{-- <div class="col-md-6">
         <label class="form-label">Badge (ประเภท)</label>
         @php $badge = old('badge','Dealer'); @endphp
         <select class="form-select" name="badge" required>
@@ -38,9 +42,24 @@
             <option value="{{ $opt }}" {{ $badge === $opt ? 'selected' : '' }}>{{ $opt }}</option>
           @endforeach
         </select>
+      </div> --}}
+        <div class="col-md-6">
+        <label class="form-label">Region</label>
+            @php $Region = old('เหนือ','ใต้','กรุงเทพฯ และปริมณฑล', 'กลาง', 'ตะวันออกเฉียงเหนือ', 'ไม่ระบุภาค'); @endphp
+            <select class="form-select" name="Region" required>
+            @foreach(['เหนือ','ใต้','กรุงเทพฯ และปริมณฑล', 'กลาง', 'ตะวันออกเฉียงเหนือ', 'ไม่ระบุภาค'] as $opt1)
+                <option value="{{ $opt1 }}" {{ $Region === $opt1 ? 'selected' : '' }}>{{ $opt1 }}</option>
+            @endforeach
+            </select>
+        </div>
+
+
+      <div class="col-md-6">
+        <label class="form-label">Phone</label>
+        <input type="number" class="form-control" name="Phone" value="{{ old('Phone') }}" placeholder="Phone">
       </div>
 
-      <div class="col-md-12"><h3 class="mb-1 mt-10">รายละเอียดกิจกรรม</h3></div>
+      {{-- <div class="col-md-12"><h3 class="mb-1 mt-10">รายละเอียดกิจกรรม</h3></div> --}}
 
       @php
         // ใช้ '' เป็นคีย์ของ "ไม่มีกลุ่ม"
@@ -66,32 +85,29 @@
         $strVal   = old('strategy',   $slotStr[$groupVal]  ?? '');
         @endphp
 
+
+        <div class="col-md-6">
+        <label class="form-label">Badge (ประเภท)</label>
+        @php $badge = old('DEALER','TMT','AFFILIATE','EXHIBITION'); @endphp
+        <select class="form-select" name="badge" required>
+          @foreach(['DEALER','TMT','AFFILIATE','EXHIBITION'] as $opt)
+            <option value="{{ $opt }}" {{ $badge === $opt ? 'selected' : '' }}>{{ $opt }}</option>
+          @endforeach
+        </select>
+      </div>
+
       <div class="col-md-6">
         <label class="form-label">Group</label>
         <select class="form-select" name="group" id="group-select">
             {{-- แสดง "ไม่มีกลุ่ม" เป็นตัวเลือกจริง (value = '') --}}
-            <option value="" {{ $groupVal === '' ? 'selected' : '' }}>ไม่มีกลุ่ม</option>
-            @foreach(['A','B','C','D','E','F'] as $g)
+            @foreach(['No GROUP','A','B','C','D','E','F'] as $g)
             <option value="{{ $g }}" {{ $groupVal === $g ? 'selected' : '' }}>{{ $g }}</option>
             @endforeach
         </select>
         </div>
 
-      <div class="col-md-6">
-        <label class="form-label">Test Drive</label>
-        <input type="text" class="form-control" name="testdrive" id="testdrive-input" value="{{ $testVal }}" placeholder="เช่น 9.40 - 10.30">
-      </div>
 
-      <div class="col-md-6">
-        <label class="form-label">Car Display</label>
-        <input type="text" class="form-control" name="cardisplay" id="cardisplay-input" value="{{ $carVal }}" placeholder="เช่น 10.35 - 11.25">
-      </div>
 
-      <div class="col-md-6">
-        <label class="form-label">Strategy Sharing</label>
-        <input type="text" class="form-control" name="strategy" id="strategy-input" value="{{ $strVal }}" placeholder="เช่น 11.30 - 12.20">
-      </div>
-    </div>
 
     <div class="mt-4">
       <button type="submit" class="btn btn-danger btn-lg">เพิ่มรายชื่อ</button>

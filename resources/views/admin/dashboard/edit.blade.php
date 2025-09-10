@@ -12,7 +12,6 @@
   @endif
 
   <h3 class="mb-1 mt-10">แก้ไขรายชื่อ</h3>
-  <div class="text-dark mb-4" style="font-size:20px">{{ $fields['name_th'] }}</div>
 
   <form method="POST" action="{{ route('toyota.update') }}">
     @csrf
@@ -21,39 +20,89 @@
     <input type="hidden" name="spreadsheetId" value="{{ $spreadsheetId }}">
 
     <div class="row g-3">
+      {{-- ===== ฟิลด์ให้ตรงกับหน้า create ===== --}}
       <div class="col-md-6">
         <label class="form-label">ชื่อ–นามสกุล (ภาษาไทย)</label>
-        <input type="text" class="form-control" name="name_th" value="{{ old('name_th', $fields['name_th']) }}" placeholder="ชื่อ นามสกุล">
+        <input type="text" class="form-control" name="name_th"
+               value="{{ old('name_th', $fields['name_th'] ?? '') }}"
+               placeholder="ชื่อ นามสกุล" required>
       </div>
       <div class="col-md-6">
         <label class="form-label">ชื่อ–นามสกุล (ภาษาอังกฤษ)</label>
-        <input type="text" class="form-control" name="name_en" value="{{ old('name_en', $fields['name_en']) }}" placeholder="Name Surname">
+        <input type="text" class="form-control" name="name_en"
+               value="{{ old('name_en', $fields['name_en'] ?? '') }}"
+               placeholder="Name Surname">
       </div>
 
       <div class="col-md-6">
         <label class="form-label">Department</label>
-        <input type="text" class="form-control" name="dept" value="{{ old('dept', $fields['dept']) }}" placeholder="รายชื่อบริษัท">
+        <input type="text" class="form-control" name="dept"
+               value="{{ old('dept', $fields['dept'] ?? '') }}"
+               placeholder="รายชื่อบริษัท">
       </div>
       <div class="col-md-6">
+        <label class="form-label">Position</label>
+        <input type="text" class="form-control" name="position"
+               value="{{ old('position', $fields['position'] ?? '') }}"
+               placeholder="ตำแหน่ง">
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Region</label>
+        @php
+          $regionOld = old('region', $fields['region'] ?? '');
+          $regionOpts = ['เหนือ','ใต้','กรุงเทพฯ และปริมณฑล','กลาง','ตะวันออกเฉียงเหนือ','ไม่ระบุภาค'];
+        @endphp
+        <select class="form-select" name="region" required>
+          @foreach($regionOpts as $opt1)
+            <option value="{{ $opt1 }}" {{ $regionOld === $opt1 ? 'selected' : '' }}>
+              {{ $opt1 }}
+            </option>
+          @endforeach
+        </select>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Phone</label>
+        <input type="number" class="form-control" name="phone"
+               value="{{ old('phone', $fields['phone'] ?? '') }}"
+               placeholder="phone">
+      </div>
+
+
+      <div class="col-md-6">
         <label class="form-label">Badge (ประเภท)</label>
-        <select class="form-select" name="badge">
-          @php $badge = old('badge', $fields['badge']); @endphp
-          @foreach(['Dealer','TMT','AFFILIATE'] as $opt)
+        @php $badge = old('badge', $fields['badge'] ?? 'DEALER'); @endphp
+        <select class="form-select" name="badge" required>
+          @foreach(['DEALER','TMT','AFFILIATE','EXHIBITION'] as $opt)
             <option value="{{ $opt }}" {{ $badge === $opt ? 'selected' : '' }}>{{ $opt }}</option>
           @endforeach
         </select>
       </div>
 
+      <div class="col-md-6">
+        <label class="form-label">Group</label>
+        @php $groupVal = old('group', $fields['group'] ?? 'No GROUP'); @endphp
+        <select class="form-select" name="group" id="group-select">
+          @foreach(['No GROUP','A','B','C','D','E','F'] as $g)
+            <option value="{{ $g }}" {{ $groupVal === $g ? 'selected' : '' }}>{{ $g }}</option>
+          @endforeach
+        </select>
+      </div>
 
-{{-- ========== ผู้มาแทน ========== --}}
+      {{-- *** ตัดส่วนเกิน: ผู้มาแทน / TestDrive / CarDisplay / Strategy / Check-in ออกทั้งหมด *** --}}
+
+
+
+    {{-- ========== ผู้มาแทน ========== --}}
 @php
-  $hasInstead = !empty($fields['instead_th'] ?? '')
-             || !empty($fields['instead_en'] ?? '')
-             || !empty($fields['instead_note'] ?? '');
+  $hasInstead = !empty($fields['instead_th'] ?? '');
 @endphp
 
 @if($hasInstead)
-  <div class="col-md-12"><h3 class="mb-1 mt-10">ผู้มาแทน</h3></div>
+
+<div class="col-md-12"> <h3 class="mb-1 mt-10">รายละเอียดผู้มาแทน</h3></div>
+
 
   <div class="col-md-6">
     <label class="form-label">ชื่อ–นามสกุล (ภาษาไทย) ผู้มาแทน</label>
@@ -68,6 +117,21 @@
            placeholder="Name Surname">
   </div>
 
+
+  <div class="col-md-6">
+        <label class="form-label">Position</label>
+        <input type="text" class="form-control" name="instead_position"
+               value="{{ old('instead_position', $fields['instead_position'] ?? '') }}"
+               placeholder="ตำแหน่ง">
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Phone</label>
+        <input type="number" class="form-control" name="instead_phone"
+               value="{{ old('instead_phone', $fields['instead_phone'] ?? '') }}"
+               placeholder="phone">
+      </div>
+
   <div class="col-12">
     <label class="form-label">Note</label>
     <textarea class="form-control" name="instead_note" rows="5"
@@ -76,71 +140,7 @@
 @endif
 {{-- ========== /ผู้มาแทน ========== --}}
 
-
-      <div class="col-md-12"> <h3 class="mb-1 mt-10">รายละเอียดกิจกรรม</h3></div>
-@php
-  // ใช้ค่าว่าง '' เป็นคีย์ของ "ไม่มีกลุ่ม"
-  $slotTest = [
-    'A'=>'9.40 - 10.30','B'=>'10.35 - 11.25','C'=>'11.30 - 12.20',
-    'D'=>'14.00 - 14.50','E'=>'14.55 - 15.45','F'=>'15.50 - 16.40',
-    '' => '9.40 - 10.30', // ไม่มีกลุ่ม
-  ];
-  $slotCar = [
-    'A'=>'10.35 - 11.25','B'=>'11.30 - 12.20','C'=>'9.40 - 10.30',
-    'D'=>'14.55 - 15.45','E'=>'15.50 - 16.40','F'=>'14.00 - 14.50',
-    '' => '10.35 - 11.25', // ไม่มีกลุ่ม
-  ];
-  $slotStrategy = [
-    'A'=>'11.30 - 12.20','B'=>'9.40 - 10.30','C'=>'10.35 - 11.25',
-    'D'=>'15.50 - 16.40','E'=>'14.00 - 14.50','F'=>'14.55 - 15.45',
-    '' => '11.30 - 12.20', // ไม่มีกลุ่ม
-  ];
-
-  // กรณีในชีตเคยบันทึกเป็นคำว่า "ไม่มีกลุ่ม" ให้ map เป็นค่าว่าง
-  $groupRaw = old('group', $fields['group'] ?? '');
-  $groupVal = ($groupRaw === 'ไม่มีกลุ่ม') ? '' : $groupRaw;
-
-  $testdriveVal  = old('testdrive',  $fields['testdrive']  ?? ($slotTest[$groupVal]     ?? ''));
-  $cardisplayVal = old('cardisplay', $fields['cardisplay'] ?? ($slotCar[$groupVal]      ?? ''));
-  $strategyVal   = old('strategy',   $fields['strategy']   ?? ($slotStrategy[$groupVal] ?? ''));
-@endphp
-
-
-<div class="col-md-6">
-  <label class="form-label">Group</label>
-  <select class="form-select" name="group" id="group-select">
-    {{-- ตัวเลือก "ไม่มีกลุ่ม" (value = '') --}}
-    <option value="" {{ $groupVal === '' ? 'selected' : '' }}>ไม่มีกลุ่ม</option>
-    @foreach(['A','B','C','D','E','F'] as $g)
-      <option value="{{ $g }}" {{ $groupVal === $g ? 'selected' : '' }}>{{ $g }}</option>
-    @endforeach
-  </select>
 </div>
-
-<div class="col-md-6">
-  <label class="form-label">Test Drive</label>
-  <input type="text" class="form-control" name="testdrive" id="testdrive-input"
-         value="{{ $testdriveVal }}" placeholder="เช่น 9.40 - 10.30">
-</div>
-
-<div class="col-md-6">
-  <label class="form-label">Car Display</label>
-  <input type="text" class="form-control" name="cardisplay" id="cardisplay-input"
-         value="{{ $cardisplayVal }}" placeholder="เช่น 10.35 - 11.25">
-</div>
-
-<div class="col-md-6">
-  <label class="form-label">Strategy Sharing</label>
-  <input type="text" class="form-control" name="strategy" id="strategy-input"
-         value="{{ $strategyVal }}" placeholder="เช่น 11.30 - 12.20">
-</div>
-
-      <div class="col-12">
-        <div class="text-muted small">
-          Check-in (อ่านอย่างเดียว): {{ $fields['checkin'] ?: '—' }}
-        </div>
-      </div>
-    </div>
 
     <div class="mt-4">
       <button type="submit" class="btn btn-danger btn-lg">บันทึก</button>
@@ -149,34 +149,41 @@
   </form>
   <br><br><br><br>
 </div>
-
 @endsection
 
 @section('scripts')
+{{-- คงสคริปต์แบบหน้า create (มีเงื่อนไขเช็ค null อยู่แล้ว จะไม่รันถ้าไม่มีช่องเวลา) --}}
 <script>
-  (function(){
-    // คีย์ '' แทน "ไม่มีกลุ่ม" ให้ตรงกับฝั่ง PHP
-    const slotTest     = {A:'9.40 - 10.30', B:'10.35 - 11.25', C:'11.30 - 12.20', D:'14.00 - 14.50', E:'14.55 - 15.45', F:'15.50 - 16.40', '':'9.40 - 10.30'};
-    const slotCar      = {A:'10.35 - 11.25', B:'11.30 - 12.20', C:'9.40 - 10.30',  D:'14.55 - 15.45', E:'15.50 - 16.40', F:'14.00 - 14.50', '':'10.35 - 11.25'};
-    const slotStrategy = {A:'11.30 - 12.20', B:'9.40 - 10.30',  C:'10.35 - 11.25', D:'15.50 - 16.40', E:'14.00 - 14.50', F:'14.55 - 15.45', '':'11.30 - 12.20'};
+(function(){
+  const slotTest     = {A:'9.40 - 10.30', B:'10.35 - 11.25', C:'11.30 - 12.20',
+                        D:'14.00 - 14.50', E:'14.55 - 15.45', F:'15.50 - 16.40',
+                        '':'9.40 - 10.30'};
+  const slotCar      = {A:'10.35 - 11.25', B:'11.30 - 12.20', C:'9.40 - 10.30',
+                        D:'14.55 - 15.45', E:'15.50 - 16.40', F:'14.00 - 14.50',
+                        '':'10.35 - 11.25'};
+  const slotStrategy = {A:'11.30 - 12.20', B:'9.40 - 10.30',  C:'10.35 - 11.25',
+                        D:'15.50 - 16.40', E:'14.00 - 14.50', F:'14.55 - 15.45',
+                        '':'11.30 - 12.20'};
 
-    const sel  = document.getElementById('group-select');
-    const tInp = document.getElementById('testdrive-input');
-    const cInp = document.getElementById('cardisplay-input');
-    const sInp = document.getElementById('strategy-input');
+  const sel = document.getElementById('group-select');
+  const t   = document.getElementById('testdrive-input');
+  const c   = document.getElementById('cardisplay-input');
+  const s   = document.getElementById('strategy-input');
 
-    function apply(g){
-      // อย่า return เมื่อ g ว่าง — ให้ใช้คีย์ ''
-      if (g in slotTest)     tInp.value = slotTest[g];
-      if (g in slotCar)      cInp.value = slotCar[g];
-      if (g in slotStrategy) sInp.value = slotStrategy[g];
+  function apply() {
+    let g = sel?.value ?? '';
+    if (g === 'No GROUP') g = '';
+    if (t && c && s) {
+      if (g in slotTest)     t.value = slotTest[g];
+      if (g in slotCar)      c.value = slotCar[g];
+      if (g in slotStrategy) s.value = slotStrategy[g];
     }
+  }
 
-    if (sel && tInp && cInp && sInp) {
-      sel.addEventListener('change', () => apply(sel.value));
-      // prefill ครั้งแรกตามค่าปัจจุบัน (รวมกรณี '')
-      apply(sel.value);
-    }
-  })();
+  if (sel) {
+    sel.addEventListener('change', apply);
+    apply();
+  }
+})();
 </script>
 @endsection

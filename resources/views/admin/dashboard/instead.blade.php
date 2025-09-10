@@ -23,12 +23,23 @@
       <input type="text" class="form-control" name="name_en" value="{{ old('name_en') }}" placeholder="Name Surname">
     </div>
 
-    <div class="col-12">
-      <label class="form-label">Note</label>
-      <textarea class="form-control" name="note" rows="6" placeholder="กรอกเนื้อหา">{{ old('note') }}</textarea>
-    </div>
+    <div class="col-md-6">
+        <label class="form-label">Position</label>
+        <input type="text" class="form-control" name="position"
+               value="{{ old('position') }}"
+               placeholder="ตำแหน่ง">
+      </div>
 
-    <div class="col-md-12"><h3 class="mb-1 mt-10">รายละเอียดกิจกรรม</h3></div>
+      <div class="col-md-6">
+        <label class="form-label">Phone</label>
+        <input type="number" class="form-control" name="phone"
+               value="{{ old('phone') }}"
+               placeholder="phone">
+      </div>
+
+
+
+    {{-- <div class="col-md-12"><h3 class="mb-1 mt-10">รายละเอียดกิจกรรม</h3></div> --}}
 
 
      @php
@@ -37,15 +48,20 @@
       @endphp
 
     <div class="col-md-6">
-  <label class="form-label">Group</label>
-  <select class="form-select" disabled>
-    <option>{{ old('group', $member['group'] ?? '') }}</option>
-  </select>
-  <!-- hidden เอาไว้ส่งค่า -->
-  <input type="hidden" name="group" value="{{ old('group', $member['group'] ?? '') }}">
-</div>
+        <label class="form-label">Group</label>
+        <select class="form-select" disabled>
+            <option>{{ old('group', $member['group'] ?? '') }}</option>
+        </select>
+        <!-- hidden เอาไว้ส่งค่า -->
+        <input type="hidden" name="group" value="{{ old('group', $member['group'] ?? '') }}">
+    </div>
 
-      <div class="col-md-6">
+    <div class="col-12">
+      <label class="form-label">Note</label>
+      <textarea class="form-control" name="note" rows="6" placeholder="กรอกเนื้อหา">{{ old('note') }}</textarea>
+    </div>
+
+      {{-- <div class="col-md-6">
         <label class="form-label">Test Drive</label>
         <input type="text"
                 class="form-control"
@@ -73,7 +89,7 @@
                 id="strategy-input"
                 value="{{ old('strategy', $member['strategy'] ?? '') }}"
                 placeholder="เช่น 11.30 - 12.20" readonly>
-        </div>
+        </div> --}}
 
 
     <div class="col-12 mt-3">

@@ -72,6 +72,12 @@
 
         /* สีเทาที่คุณขอ */
 
+        .dot-split{
+  display:inline-block;width:16px;height:16px;border-radius:50%;
+  background: linear-gradient(90deg, #EA8238 50%, #9CA3AF 50%); /* ส้ม / เทา */
+}
+
+
 
         .col-5th {
   flex: 0 0 20%;
@@ -402,14 +408,14 @@
                         <thead>
                             <tr class="text-start text-gray-500 fw-bold text-uppercase">
                                 <th class="min-w-40px">No.</th>
-                                <th class="min-w-100px">Badge</th>
+                                <th class="min-w-120px" style="min-width: 120px;">Badge</th>
                                 <th class="min-w-90px">Group</th>
                                 <th class="min-w-220px">ชื่อ-นามสกุล</th>
                                 <th class="min-w-220px">Department</th>
                                 <th class="min-w-140px">Check-in</th>
-                                <th class="min-w-140px">Test Drive</th>
-                                <th class="min-w-140px">Car Display</th>
-                                <th class="min-w-160px">Strategy Sharing</th>
+                                <th class="min-w-140px">Region</th>
+                                <th class="min-w-140px">Position</th>
+                                <th class="min-w-160px">Phone</th>
                                 <th class="min-w-120px text-end">Action</th>
                             </tr>
                         </thead>
@@ -426,17 +432,23 @@
                                     <td>
 
                                     <span class="status-dot" id="status-dot-{{ $m['row'] }}">
-                                            @if((string)($m['new_member'] ?? '') === '1')
-                                             <span class="dot dot-navy"></span>     {{-- รายชื่อใหม่ --}}
-                                           @elseif(!empty($m['instead']))
-                                             <span class="dot dot-orange"></span>   {{-- ผู้มาแทน --}}
-                                           @elseif(!empty($m['checkin']))
-                                             <span class="dot dot-green"></span>    {{-- เช็คอินทั่วไป --}}
-                                           @endif
-                                        </span>
+                                        @if((string)($m['new_member'] ?? '') === '1')
+                                            <span class="dot dot-navy"></span>     {{-- รายชื่อใหม่ --}}
+
+                                        @elseif(!empty($m['instead']) && empty($m['checkin']))
+                                            <span class="dot dot-split"></span>    {{-- ✅ ผู้มาแทน + ยังไม่เช็คอิน --}}
+
+                                        @elseif(!empty($m['instead']) && !empty($m['checkin']))
+                                            <span class="dot dot-orange"></span>   {{-- ผู้มาแทน (เช็คอินแล้ว) --}}
+
+                                        @elseif(!empty($m['checkin']))
+                                            <span class="dot dot-green"></span>    {{-- เช็คอินทั่วไป --}}
+                                        @endif
+                                    </span>
 
 
-                                        <span class="badge badge-light me-2">{{ $m['badge'] ?: '—' }}</span>
+                                        <span class="badge badge-light ">{{ $m['badge'] ?: '—' }}</span>
+
 
 
                                     </td>
@@ -596,23 +608,37 @@
                 // อัปเดตจุดสี (รองรับทั้ง id เดิม dot-<row> และ status-dot-<row>)
                 // =========================
                 const dotWrapLegacy = document.getElementById(`dot-${row}`);
+                const statusDot     = document.getElementById(`status-dot-${row}`);
+
+                const isNew     = String(btn.dataset.newmember || '0') === '1';
+                const isInstead = String(btn.dataset.instead   || '0') === '1';
+                const checked   = !!data.checked;
+
+                // legacy container
                 if (dotWrapLegacy) {
-                    dotWrapLegacy.innerHTML = data.checked ? '<span class="dot dot-green"></span>' : '';
+                if (isInstead && !checked) {
+                    dotWrapLegacy.innerHTML = '<span class="dot dot-split"></span>';   // ผู้มาแทน + ยังไม่เช็คอิน
+                } else if (checked) {
+                    dotWrapLegacy.innerHTML = '<span class="dot dot-green"></span>';   // เช็คอินทั่วไป
+                } else {
+                    dotWrapLegacy.innerHTML = '';
+                }
                 }
 
-                const statusDot = document.getElementById(`status-dot-${row}`);
+                // status-dot (หลัก)
                 if (statusDot) {
-                    // statusDot.innerHTML = data.checked ? '<span class="dot dot-green"></span>' : '';
-                      const isNew     = String(btn.dataset.newmember || '0') === '1';
-                      const isInstead = String(btn.dataset.instead    || '0') === '1';
-                      if (isNew) {
-                        statusDot.innerHTML = '<span class="dot dot-navy"></span>';
-                      } else if (isInstead) {
-                        statusDot.innerHTML = '<span class="dot dot-orange"></span>';
-                      } else {
-                        statusDot.innerHTML = data.checked ? '<span class="dot dot-green"></span>' : '';
-                      }
-                    }
+                if (isNew) {
+                    statusDot.innerHTML = '<span class="dot dot-navy"></span>';        // รายชื่อใหม่ (ความสำคัญสูงสุด)
+                } else if (isInstead && !checked) {
+                    statusDot.innerHTML = '<span class="dot dot-split"></span>';       // ผู้มาแทน + ยังไม่เช็คอิน
+                } else if (isInstead && checked) {
+                    statusDot.innerHTML = '<span class="dot dot-orange"></span>';      // ผู้มาแทน (เช็คอินแล้ว)
+                } else if (checked) {
+                    statusDot.innerHTML = '<span class="dot dot-green"></span>';       // เช็คอินทั่วไป
+                } else {
+                    statusDot.innerHTML = '';
+                }
+                }
 
                 // =========================
                 // อัปเดตช่องวันที่/เวลา check-in (td)
