@@ -77,6 +77,11 @@
   background: linear-gradient(90deg, #EA8238 50%, #9CA3AF 50%); /* ส้ม / เทา */
 }
 
+        .dot-split2{
+  display:inline-block;width:16px;height:16px;border-radius:50%;
+  background: linear-gradient(90deg, #001E7E 50%, #9CA3AF 50%); /* ส้ม / เทา */
+}
+
 
 
         .col-5th {
@@ -432,11 +437,14 @@
                                     <td>
 
                                     <span class="status-dot" id="status-dot-{{ $m['row'] }}">
-                                        @if((string)($m['new_member'] ?? '') === '1')
-                                            <span class="dot dot-navy"></span>     {{-- รายชื่อใหม่ --}}
+                                        @if((string)($m['new_member'] ?? '') === '1' && !empty($m['checkin']))
+                                            <span class="dot dot-navy"></span>     {{-- รายชื่อใหม่ (เช็คอินแล้ว) --}}
+
+                                        @elseif((string)($m['new_member'] ?? '') === '1' && empty($m['checkin']))
+                                            <span class="dot dot-split2"></span>   {{-- รายชื่อใหม่ (ยังไม่เช็คอิน) --}}
 
                                         @elseif(!empty($m['instead']) && empty($m['checkin']))
-                                            <span class="dot dot-split"></span>    {{-- ✅ ผู้มาแทน + ยังไม่เช็คอิน --}}
+                                            <span class="dot dot-split"></span>    {{-- ผู้มาแทน + ยังไม่เช็คอิน --}}
 
                                         @elseif(!empty($m['instead']) && !empty($m['checkin']))
                                             <span class="dot dot-orange"></span>   {{-- ผู้มาแทน (เช็คอินแล้ว) --}}
@@ -604,7 +612,7 @@
                     throw new Error(data.message || 'Update failed');
                 }
 
-                // =========================
+               // =========================
                 // อัปเดตจุดสี (รองรับทั้ง id เดิม dot-<row> และ status-dot-<row>)
                 // =========================
                 const dotWrapLegacy = document.getElementById(`dot-${row}`);
@@ -614,21 +622,29 @@
                 const isInstead = String(btn.dataset.instead   || '0') === '1';
                 const checked   = !!data.checked;
 
-                // legacy container
+                // ---- legacy container (ถ้าต้องการสะท้อนสถานะมากขึ้น)
                 if (dotWrapLegacy) {
-                if (isInstead && !checked) {
+                if (isNew && !checked) {
+                    dotWrapLegacy.innerHTML = '<span class="dot dot-split2"></span>';  // รายชื่อใหม่ (ยังไม่เช็คอิน)
+                } else if (isNew && checked) {
+                    dotWrapLegacy.innerHTML = '<span class="dot dot-navy"></span>';    // รายชื่อใหม่ (เช็คอินแล้ว)
+                } else if (isInstead && !checked) {
                     dotWrapLegacy.innerHTML = '<span class="dot dot-split"></span>';   // ผู้มาแทน + ยังไม่เช็คอิน
+                } else if (isInstead && checked) {
+                    dotWrapLegacy.innerHTML = '<span class="dot dot-orange"></span>';  // ผู้มาแทน (เช็คอินแล้ว)
                 } else if (checked) {
                     dotWrapLegacy.innerHTML = '<span class="dot dot-green"></span>';   // เช็คอินทั่วไป
                 } else {
-                    dotWrapLegacy.innerHTML = '';
+                    dotWrapLegacy.innerHTML = '';                                      // ยังไม่เช็คอิน & ไม่เข้าเคสใด
                 }
                 }
 
-                // status-dot (หลัก)
+                // ---- status-dot (หลัก)
                 if (statusDot) {
-                if (isNew) {
-                    statusDot.innerHTML = '<span class="dot dot-navy"></span>';        // รายชื่อใหม่ (ความสำคัญสูงสุด)
+                if (isNew && !checked) {
+                    statusDot.innerHTML = '<span class="dot dot-split2"></span>';      // ✅ รายชื่อใหม่ (ยังไม่เช็คอิน)
+                } else if (isNew && checked) {
+                    statusDot.innerHTML = '<span class="dot dot-navy"></span>';        // รายชื่อใหม่ (เช็คอินแล้ว)
                 } else if (isInstead && !checked) {
                     statusDot.innerHTML = '<span class="dot dot-split"></span>';       // ผู้มาแทน + ยังไม่เช็คอิน
                 } else if (isInstead && checked) {
