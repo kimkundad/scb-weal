@@ -127,7 +127,7 @@
 
       <div class="col-md-6">
         <label class="form-label">Phone</label>
-        <input type="number" class="form-control" name="instead_phone"
+        <input type="text" class="form-control" name="instead_phone"
                value="{{ old('instead_phone', $fields['instead_phone'] ?? '') }}"
                placeholder="phone">
       </div>

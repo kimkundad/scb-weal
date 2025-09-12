@@ -56,7 +56,7 @@
 
       <div class="col-md-6">
         <label class="form-label">Phone</label>
-        <input type="number" class="form-control" name="Phone" value="{{ old('Phone') }}" placeholder="Phone">
+        <input type="text" class="form-control" name="Phone" value="{{ old('Phone') }}" placeholder="Phone">
       </div>
 
       {{-- <div class="col-md-12"><h3 class="mb-1 mt-10">รายละเอียดกิจกรรม</h3></div> --}}

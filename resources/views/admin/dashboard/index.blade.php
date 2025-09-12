@@ -461,7 +461,20 @@
 
                                     </td>
 
-                                    <td>Group {{ $m['group'] ?? 'A' }}</td>
+                                   <td>
+                                    {{ (function ($raw) {
+                                        // แปลงช่องว่างพิเศษ → space ปกติ, บีบช่องว่าง และ trim
+                                        $normalized = str_replace(["\u{00A0}", "\u{2007}", "\u{202F}"], ' ', (string)$raw);
+                                        $normalized = preg_replace('/[[:space:]\pZ]+/u', ' ', $normalized);
+                                        $normalized = trim($normalized);
+
+                                        $val = $normalized === '' ? 'A' : $normalized;
+
+                                        return mb_strtolower($normalized, 'UTF-8') === 'no group'
+                                            ? $normalized
+                                            : 'Group '.$val;
+                                    })($m['group'] ?? '') }}
+                                    </td>
 
                                     <td>
                                         <div class="fw-bold">{{ $m['name_th'] ?? '-' }}</div>
