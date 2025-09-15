@@ -29,7 +29,7 @@ Route::domain('ttb.idx.co.th')->group(function () {
 
 Route::middleware(['auth'])->group(function () {
 
-     Route::domain('toyota.idx.co.th')->group(function () {
+  //   Route::domain('toyota.idx.co.th')->group(function () {
 
     Route::get('/', [App\Http\Controllers\ToyataController::class, 'index']);
 
@@ -57,7 +57,7 @@ Route::middleware(['auth'])->group(function () {
 Route::post('/toyota/instead', [ToyataController::class,'insteadStore'])
     ->name('toyota.instead.store');
 
-     });
+  //   });
 
 
 

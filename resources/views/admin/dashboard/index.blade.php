@@ -671,7 +671,7 @@
 
                 // =========================
                 // อัปเดตช่องวันที่/เวลา check-in (td)
-                // ต้องมี <td id="checkin-cell-{{ $m['row'] }}">
+                // ต้องมี
                 // =========================
                 const cellDate = document.getElementById(`checkin-cell-${row}`);
                 if (cellDate) {
