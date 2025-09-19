@@ -426,7 +426,7 @@ class ToyataController extends Controller
             // ถ้าไม่มีกลุ่ม
             if (in_array(strtoupper(trim($m['group'])), ['', 'NO GROUP', 'ไม่มีกลุ่ม'], true)) {
                 $h = $checkinHour($m['checkin'] ?? null);
-                return $h !== null && $h < 12;
+                return $h !== null && $h < 11;
             }
             return false;
         })->count();
@@ -439,7 +439,7 @@ class ToyataController extends Controller
             // ถ้าไม่มีกลุ่ม
             if (in_array(strtoupper(trim($m['group'])), ['', 'NO GROUP', 'ไม่มีกลุ่ม'], true)) {
                 $h = $checkinHour($m['checkin'] ?? null);
-                return $h !== null && $h >= 12;
+                return $h !== null && $h >= 11;
             }
             return false;
         })->count();
