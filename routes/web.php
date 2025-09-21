@@ -51,8 +51,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/members/create', [ToyataController::class, 'create'])->name('members.create');
     Route::post('/members',        [ToyataController::class, 'store'])->name('members.store');
 
-    Route::get('/toyota/instead/{spreadsheetId}/{sheetName}/{row}/{Name}', [ToyataController::class,'insteadForm'])
-    ->name('toyota.instead.form');
+    // Route::get('/toyota/instead/{spreadsheetId}/{sheetName}/{row}/{Name}', [ToyataController::class,'insteadForm'])
+    // ->name('toyota.instead.form');
+
+    Route::get(
+        '/toyota/instead/{spreadsheetId}/{sheetName}/{row}/{Name?}',
+        [ToyataController::class, 'insteadForm']
+    )->name('toyota.instead.form');
 
 Route::post('/toyota/instead', [ToyataController::class,'insteadStore'])
     ->name('toyota.instead.store');
