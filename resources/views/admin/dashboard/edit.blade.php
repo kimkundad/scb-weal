@@ -51,7 +51,7 @@
         <label class="form-label">Region</label>
         @php
           $regionOld = old('region', $fields['region'] ?? '');
-          $regionOpts = ['เหนือ','ใต้','กรุงเทพฯ และปริมณฑล','กลาง','ตะวันออกเฉียงเหนือ','ไม่ระบุภาค'];
+          $regionOpts = ['North', 'South', 'Metro', 'Central', 'Northeast', 'Unspecified Region'];
         @endphp
         <select class="form-select" name="region" required>
           @foreach($regionOpts as $opt1)

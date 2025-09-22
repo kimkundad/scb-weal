@@ -45,9 +45,9 @@
       </div> --}}
         <div class="col-md-6">
         <label class="form-label">Region</label>
-            @php $Region = old('เหนือ','ใต้','กรุงเทพฯ และปริมณฑล', 'กลาง', 'ตะวันออกเฉียงเหนือ', 'ไม่ระบุภาค'); @endphp
+            @php $Region = old('North', 'South', 'Metro', 'Central', 'Northeast', 'Unspecified Region'); @endphp
             <select class="form-select" name="Region" required>
-            @foreach(['เหนือ','ใต้','กรุงเทพฯ และปริมณฑล', 'กลาง', 'ตะวันออกเฉียงเหนือ', 'ไม่ระบุภาค'] as $opt1)
+            @foreach(['North', 'South', 'Metro', 'Central', 'Northeast', 'Unspecified Region'] as $opt1)
                 <option value="{{ $opt1 }}" {{ $Region === $opt1 ? 'selected' : '' }}>{{ $opt1 }}</option>
             @endforeach
             </select>

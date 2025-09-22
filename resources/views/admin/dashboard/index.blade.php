@@ -374,9 +374,10 @@
                     <label class="text-muted me-2">Badge</label>
                     <select class="form-select w-180px" name="badge" onchange="submitFilters()">
                         <option value="" @selected(request('badge', '') === '')>ทั้งหมด</option>
-                        <option value="Dealer" @selected(request('badge') === 'Dealer')>Dealer</option>
+                        <option value="DEALER" @selected(request('badge') === 'DEALER')>DEALER</option>
                         <option value="TMT" @selected(request('badge') === 'TMT')>TMT</option>
                         <option value="AFFILIATE" @selected(request('badge') === 'AFFILIATE')>AFFILIATE</option>
+                        <option value="EXHIBITION" @selected(request('badge') === 'EXHIBITION')>EXHIBITION</option>
                     </select>
                 </div>
 

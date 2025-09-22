@@ -406,14 +406,14 @@ class ToyataController extends Controller
             $stats['no_group_morning'] = $noGroup
                 ->filter(function ($m) use ($checkinHour) {
                     $h = $checkinHour($m['checkin'] ?? null);
-                    return $h !== null && $h < 12;       // ก่อน 12:00
+                    return $h !== null && $h < 11;       // ก่อน 12:00
                 })
                 ->count();
 
             $stats['no_group_afternoon'] = $noGroup
                 ->filter(function ($m) use ($checkinHour) {
                     $h = $checkinHour($m['checkin'] ?? null);
-                    return $h !== null && $h >= 12;      // ตั้งแต่ 12:00 ขึ้นไป
+                    return $h !== null && $h >= 11;      // ตั้งแต่ 12:00 ขึ้นไป
                 })
                 ->count();
 
