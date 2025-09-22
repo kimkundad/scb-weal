@@ -376,10 +376,12 @@
                         <option value="" @selected(request('badge', '') === '')>ทั้งหมด</option>
                         <option value="DEALER" @selected(request('badge') === 'DEALER')>DEALER</option>
                         <option value="TMT" @selected(request('badge') === 'TMT')>TMT</option>
+                        <option value="TMA" @selected(request('badge') === 'TMA')>TMA</option>
                         <option value="AFFILIATE" @selected(request('badge') === 'AFFILIATE')>AFFILIATE</option>
                         <option value="EXHIBITION" @selected(request('badge') === 'EXHIBITION')>EXHIBITION</option>
                     </select>
                 </div>
+
 
                 <div class="col-auto w-180">
                     <label class="text-muted me-2">สถานะ</label>
