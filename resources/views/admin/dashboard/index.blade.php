@@ -377,8 +377,8 @@
                         <option value="DEALER" @selected(request('badge') === 'DEALER')>DEALER</option>
                         <option value="TMT" @selected(request('badge') === 'TMT')>TMT</option>
                         <option value="TMA" @selected(request('badge') === 'TMA')>TMA</option>
-                        <option value="AFFILIATE" @selected(request('badge') === 'AFFILIATE')>AFFILIATE</option>
-                        <option value="EXHIBITION" @selected(request('badge') === 'EXHIBITION')>EXHIBITION</option>
+                        <option value="Affiliate" @selected(request('badge') === 'Affiliate')>Affiliate</option>
+                        <option value="Exhibitor" @selected(request('badge') === 'Exhibitor')>Exhibitor</option>
                     </select>
                 </div>
 
@@ -516,7 +516,7 @@
                                                 data-bs-toggle="dropdown"></button>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    {{-- <a class="dropdown-item"
+                                                    <a class="dropdown-item"
                                                         href="{{ route('toyota.instead.form', [
                                                                 'spreadsheetId' => $spreadsheetId,
                                                                 'sheetName'     => $sheetName,
@@ -524,7 +524,7 @@
                                                                 'Name'          => $m['name_th'] ?: $m['name_en'],  // ถ้า D ว่าง ใช้ E
                                                         ]) }}">
                                                         ผู้มาแทน
-                                                    </a> --}}
+                                                    </a>
                                                 </li>
                                                 <li>
                                                     <a class="dropdown-item"

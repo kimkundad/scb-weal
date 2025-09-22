@@ -38,7 +38,7 @@
         <label class="form-label">Badge (ประเภท)</label>
         @php $badge = old('badge','Dealer'); @endphp
         <select class="form-select" name="badge" required>
-          @foreach(['Dealer','TMT','AFFILIATE'] as $opt)
+          @foreach(['Dealer','TMT','Affiliate'] as $opt)
             <option value="{{ $opt }}" {{ $badge === $opt ? 'selected' : '' }}>{{ $opt }}</option>
           @endforeach
         </select>
@@ -88,9 +88,9 @@
 
         <div class="col-md-6">
         <label class="form-label">Badge (ประเภท)</label>
-        @php $badge = old('DEALER','TMT','AFFILIATE','EXHIBITION'); @endphp
+        @php $badge = old('DEALER','TMT','Affiliate','Exhibitor'); @endphp
         <select class="form-select" name="badge" required>
-          @foreach(['DEALER','TMT','TMA','AFFILIATE','EXHIBITION'] as $opt)
+          @foreach(['DEALER','TMT','TMA','Affiliate','Exhibitor'] as $opt)
             <option value="{{ $opt }}" {{ $badge === $opt ? 'selected' : '' }}>{{ $opt }}</option>
           @endforeach
         </select>

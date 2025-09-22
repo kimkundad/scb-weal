@@ -275,8 +275,15 @@ class ToyataController extends Controller
             )->values();
         }
 
-        if ($badge = trim((string)$request->input('badge'))) {
-            $filtered = $filtered->where('badge', $badge)->values();
+        // if ($badge = trim((string)$request->input('badge'))) {
+        //     $filtered = $filtered->where('badge', $badge)->values();
+        // }
+
+        if (($badge = trim((string)$request->input('badge'))) !== '') {
+            $badgeL = mb_strtolower($badge, 'UTF-8');
+            $filtered = $filtered
+                ->filter(fn($m) => mb_strtolower((string)($m['badge'] ?? ''), 'UTF-8') === $badgeL)
+                ->values();
         }
 
         $status = $request->input('status'); // '', 'checked', 'not_checked', 'newMember', 'instead', 'instead_not_checked'
