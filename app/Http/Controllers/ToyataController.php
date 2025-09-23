@@ -293,7 +293,7 @@ class ToyataController extends Controller
         $isNew      = fn($m) => (string)($m['new_member'] ?? '') === '1';
 
         if ($status === 'checked') {
-            $filtered = $filtered->filter(fn($m) => $hasCheckin($m) && !$isNew($m))->values();
+            $filtered = $filtered->filter(fn($m) => $hasCheckin($m))->values();
         } elseif ($status === 'not_checked') {
             $filtered = $filtered->filter(fn($m) => !$hasCheckin($m))->values();
         } elseif ($status === 'newMember') {
