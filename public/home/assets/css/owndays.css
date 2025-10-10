@@ -1,0 +1,709 @@
+@font-face {
+    font-family: 'TTB Regular';
+    src: url('../../../fonts/ttb-regular.woff2') format('woff2'),
+         url('../../../fonts/ttb-regular.woff') format('woff'),
+         url('../../../fonts/ttb-regular.eot') format('embedded-opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'TTB Bold';
+    src: url('../../../fonts/ttb-bold.woff2') format('woff2'),
+         url('../../../fonts/ttb-bold.woff') format('woff'),
+         url('../../../fonts/ttb-bold.eot') format('embedded-opentype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'TTB ExtraBold';
+    src: url('../../../fonts/ttb-bold.woff2') format('woff2'),
+         url('../../../fonts/ttb-bold.woff') format('woff'),
+         url('../../../fonts/ttb-bold.eot') format('embedded-opentype');
+    font-weight: 800;
+    font-style: normal;
+}
+
+
+body {
+    font-family: 'TTB Regular', sans-serif;
+}
+h1, h2, h3, h4, h5, h6, button {
+  font-family: 'TTB ExtraBold', sans-serif !important;
+}
+span, p , li ,strong, option , label, input, a, b, textarea {
+  font-family: 'TTB Regular', sans-serif !important;
+}
+.copyright{
+    font-family: 'TTB Regular', sans-serif !important;
+}
+
+.message{
+    font-family: 'TTB ExtraBold', sans-serif !important;
+}
+
+.question-section {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0px 15px;
+    text-align: center;
+  }
+
+  .question-section h2 {
+    /* color: white; */
+    margin-bottom: 20px;
+    font-size: 33px;
+  }
+  .first-h3{
+    color: white;
+    margin-bottom: 20px;
+    font-size: 18px;
+  }
+  .text-left{
+    text-align: left;
+  }
+  .first-h2{
+    color: #94FF8A;
+    margin-bottom: 20px;
+    font-size: 32px;
+  }
+  .head-text{
+    font-size: 18px;
+    color: white;
+    font-family: 'TTB ExtraBold', sans-serif !important;
+  }
+  .question-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  input[type="tel"],
+input[type="text"] {
+  padding: 12px;
+  font-size: 15px;
+  border-radius: 8px;
+  border: none;
+}
+.submit-btn-user {
+  background-color: transparent;
+  color: #72ff94;
+  border: none;
+  margin-top: 20px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+select {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #333;
+  background-color: #fff;
+  width: 100%;
+  appearance: none;
+}
+
+.btn-line-link {
+  width: 340px;
+    padding: 12px 50px;
+    background-color: #94FF8A;
+    color: #2A2A2A;
+    border: none;
+    border-radius: 6px;
+    font-size: 18px;
+    cursor: pointer;
+        text-decoration: none;
+        font-weight: 700;
+}
+
+
+.checkbox-custom {
+      position: relative;
+    padding: 0 0 0 30px;
+    margin-bottom: 7px;
+    margin-top: 0;
+}
+
+.checkbox-custom input[type="checkbox"] {
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 3px;
+    margin: -6px 0 0 0;
+    z-index: 2;
+    cursor: pointer;
+}
+
+.checkbox-custom label {
+    cursor: pointer;
+    margin-bottom: 0;
+    text-align: left;
+    line-height: 1.5;
+}
+
+input[type="radio"], input[type="checkbox"] {
+    box-sizing: border-box;
+    padding: 0;
+}
+
+.checkbox-custom label:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    margin-top: -9px;
+    width: 22px;
+    height: 21px;
+    display: inline-block;
+    border-radius: 50px;
+    border: 1px solid #bbb;
+    background: #fff;
+}
+
+
+.checkbox-custom input[type="checkbox"]:checked + label:after {
+    position: absolute;
+    display: inline-block;
+    content: '✔' !important;
+    font-size: 22px;
+    content: '\F00C';
+    top: 50%;
+    left: 0;
+    margin-top: -9px;
+    line-height: 1;
+    width: 22px;
+    height: 21px;
+    color: white;
+    background: #47a447;
+    border: 1px solid #47a447;
+    border-radius: 50px;
+}
+
+.back-btn-user{
+    color: rgba(148, 255, 138, 1);
+font-size: 18px;
+font-weight: 500;
+text-align: center;
+line-height: 18px;
+
+}
+
+    .form-row {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    flex-wrap: wrap;
+    }
+
+    .form-row .form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    }
+
+    /* ปรับอินพุตให้เต็มกล่อง */
+    .form-group input {
+    width: 100%;
+    }
+
+  .question-item {
+    background-color: white;
+    color: #000;
+    font-size: 16px;
+    padding: 15px 20px;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    line-height: 1.4;
+    white-space: normal;
+    word-wrap: break-word;
+  }
+
+  .question-item:hover {
+    border-color: #ffa500;
+  }
+
+  .question-item.active {
+    border: 3px solid #ffa500;
+  }
+
+
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: sans-serif;
+    background: #9CA6C1;
+    color: #fff;
+  }
+
+  .wrapper {
+    background: #9CA6C1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  header {
+    text-align: center;
+    padding: 10px;
+    background-color: #fff;
+  }
+
+  footer {
+    text-align: center;
+    padding: 15px;
+    background-color: rgba(82, 89, 107, 1);
+  }
+
+  header img {
+    margin-top: 10px;
+    max-height: 15px;
+  }
+
+  /* main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    background: linear-gradient( 270deg ,  0% rgba(20, 20, 20, 1) ,  100% rgba(16, 54, 30, 1) );
+
+
+  } */
+
+  main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  padding: 20px 20px;
+  background: url('../../../img/owndays/Rectangle-3@3x.jpg') no-repeat center center;
+  background-size: cover;
+  position: relative;
+}
+
+  main h2 {
+    font-size: 36px;
+  }
+
+  .form-container {
+    /* background: #fff; */
+    padding: 20px;
+    border-radius: 10px;
+    width: 100%;
+    /* max-width: 400px; */
+    color: #000;
+  }
+
+  .form-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #003c8f;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+  }
+
+  .form-group textarea {
+    resize: vertical;
+    height: 100px;
+  }
+
+  .form-container button {
+    width: 100%;
+    padding: 12px;
+    background-color: #94FF8A;
+    color: #2A2A2A;
+    border: none;
+    border-radius: 6px;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  .copyright {
+    font-size: 12px;
+    color: #ccc;
+  }
+
+  /* ========================== Desktop Style ========================== */
+  @media (min-width: 768px) {
+    .wrapper {
+      background: #9CA6C1;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .form-container {
+      /* background: rgba(255, 255, 255, 0.9); */
+      /* width: 400px; */
+      margin: 0px auto;
+      border-radius: 10px;
+    }
+
+    header, footer {
+      width: 100%;
+      background-color: transparent;
+      color: white;
+    }
+
+    header {
+        z-index: 1;
+      /* position: absolute; */
+      top: 0;
+      padding: 10px 15px;
+      background-color: #fff;
+    }
+
+    footer {
+      position: static;
+      bottom: 0;
+      padding: 15px;
+      font-size: 14px;
+      background-color: rgba(82, 89, 107, 1);
+
+    }
+
+    main {
+      /* padding: 80px 20px; */
+      /* background: none; */
+      min-width: 440px;
+    }
+  }
+
+
+  .question-section {
+
+    padding: 0px 0px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 400px;
+    color: white;
+    min-width: 360px;
+
+  }
+
+.question-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* จัดให้อยู่กลางแนวนอน */
+  gap: 20px;           /* เว้นระยะระหว่างรูปและปุ่ม */
+  text-align: center;
+}
+
+  .question-section h2 {
+    text-align: center;
+    font-size: 33px;
+    margin-bottom: 20px;
+  }
+
+  .qa-form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .qa-form label {
+    color: white;
+    text-align: start;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .qa-form input,
+  .qa-form textarea {
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+    resize: none;
+    color: #333;
+  }
+
+  .info {
+    font-size: 14px;
+    margin-top: 8px;
+    margin-bottom: 12px;
+    color: #eee;
+  }
+
+  .submit-btn {
+    background-color: #f7941e;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .submit-btn:hover {
+    background-color: #e27c00;
+  }
+
+  .submit-btn-user{
+    background-color: #f7941e;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .submit-btn-user:hover{
+    background-color: #e27c00;
+  }
+
+  .submit-btn-dis{
+    background-color: transparent;
+    color: #ffffff69;
+    padding: 12px;
+    border: 2px solid #ffffff69;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+
+
+  .check-icon {
+    width: 100px;
+    height: 100px;
+    background-color: #00c853;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .check-icon::before {
+    content: '✔';
+    font-size: 50px;
+    color: white;
+  }
+
+  .check-icon2{
+    display: inline-block;
+                width: 40px;
+                height: 40px;
+                background-color: #00c853;
+                border-radius: 50%;
+                text-align: center;
+                line-height: 40px;
+                font-size: 16px;
+                color: #fff;
+                margin-left: 10px;
+  }
+  .check-icon2::before {
+    content: '✔';
+    font-size: 32px;
+    color: white;
+  }
+
+  .message {
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 30px;
+  }
+
+  .btn-submit-more {
+    background-color: #ff9900;
+    color: white;
+    border: none;
+    padding: 14px 45px;
+    font-size: 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.3s;
+  }
+
+  .btn-submit-more:hover {
+    background-color: #e88c00;
+  }
+
+
+.btn-custom {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+  cursor: pointer;
+  width: 320px; /* ขนาดปุ่ม */
+  max-width: 100%;
+}
+
+.btn-custom .btn-bg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.btn-custom .btn-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'TTB Bold', sans-serif;
+  font-size: 18px;
+  color: #2A2A2A;
+  white-space: nowrap;
+}
+
+.btn-custom:hover .btn-text {
+  opacity: 0.85;
+}
+
+/* กล่องที่ห่อรูปและปุ่ม */
+.intro-container {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+}
+
+/* รูปพื้นหลัง */
+.intro-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ปุ่มลอยอยู่บนรูป */
+.btn-image-link {
+  position: absolute;
+  left: 50%;            /* จัดกลางแนวนอน */
+  bottom: 5%;            /* อยู่ติดขอบล่างของ intro หรือปรับเป็น 20px เพื่อยกขึ้น */
+  transform: translateX(-50%);
+  width: 80%;           /* ให้ปุ่มกว้าง 90% ของรูป intro */
+}
+
+.btn-image {
+  width: 100%;          /* ให้ภาพปุ่มขยายเต็มความกว้างของ link container */
+  height: auto;
+  display: block;
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.btn-image:hover {
+  transform: scale(1.02);
+  filter: brightness(1.05);
+}
+
+
+.intro-container2 {
+  position: relative;
+  width: 100%;
+  max-width: 450px;
+  margin: 0 auto;
+  background: url('../../../img/owndays/intro_bg.png') no-repeat center top;
+  background-size: contain;   /* หรือ cover ถ้าต้องการให้เต็ม */
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;      /* ให้ปุ่มอยู่ด้านล่างของ bg */
+  padding: 40px 0;            /* เผื่อช่องด้านใน */
+}
+
+
+.form-container {
+  width: 100%;
+  height: 480px;
+  max-width: 380px;
+  margin: 0 auto;
+  background: transparent;
+  color: #4a3f2b;
+  font-family: 'TTB Regular', sans-serif;
+}
+
+.form-group label {
+  color: #4a3f2b;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+input[type="text"],
+select {
+  width: 100%;
+  height: 46px;               /* ✅ กำหนดความสูงให้เท่ากัน */
+  padding: 10px 12px;         /* ปรับให้ดูบาลานซ์ */
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+  color: #333;
+  background-color: #fff;
+  box-sizing: border-box;     /* ให้ padding รวมอยู่ในความสูง */
+  appearance: none;           /* ตัดสไตล์ select เริ่มต้นบางเบราว์เซอร์ */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+input[type="text"]:focus,
+select:focus {
+  border-color: #f5a623;
+  outline: none;
+}
+
+.form-group label {
+  display: block;
+  text-align: left;       /* ✅ ให้ label ชิดซ้าย */
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #4a3f2b;         /* คงโทนสีน้ำตาลทองแบบ OWNDAYS */
+}
+
+
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+textarea,
+select {
+  font-family: 'TTB Regular', sans-serif !important;  /* ✅ ใช้ฟอนต์ TTB Regular */
+  font-size: 16px;
+  color: #333;
+}
+
+/* ให้ placeholder ก็ใช้ฟอนต์เดียวกันด้วย */
+input::placeholder,
+textarea::placeholder {
+  font-family: 'TTB Regular', sans-serif !important;
+  color: #999;
+}

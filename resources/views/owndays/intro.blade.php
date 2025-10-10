@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>สมาคมศิษย์เก่าทวีธาภิเศก</title>
+  <link rel="stylesheet" href="{{ url('/home/assets/css/owndays.css') }}?v={{ time() }}" type="text/css" />
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ url('img/tp/favicon_v5.png') }}" />
+</head>
+<body>
+  <div class="wrapper">
+    <header>
+      <a href="{{ url('/') }}">
+        <img src="{{ url('img/owndays/logo.png') }}" alt="owndays logo" />
+      </a>
+    </header>
+
+
+        <main>
+            <div class="question-section">
+                <div class="intro-container">
+                    <img src="{{ url('img/owndays/intro.png') }}"
+                        alt="intro"
+                        class="intro-img">
+
+                    <!-- ปุ่มซ้อนอยู่บนรูป -->
+                    <a href="{{ url('/data') }}" class="btn-image-link">
+                    <img src="{{ url('img/owndays/พร้อมแล้ว-ไปต่อกันเลย@3x.png') }}"
+                        alt="พร้อมแล้ว ไปต่อกันเลย"
+                        class="btn-image">
+                    </a>
+                </div>
+            </div>
+        </main>
+
+
+    <footer>
+      <div class="copyright">
+        COPYRIGHT (C) OWNDAYS co., ltd. ALL RIGHTS RESERVED. <br> นโยบายความเป็นส่วนตัว | ข้อตกลงและเงื่อนไขในการบริการ
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
