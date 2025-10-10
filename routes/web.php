@@ -19,6 +19,7 @@ use App\Http\Controllers\ToyataController;
 |
 */
 
+Auth::routes();
 
 Route::domain('ttb.idx.co.th')->group(function () {
     Route::get('/', function () {
@@ -185,7 +186,7 @@ Route::get('/afternoon', function () {
     return view('afternoon');
 });
 
-Auth::routes();
+
 
 Route::post('/api_search', [EmployeeController::class, 'api_search']);
 
