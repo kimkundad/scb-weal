@@ -73,70 +73,113 @@ class OwndaysQuizController extends Controller
     // }
 
 
-    public function submitQuiz(Request $request)
-{
-    try {
-        // ✅ ดึงข้อมูลส่วนตัวจาก Session (เก็บจากหน้าแรก)
-        $userInfo = session('user_info', []);
+//     public function submitQuiz(Request $request)
+// {
+//     try {
+//         // ✅ ดึงข้อมูลส่วนตัวจาก Session (เก็บจากหน้าแรก)
+//         $userInfo = session('user_info', []);
 
-        // ✅ ดึงคำตอบทั้งหมดจากฟอร์ม
-        $answers = $request->input('answers', []);
+//         // ✅ ดึงคำตอบทั้งหมดจากฟอร์ม
+//         $answers = $request->input('answers', []);
 
-        // ✅ ตรวจว่ามีข้อมูลหรือไม่
-        if (empty($userInfo) || empty($answers)) {
-            return back()->with('error', 'ข้อมูลไม่ครบ กรุณากรอกใหม่อีกครั้ง');
+//         // ✅ ตรวจว่ามีข้อมูลหรือไม่
+//         if (empty($userInfo) || empty($answers)) {
+//             return back()->with('error', 'ข้อมูลไม่ครบ กรุณากรอกใหม่อีกครั้ง');
+//         }
+
+//         // ✅ จัดเรียงข้อมูลก่อนบันทึกลงชีต
+//         $row = [
+//             now()->format('Y-m-d H:i:s'),
+//             $userInfo['gender'] ?? '',
+//             $userInfo['age'] ?? '',
+//             $userInfo['career'] ?? '',
+//             $userInfo['province'] ?? '',
+//             $userInfo['income'] ?? '',
+//         ];
+
+//         // ✅ เพิ่มคำตอบแต่ละข้อเข้าไปต่อท้าย
+//         foreach ($answers as $ans) {
+//             $row[] = $ans;
+//         }
+
+//       //  dd($row);
+
+//         // ✅ บันทึกลง Google Sheet
+//         $this->googleSheet->appendRowFlexible(
+//             $this->spreadsheetId,
+//             $this->sheetName,
+//             $row
+//         );
+
+//         // ✅ เคลียร์ session หลังบันทึกเสร็จ
+//         $request->session()->forget('user_info');
+
+//         return redirect('/result')->with('success', 'ส่งข้อมูลเรียบร้อยแล้ว!');
+//     } catch (\Exception $e) {
+//         \Log::error('Google Sheet Error: ' . $e->getMessage());
+//         return back()->with('error', 'เกิดข้อผิดพลาดในการส่งข้อมูล');
+//     }
+// }
+
+
+        public function submitQuiz(Request $request)
+        {
+            try {
+                // ✅ ดึงข้อมูลส่วนตัวจาก Session
+                $userInfo = session('user_info', []);
+
+                // ✅ ดึงคำตอบทั้งหมดจากฟอร์ม
+                $answers = $request->input('answers', []);
+
+                // ✅ ตรวจสอบว่ามีข้อมูลหรือไม่
+                if (empty($userInfo) || empty($answers)) {
+                    return back()->with('error', 'ข้อมูลไม่ครบ กรุณากรอกใหม่อีกครั้ง');
+                }
+
+                // ✅ เตรียมข้อมูลสำหรับ Google Sheet
+                // เริ่มตั้งแต่ row 2 โดยใช้ appendRowFlexible
+                $row = [
+                    now('Asia/Bangkok')->format('Y-m-d H:i:s'),
+                    $userInfo['gender'] ?? '',
+                    $userInfo['age'] ?? '',
+                ];
+
+                // ✅ เพิ่มคำตอบทั้ง 7 ข้อเข้าไป
+                foreach ($answers as $ans) {
+                    $row[] = $ans;
+                }
+
+                // ✅ ส่งไป Google Sheets
+                $this->googleSheet->appendRowFlexible(
+                    $this->spreadsheetId,
+                    $this->sheetName,
+                    $row
+                );
+
+                // ✅ เคลียร์ session หลังบันทึกเสร็จ
+                $request->session()->forget('user_info');
+
+                // ✅ ไปหน้า result
+                return redirect('/result')->with('success', 'ส่งข้อมูลเรียบร้อยแล้ว!');
+            } catch (\Exception $e) {
+                \Log::error('Google Sheet Error: ' . $e->getMessage());
+                return back()->with('error', 'เกิดข้อผิดพลาดในการส่งข้อมูล');
+            }
         }
-
-        // ✅ จัดเรียงข้อมูลก่อนบันทึกลงชีต
-        $row = [
-            now()->format('Y-m-d H:i:s'),
-            $userInfo['gender'] ?? '',
-            $userInfo['age'] ?? '',
-            $userInfo['career'] ?? '',
-            $userInfo['province'] ?? '',
-            $userInfo['income'] ?? '',
-        ];
-
-        // ✅ เพิ่มคำตอบแต่ละข้อเข้าไปต่อท้าย
-        foreach ($answers as $ans) {
-            $row[] = $ans;
-        }
-
-      //  dd($row);
-
-        // ✅ บันทึกลง Google Sheet
-        $this->googleSheet->appendRowFlexible(
-            $this->spreadsheetId,
-            $this->sheetName,
-            $row
-        );
-
-        // ✅ เคลียร์ session หลังบันทึกเสร็จ
-        $request->session()->forget('user_info');
-
-        return redirect('/result')->with('success', 'ส่งข้อมูลเรียบร้อยแล้ว!');
-    } catch (\Exception $e) {
-        \Log::error('Google Sheet Error: ' . $e->getMessage());
-        return back()->with('error', 'เกิดข้อผิดพลาดในการส่งข้อมูล');
-    }
-}
-
 
 
     public function storeUserInfo(Request $request)
     {
+        // ✅ validate เฉพาะ 2 ฟิลด์ที่เหลืออยู่
         $validated = $request->validate([
             'gender' => 'required|string',
-            'age' => 'required|numeric|min:1|max:120',
-            'career' => 'required|string',
-            'province' => 'required|string',
-            'income' => 'required|string',
+            'age' => 'required|string|max:50', // วัน/เดือน/ปีเกิดเป็นข้อความ (ไม่ numeric แล้ว)
         ]);
 
-        // ✅ เก็บไว้ใน session
+        // ✅ เก็บลง session
         session(['user_info' => $validated]);
 
-        // ✅ ไปหน้า intro_quiz
+        // ✅ ไปหน้า intro_quiz ต่อ
         return redirect('/intro_quiz');
     }
 

@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
 
-    if(index === 5){
+    if(index === 6){
         nextBtn.innerHTML = `
           <img src="{{ url('img/owndays/checkBtn@3x.png') }}"
                alt="ยืนยันคำตอบ"
@@ -134,15 +134,10 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       else {
         // ✅ ถ้าคำถามสุดท้าย — เปลี่ยนปุ่มเป็น checkBtn
-        nextBtn.innerHTML = `
-          <img src="{{ url('img/owndays/checkBtn@3x.png') }}"
-               alt="ยืนยันคำตอบ"
-               class="btn-image">`;
+
 
         // ✅ เมื่อกดครั้งสุดท้าย ให้ submit form
-        nextBtn.addEventListener('click', () => {
-          document.getElementById('quizForm').submit();
-        });
+        document.getElementById('quizForm').submit();
       }
     });
   });

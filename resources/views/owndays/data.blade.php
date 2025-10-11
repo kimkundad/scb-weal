@@ -6,6 +6,12 @@
   <title>OwnDays</title>
   <link rel="stylesheet" href="{{ url('/home/assets/css/owndays.css') }}?v={{ time() }}" type="text/css" />
   <link rel="icon" type="image/x-icon" sizes="32x32" href="{{ url('/img/owndays/favicon.ico') }}?v={{ time() }}">
+
+  <!-- Flatpickr -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+
+
 </head>
 <body>
   <div class="wrapper">
@@ -26,57 +32,20 @@
         <form action="{{ url('/submitForm') }}" method="POST" id="infoForm" class="form-container">
         @csrf
 
-        <div class="form-row">
-          <div class="form-group">
-            <label>เพศ</label>
-            <select name="gender" required>
-              <option value="">ไม่ระบุ</option>
-              <option value="ชาย">ชาย</option>
-              <option value="หญิง">หญิง</option>
-              <option value="อื่นๆ">อื่นๆ</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>อายุ</label>
-            <input type="text" name="age" placeholder="24" value="{{ old('age') }}" required>
-          </div>
-        </div>
-
-
-
         <div class="form-group">
-          <label>อาชีพ</label>
-          <select name="career" required>
-            <option value="">เลือกกลุ่มอาชีพ</option>
-            <option value="นักเรียน/นักศึกษา">นักเรียน / นักศึกษา</option>
-            <option value="พนักงานออฟฟิศ">พนักงานออฟฟิศ</option>
-            <option value="เจ้าของกิจการ">เจ้าของกิจการ</option>
-            <option value="ฟรีแลนซ์">ฟรีแลนซ์</option>
-            <option value="อื่นๆ">อื่นๆ</option>
-          </select>
-        </div>
-
-        <div class="form-row">
-            <div class="form-group">
-                <label>จังหวัด</label>
-                <select name="province" id="province" required>
-                    <option value="">กำลังโหลด...</option>
+                <label>เพศ</label>
+                <select name="gender" required>
+                  <option value="">ไม่ระบุ</option>
+                  <option value="ชาย">ชาย</option>
+                  <option value="หญิง">หญิง</option>
+                  <option value="อื่นๆ">อื่นๆ</option>
                 </select>
-            </div>
+              </div>
 
-          <div class="form-group">
-            <label>รายได้โดยประมาณ</label>
-            <select name="income" required>
-              <option value="">เลือกช่วงรายได้</option>
-              <option value="ต่ำกว่า 10,000">ต่ำกว่า 10,000</option>
-              <option value="10,000-18,000">10,000 - 18,000</option>
-              <option value="18,001-30,000">18,001 - 30,000</option>
-              <option value="30,001-50,000">30,001 - 50,000</option>
-              <option value="มากกว่า 50,000">มากกว่า 50,000</option>
-            </select>
-          </div>
-        </div>
+              <div class="form-group">
+                <label>วัน/เดือน/ปีเกิด</label>
+                <input type="text" id="birthday" name="age" placeholder="เลือกวันเกิดของคุณ" required>
+            </div>
 
         <!-- ปุ่มซ้อนอยู่บนรูป -->
                        <a href="javascript:void(0)" onclick="submitInfoForm()"
@@ -102,6 +71,21 @@
     </footer>
   </div>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<!-- ภาษาไทย -->
+<script src="https://npmcdn.com/flatpickr/dist/l10n/th.js"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    flatpickr("#birthday", {
+      locale: "th",
+      dateFormat: "d/m/Y",       // รูปแบบไทย
+      maxDate: "today",          // ห้ามเลือกวันอนาคต
+      disableMobile: true,       // ใช้ theme เดิมบนมือถือด้วย
+      defaultDate: null
+    });
+  });
+</script>
 
 <script>
 function submitInfoForm() {
@@ -116,28 +100,7 @@ function submitInfoForm() {
 }
 </script>
 
-<script>
-  fetch("https://raw.githubusercontent.com/kongvut/thai-province-data/refs/heads/master/api/latest/province.json")
-    .then(res => {
-      if (!res.ok) throw new Error("HTTP error " + res.status);
-      return res.json();
-    })
-    .then(data => {
-      const sel = document.getElementById("province");
-      sel.innerHTML = '<option value="">เลือกจังหวัด</option>';
-      data.forEach(p => {
-        const opt = document.createElement("option");
-        opt.value = p.name_th;
-        opt.textContent = p.name_th;
-        sel.appendChild(opt);
-      });
-    })
-    .catch(err => {
-      console.error("โหลดจังหวัดไม่สำเร็จ:", err);
-      const sel = document.getElementById("province");
-      sel.innerHTML = '<option value="">ไม่สามารถโหลดข้อมูลได้</option>';
-    });
-</script>
+
 
 
 </html>

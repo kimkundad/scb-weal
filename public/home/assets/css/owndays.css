@@ -1012,3 +1012,34 @@ textarea::placeholder {
   line-height: 1.6;
   flex: 1;                  /* ให้ text ขยายเต็มพื้นที่ฝั่งขวา */
 }
+
+
+
+.flatpickr-input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #fff;
+  font-size: 14px;
+  color: #5a4b3b;
+  font-family: 'TTB Regular', sans-serif;
+}
+
+.flatpickr-calendar {
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  font-family: 'TTB Regular', sans-serif;
+}
+
+.flatpickr-day.today {
+  border-color: #bca983;
+  color: #a3342f;
+  font-weight: bold;
+}
+
+.flatpickr-day.selected {
+  background: #bca983;
+  color: white;
+  font-weight: bold;
+}
