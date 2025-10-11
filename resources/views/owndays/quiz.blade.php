@@ -114,9 +114,18 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
 
+    if(index === 5){
+        nextBtn.innerHTML = `
+          <img src="{{ url('img/owndays/checkBtn@3x.png') }}"
+               alt="ยืนยันคำตอบ"
+               class="btn-image">`;
+      }
+
     // เมื่อคลิก "ต่อไป"
     nextBtn.addEventListener('click', () => {
       if (!selected) return; // ยังไม่ได้เลือก หยุดไว้ก่อน
+      console.log('index', index, 'total', total)
+
 
       // ถ้ายังไม่ใช่คำถามสุดท้าย
       if (index < total - 1) {

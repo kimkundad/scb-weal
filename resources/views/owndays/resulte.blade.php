@@ -8,14 +8,14 @@
   <link rel="icon" type="image/x-icon" sizes="32x32" href="{{ url('/img/owndays/favicon.ico') }}?v={{ time() }}">
 </head>
 <body>
-  <div class="wrapper">
+  <div class="wrapper" style="background: {{ $product['bg'] }};">
     <header>
       <a href="{{ url('/') }}">
         <img src="{{ url('img/owndays/logo.png') }}" alt="owndays logo" />
       </a>
     </header>
 
-        <main style="background: url('{{ url('img/owndays/Rectangle%203@3x.png') }}') no-repeat center center; background-size: cover;">
+        <main >
 
             <div class="question-section">
                 <div class="intro-bg">
@@ -23,40 +23,32 @@
                     <div class="intro-container" >
 
                         <div style="height:680px">
-                            {{-- <img src="{{ url('img/owndays/Group 26@2x.png') }}" style="width: 84px; margin-top:40px">
-                            <img src="{{ url('img/owndays/title.png') }}" style="width: 395px">
-                            <img src="{{ url('img/owndays/detail.png') }}" style="width: 279px">
-                            <img src="{{ url('img/owndays/product.png') }}" style="width: 251px">
-                            <img src="{{ url('img/owndays/pro_detail.png') }}" style="width: 251px"> --}}
 
-                            <img src="{{ url('img/owndays/Group 26@2x.png') }}" style="width: 84px; ">
+
+                            <img src="{{ url('img/owndays/' . $product['path'] . '/img.png') }}" style="width:84px;">
 
 
                             <!-- หัวข้อหลัก -->
-                            <h2 class="result-title">
-                                เติมมุมมองความมั่นใจให้ตัวคุณ<br>
-                                ด้วยความกล้าแกร่งแบบสีแดง
+                            <h2 class="result-title" style="color: {{ $product['color_main'] }}">
+                                {!! $product['title'] !!}
                             </h2>
 
                             <!-- คำอธิบายสั้น -->
-                            <p class="result-subtitle">
-                                สีแดง แทนพลังธาตุไฟที่ก้าวข้ามทุกอุปสรรค<br>
-                                ด้วยความกระตือรือร้น
+                            <p class="result-subtitle" style="color: {{ $product['color_sub'] }}">
+                                {!! $product['subtitle'] !!}
                             </p>
 
                             <!-- เนื้อหาคำอธิบาย -->
-                            <p class="result-desc">
-                                ความมั่นใจในตัวคุณ เกิดจากความไม่ย่อต่อความท้าทายในสถานการณ์<br>
-                                การลงมือทำอย่างเชื่อมั่นในพลังที่ตัวเองมี<br>
-                                จะสร้างการเปลี่ยนแปลงให้คุณได้ในที่สุด
+                            <p class="result-desc" style="color: {{ $product['color_desc'] }}">
+                                {!! $product['desc'] !!}
                             </p>
 
                             <!-- ✅ สไลด์สินค้า -->
                             <div class="product-carousel">
                                 <div class="carousel-track">
-                                    <img src="{{ url('img/owndays/1/TH2001G-5A_C1.2.png') }}" alt="Product 1">
-                                    <img src="{{ url('img/owndays/1/TH2001G-5A_C1.3.png') }}" alt="Product 2">
-                                    <img src="{{ url('img/owndays/1/TH2001G-5A_C1.4.png') }}" alt="Product 3">
+                                    <img src="{{ url('img/owndays/' . $product['path'] . '/p1.png') }}" alt="Product 1">
+                                    <img src="{{ url('img/owndays/' . $product['path'] . '/p2.png') }}" alt="Product 2">
+                                    <img src="{{ url('img/owndays/' . $product['path'] . '/p3.png') }}" alt="Product 3">
                                     </div>
                                 <!-- ปุ่มเลื่อน -->
                                 <button class="carousel-btn prev">‹</button>
@@ -65,11 +57,8 @@
 
                             <!-- ข้อความด้านล่าง -->
                             <div class="result-footer">
-                                <p class="result-footer-title">
-                                ลองเติมมุมมองนี้ด้วยแว่น
-                                </p>
-                                <p class="result-footer-desc">
-                                Avatar 28 - Trimukha Ganapati The Avatar with Three Heads ...
+                                <p class="result-footer-title" style="color: {{ $product['color_footer'] }}">
+                                    {!! $product['footer'] !!}
                                 </p>
                             </div>
 

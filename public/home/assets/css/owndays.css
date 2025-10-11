@@ -259,6 +259,9 @@ line-height: 18px;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+      background: url('../../../img/owndays/BG.png') no-repeat center center;
+  background-size: cover;
+  position: relative;
   }
 
   header {
@@ -294,9 +297,7 @@ line-height: 18px;
   justify-content: center;
   align-items: start;
   padding: 20px 20px;
-  background: url('../../../img/owndays/Rectangle-3@3x.jpg') no-repeat center center;
-  background-size: cover;
-  position: relative;
+
 }
 
   main h2 {
@@ -364,6 +365,9 @@ line-height: 18px;
       background: #9CA6C1;
       align-items: center;
       justify-content: center;
+       background: url('../../../img/owndays/BG.png') no-repeat center center;
+  background-size: cover;
+  position: relative;
     }
 
     .form-container {
@@ -826,14 +830,14 @@ textarea::placeholder {
 .quiz-option span {
   font-family: 'TTB Regular', sans-serif;
   font-size: 16px;
-  color: #4a3f2b;
+  color: #574319;
 }
 
 /* ✅ หัวข้อใหญ่: ใช้ TTB ExtraBold */
 .result-title {
   font-family: 'TTB ExtraBold', sans-serif;
   font-size: 22px !important;
-  color: #a3342f; /* สีแดงเข้ม */
+  color: #BF888A; /* สีแดงเข้ม */
   line-height: 1.2;
   margin-bottom: 15px;
 
@@ -842,7 +846,7 @@ textarea::placeholder {
 /* ✅ หัวข้อรอง: ใช้ TTB Regular */
 .result-subtitle {
   font-family: 'TTB Regular', sans-serif;
-  color: #a3342f;
+  color: #574319;
   font-size: 15px;
   margin-bottom: 10px;
   line-height: 1.3;
@@ -852,7 +856,7 @@ textarea::placeholder {
 /* ✅ เนื้อหาอธิบาย: ใช้ TTB Regular */
 .result-desc {
   font-family: 'TTB Regular', sans-serif;
-  color: #4a3f2b;
+  color: #AB3B3F;
   font-size: 15px;
   line-height: 1.3;
   margin-bottom: 30px;
@@ -876,7 +880,7 @@ textarea::placeholder {
 .result-footer-title {
   font-family: 'TTB ExtraBold', sans-serif;
   font-size: 16px;
-  color: #4a3f2b;
+  color: #574319;
   margin-bottom: 5px;
   font-weight: 700;
 }
@@ -884,7 +888,7 @@ textarea::placeholder {
 .result-footer-desc {
   font-family: 'TTB Regular', sans-serif;
   font-size: 14px;
-  color: #4a3f2b;
+  color: #574319;
   opacity: 0.8;
   line-height: 1.4;
   font-weight: 700;

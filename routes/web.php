@@ -30,42 +30,40 @@ Route::domain('ttb.idx.co.th')->group(function () {
 });
 
 
-Route::domain('owndays.ideavivat.com')->group(function () {
- //owndays.ideavivat.com
-    Route::get('/', function () {
-            return view('owndays.index'); // หรือ controller ก็ได้
+    Route::domain('owndays.ideavivat.com')->group(function () {
+
+        Route::get('/', function () {
+                return view('owndays.index'); // หรือ controller ก็ได้
+        });
+
+        Route::get('/intro', function () {
+                return view('owndays.intro'); // หรือ controller ก็ได้
+        });
+
+        Route::get('/data', function () {
+                return view('owndays.data'); // หรือ controller ก็ได้
+        });
+
+        Route::get('/intro_quiz', function () {
+                return view('owndays.intro_quiz'); // หรือ controller ก็ได้
+        });
+
+        // Route::get('/quiz', function () {
+        //         return view('owndays.quiz'); // หรือ controller ก็ได้
+        // });
+
+        Route::get('/finalQuiz', function () {
+                return view('owndays.finalQuiz'); // หรือ controller ก็ได้
+        });
+
+        Route::get('/result', [OwndaysQuizController::class, 'showResult']);
+
+        Route::get('/quiz', [QuizController::class, 'show']);
+
+        Route::post('/quiz/submit', [OwndaysQuizController::class, 'submitQuiz']);
+
+        Route::post('/submitForm', [OwndaysQuizController::class, 'storeUserInfo']);
     });
-
-    Route::get('/intro', function () {
-            return view('owndays.intro'); // หรือ controller ก็ได้
-    });
-
-     Route::get('/data', function () {
-            return view('owndays.data'); // หรือ controller ก็ได้
-    });
-
-    Route::get('/intro_quiz', function () {
-            return view('owndays.intro_quiz'); // หรือ controller ก็ได้
-    });
-
-    // Route::get('/quiz', function () {
-    //         return view('owndays.quiz'); // หรือ controller ก็ได้
-    // });
-
-    Route::get('/finalQuiz', function () {
-            return view('owndays.finalQuiz'); // หรือ controller ก็ได้
-    });
-
-    Route::get('/result', function () {
-            return view('owndays.resulte'); // หรือ controller ก็ได้
-    });
-
-    Route::get('/quiz', [QuizController::class, 'show']);
-
-    Route::post('/quiz/submit', [OwndaysQuizController::class, 'submitQuiz']);
-
-    Route::post('/submitForm', [OwndaysQuizController::class, 'storeUserInfo']);
-});
 
 
 
