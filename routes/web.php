@@ -29,6 +29,7 @@ Route::domain('ttb.idx.co.th')->group(function () {
     });
 });
 
+
 Route::domain('owndays.ideavivat.com')->group(function () {
  //owndays.ideavivat.com
     Route::get('/', function () {
