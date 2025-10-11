@@ -48,9 +48,9 @@ Route::domain('owndays.ideavivat.com')->group(function () {
             return view('owndays.intro_quiz'); // หรือ controller ก็ได้
     });
 
-    Route::get('/quiz', function () {
-            return view('owndays.quiz'); // หรือ controller ก็ได้
-    });
+    // Route::get('/quiz', function () {
+    //         return view('owndays.quiz'); // หรือ controller ก็ได้
+    // });
 
     Route::get('/finalQuiz', function () {
             return view('owndays.finalQuiz'); // หรือ controller ก็ได้
