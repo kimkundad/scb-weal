@@ -20,7 +20,7 @@
             <div class="question-section">
                 <div class="intro-container2">
                     <div class="intro-container">
-                        <img src="{{ url('img/owndays/text@3x@3x.png') }}" style="width: 278px; margin-top:8px">
+                        <img src="{{ url('img/owndays/text@3x@3x.png') }}" style="width: 278px; margin-top:45px">
 
 
         <form action="{{ url('/submitForm') }}" method="POST" id="infoForm" class="form-container">
@@ -79,7 +79,8 @@
         </div>
 
         <!-- ปุ่มซ้อนอยู่บนรูป -->
-                        <a href="{{ url('/quiz') }}" class="btn-image-link" style="    bottom: auto; padding-top: 52px;">
+                       <a href="javascript:void(0)" onclick="submitInfoForm()"
+                        class="btn-image-link pt-45-res w-btn-90" style="bottom: auto;">
                         <img src="{{ url('img/owndays/confirm.png') }}"
                             alt="พร้อมแล้ว ไปต่อกันเลย"
                             class="btn-image">
@@ -101,6 +102,19 @@
     </footer>
   </div>
 </body>
+
+<script>
+function submitInfoForm() {
+  const form = document.getElementById('infoForm');
+
+  // ตรวจสอบว่า field สำคัญกรอกครบไหม
+  if (form.checkValidity()) {
+    form.submit();
+  } else {
+    form.reportValidity(); // แจ้งเตือนฟิลด์ที่ยังไม่ครบ
+  }
+}
+</script>
 
 <script>
   fetch("https://raw.githubusercontent.com/kongvut/thai-province-data/refs/heads/master/api/latest/province.json")
