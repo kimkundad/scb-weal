@@ -32,7 +32,7 @@ html, body {
 body {
   font-family: 'Aktiv Grotesk Thai', sans-serif;
   background: url('../../../img/owndays/BG.png') no-repeat center center;
-  background-size: cover;
+  background-size: auto;
   color: #4a3f2b;
   display: flex;
   justify-content: center;
@@ -188,6 +188,12 @@ line-height: 20px;
    🟡 Responsive
 =============================== */
 @media (min-width: 768px) {
+
+    body {
+  background-size: cover;
+}
+
+
   .page-wrapper {
     max-width: 600px;
     margin: 0 auto;
@@ -221,6 +227,11 @@ line-height: 20px;
 
 @media (min-width: 1080px) and (min-height: 1000px) {
 
+
+    body {
+  background-size: cover;
+}
+
       .page-wrapper {
     max-width: 800px;
     margin: 0 auto;
@@ -241,6 +252,8 @@ line-height: 20px;
   .page-wrapper2 {
     min-height: 100dvh;
   }
+
+
 
 }
 
