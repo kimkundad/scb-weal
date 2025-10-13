@@ -124,7 +124,7 @@ line-height: 20px;
   width: 85%;
   max-width: 360px;
   margin-bottom: 50px;
-
+  display: inline-table;
 }
 
 .start-btn img {

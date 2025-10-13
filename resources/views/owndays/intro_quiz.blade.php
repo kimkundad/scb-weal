@@ -41,6 +41,7 @@
         <a href="{{ url('/quiz') }}" class="start-btn">
                                 <img src="{{ url('img/owndays/start.png') }}" alt="พร้อมแล้ว ไปต่อกันเลย"
                                     class="btn-image">
+                                    <br><br>
                             </a>
 
                             <br><br>
