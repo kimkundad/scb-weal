@@ -7,9 +7,24 @@
     <title>OWNDAYS</title>
     <link rel="stylesheet" href="{{ url('/home/assets/css/intro.css') }}?v={{ time() }}" type="text/css" />
     <link rel="icon" type="image/x-icon" sizes="32x32" href="{{ url('/img/owndays/favicon.ico') }}">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/airbnb.css">
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
+<style>
+/* ✅ เพิ่ม dropdown ให้เลือกปีและเดือนได้ง่ายขึ้น */
+.flatpickr-current-month {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+
+.flatpickr-monthDropdown-months, .numInput.cur-year {
+  font-size: 15px !important;
+  padding: 2px 6px !important;
+  border-radius: 4px;
+  background-color: #f3f3f3;
+  border: 1px solid #ddd;
+}
+</style>
 
 </head>
 
@@ -78,21 +93,78 @@
 </body>
 
 
-
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
  <!-- ✅ Script: ใช้ พ.ศ. ตลอด + แปลงกลับ ค.ศ. ก่อนส่ง -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-  flatpickr("#birthday", {
-    locale: "th",                // ใช้ปี พ.ศ. อัตโนมัติ
+  const input = document.getElementById("birthday");
+
+  const fp = flatpickr(input, {
+    locale: "th",
     dateFormat: "d/m/Y",
     maxDate: "today",
     disableMobile: true,
-    allowInput: true,
+    allowInput: false, // ✅ ปิดโหมด manual เพื่อไม่ให้ค่าหาย
+    clickOpens: true,
 
-    // ✅ ทำให้เลือกปีง่ายขึ้น
-    monthSelectorType: "dropdown",
-    yearSelectorType: "dropdown",
+    onReady: enhanceYearDropdown,
+    onOpen: enhanceYearDropdown,
+    onYearChange: enhanceYearDropdown,
+    onMonthChange: enhanceYearDropdown,
+
+    onChange: function(selectedDates, dateStr, instance) {
+      if (dateStr) {
+        const [d, m, y] = dateStr.split("/");
+        const buddhistYear = parseInt(y) + 543;
+        input.value = `${d}/${m}/${buddhistYear}`; // ✅ แสดงเป็น พ.ศ.
+      }
+    },
   });
+
+  // ✅ แปลงปีใน Header เป็น Dropdown + พ.ศ.
+  function enhanceYearDropdown(selectedDates, dateStr, instance) {
+    const yearEl = instance.currentYearElement;
+    if (!yearEl) return;
+
+    // ถ้าไม่เคยเปลี่ยนเป็น select ให้เปลี่ยนเลย
+    if (yearEl.tagName.toLowerCase() !== "select") {
+      const currentYear = parseInt(yearEl.value);
+      const select = document.createElement("select");
+      select.className = "flatpickr-year-select";
+
+      // ✅ เพิ่มปีในช่วงที่เหมาะสม เช่น 1950 - ปัจจุบัน
+      for (let y = 1950; y <= new Date().getFullYear(); y++) {
+        const option = document.createElement("option");
+        option.value = y;
+        option.textContent = y + 543; // แสดงเป็น พ.ศ.
+        if (y === currentYear) option.selected = true;
+        select.appendChild(option);
+      }
+
+      // แทนที่ year input เดิม
+      yearEl.parentNode.replaceChild(select, yearEl);
+
+      // ✅ เมื่อผู้ใช้เลือกปีใหม่
+      select.addEventListener("change", function () {
+        instance.changeYear(parseInt(this.value)); // Flatpickr API
+      });
+    }
+  }
+
+  // ✅ ก่อนส่ง form แปลงกลับเป็น ค.ศ.
+  const form = document.getElementById("infoForm");
+  if (form) {
+    form.addEventListener("submit", function () {
+      const parts = input.value.split("/");
+      if (parts.length === 3) {
+        let [d, m, y] = parts;
+        if (parseInt(y) > 2500) {
+          input.value = `${d}/${m}/${parseInt(y) - 543}`;
+        }
+      }
+    });
+  }
 });
 </script>
 
