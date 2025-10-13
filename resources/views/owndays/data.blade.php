@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="{{ url('/home/assets/css/intro.css') }}?v={{ time() }}" type="text/css" />
     <link rel="icon" type="image/x-icon" sizes="32x32" href="{{ url('/img/owndays/favicon.ico') }}">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/airbnb.css">
-
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
 
 </head>
 
@@ -76,20 +77,21 @@
     </div>
 </body>
 
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
-
 
 
  <!-- ✅ Script: ใช้ พ.ศ. ตลอด + แปลงกลับ ค.ศ. ก่อนส่ง -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   flatpickr("#birthday", {
-    locale: "th",           // ✅ ภาษาไทย + พ.ศ.
-    dateFormat: "d M Y",    // ✅ วันที่ เดือน (ย่อ) ปี พ.ศ.
+    locale: "th",                // ใช้ปี พ.ศ. อัตโนมัติ
+    dateFormat: "d/m/Y",
     maxDate: "today",
-    disableMobile: true,    // ✅ บังคับให้ใช้ UI Flatpickr บนมือถือ
+    disableMobile: true,
     allowInput: true,
+
+    // ✅ ทำให้เลือกปีง่ายขึ้น
+    monthSelectorType: "dropdown",
+    yearSelectorType: "dropdown",
   });
 });
 </script>
