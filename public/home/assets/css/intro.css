@@ -363,7 +363,6 @@ textarea::placeholder {
   font-size: 24px;
   color: #7c6c56;
   margin-bottom: 10px;
-  text-align: left;
 }
 
 .quiz-question {
