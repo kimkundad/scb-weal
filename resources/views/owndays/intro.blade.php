@@ -20,7 +20,7 @@
     </header>
 
     <!-- Main Content -->
-    <main class="page-content" style="width: 100%;">
+    <main class="page-content" >
 
 
 
@@ -30,11 +30,11 @@
 
                     <img src="{{ url('img/owndays/text@3x@3x.png') }}"
                         alt="intro"
-                        class="intro-img">
+                        class="intro-img ">
 
                         <img src="{{ url('img/owndays/หลายความสำเร็จที่มีความหม@3x.png') }}"
                         alt="intro"
-                        class="intro-img">
+                        class="mt-10 img-w">
 
         <a href="{{ url('/data') }}" class="start-btn">
             <img src="{{ url('img/owndays/พร้อมแล้ว-ไปต่อกันเลย@3x.png') }}"

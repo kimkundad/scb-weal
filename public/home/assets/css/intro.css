@@ -63,7 +63,7 @@ body {
   align-items: center;
   min-height: 100vh;
   width: 100%;
-  max-width: 480px;
+
 
   box-sizing: border-box;
   position: relative;
@@ -76,7 +76,7 @@ body {
   width: 100%;
   text-align: left;
   background: #fff;
-  padding: 10px 0;
+  padding: 15px 0;
 }
 
 .page-header img {
@@ -94,7 +94,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 30px 20px;
+  margin: 30px 20px;
   font-family: 'Aktiv Grotesk Thai', sans-serif !important;
 }
 
@@ -172,6 +172,18 @@ line-height: 20px;
     margin-top: 450px;
 }
 
+.img-w{
+    width: 95%;
+}
+.mt-30{
+    margin-top: 30px;
+}
+.mt-20{
+    margin-top: 20px;
+}
+.mt-10{
+    margin-top: 10px;
+}
 /* ===============================
    🟡 Responsive
 =============================== */
@@ -180,6 +192,10 @@ line-height: 20px;
     max-width: 600px;
     margin: 0 auto;
   }
+
+  .img-w{
+    width: 90%;
+}
 
     .page-wrapper2 {
     max-width: 600px;
@@ -335,9 +351,11 @@ textarea::placeholder {
   font-size: 24px;
   color: #7c6c56;
   margin-bottom: 10px;
+  text-align: left;
 }
 
 .quiz-question {
+    text-align: left;
   font-size: 18px;
   line-height: 1.6;
   margin-bottom: 20px;

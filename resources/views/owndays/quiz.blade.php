@@ -20,7 +20,7 @@
         </header>
 
         <!-- Main Content -->
-        <main class="page-content" style="width: 100%;">
+        <main class="page-content" >
 
 
 

@@ -7,7 +7,9 @@
     <title>OWNDAYS</title>
     <link rel="stylesheet" href="{{ url('/home/assets/css/intro.css') }}?v={{ time() }}" type="text/css" />
     <link rel="icon" type="image/x-icon" sizes="32x32" href="{{ url('/img/owndays/favicon.ico') }}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="{{ url('bootstrap-datepicker-thai/jquery.datetimepicker.css') }}">
+
+
 </head>
 
 <body>
@@ -21,7 +23,7 @@
         </header>
 
         <!-- Main Content -->
-        <main class="page-content" style="width: 100%;">
+        <main class="page-content" >
 
 
             <div class="intro-bg">
@@ -73,57 +75,66 @@
 
     </div>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<!-- ภาษาไทย -->
-<script src="https://npmcdn.com/flatpickr/dist/l10n/th.js"></script>
 
-<!-- script -->
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  flatpickr("#birthday", {
-    locale: "th",
-    dateFormat: "d/m/Y",
-    maxDate: "today",
-    disableMobile: true,
-    allowInput: true,
+<!-- ✅ ใช้เวอร์ชันที่มี thaiyear ทำงานแน่นอน -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="{{ url('bootstrap-datepicker-thai/jquery.datetimepicker.full.js') }}"></script>
 
-    onReady: fixThaiYear,
-    onOpen: fixThaiYear,
-    onMonthChange: fixThaiYear,
-    onYearChange: fixThaiYear,
-  });
 
-  function fixThaiYear(selectedDates, dateStr, instance) {
-    // ✅ แก้ปีใน header ของปฏิทินให้เป็นพ.ศ.
-    setTimeout(() => {
-      const yearEl = instance.calendarContainer.querySelector(".cur-year");
-      if (yearEl) {
-        const year = parseInt(yearEl.value);
-        if (year < 2500) yearEl.value = year + 543;
-      }
 
-      // ✅ ป้องกัน scroll เปลี่ยนปี
-      const numInputs = instance.calendarContainer.querySelectorAll(".numInputWrapper");
-      numInputs.forEach(wrapper => {
-        wrapper.addEventListener("wheel", e => e.preventDefault());
-      });
-    }, 10);
-  }
 
-  // ✅ แปลงเป็นพ.ศ.เฉพาะตอนผู้ใช้พิมพ์เสร็จ (input blur)
-  const input = document.getElementById("birthday");
-  input.addEventListener("blur", () => {
-    const parts = input.value.split("/");
-    if (parts.length === 3) {
-      let [day, month, year] = parts;
-      year = parseInt(year);
-      if (year && year < 2400) {
-        input.value = `${day}/${month}/${year + 543}`;
-      }
-    }
-  });
+ <!-- ✅ Script: ใช้ พ.ศ. ตลอด + แปลงกลับ ค.ศ. ก่อนส่ง -->
+<script type="text/javascript">
+$(function(){
+
+    $.datetimepicker.setLocale('th'); // ต้องกำหนดเสมอถ้าใช้ภาษาไทย และ เป็นปี พ.ศ.
+
+    // กรณีใช้แบบ inline
+    $("#testdate4").datetimepicker({
+        timepicker:false,
+        format:'d-m-Y',  // กำหนดรูปแบบวันที่ ที่ใช้ เป็น 00-00-0000
+        lang:'th',  // ต้องกำหนดเสมอถ้าใช้ภาษาไทย และ เป็นปี พ.ศ.
+        inline:true
+    });
+
+
+    // กรณีใช้แบบ input
+    // กรณีใช้แบบ input
+    $("#birthday").datetimepicker({
+        timepicker:false,
+        format:'d-m-Y',  // กำหนดรูปแบบวันที่ ที่ใช้ เป็น 00-00-0000
+        lang:'th',  // ต้องกำหนดเสมอถ้าใช้ภาษาไทย และ เป็นปี พ.ศ.
+        onSelectDate:function(dp,$input){
+            var yearT=new Date(dp).getFullYear()-0;
+            var yearTH=yearT+543;
+            var fulldate=$input.val();
+            var fulldateTH=fulldate.replace(yearT,yearTH);
+            $input.val(fulldateTH);
+        },
+    });
+    // กรณีใช้กับ input ต้องกำหนดส่วนนี้ด้วยเสมอ เพื่อปรับปีให้เป็น ค.ศ. ก่อนแสดงปฏิทิน
+    $("#birthday").on("mouseenter mouseleave",function(e){
+        var dateValue=$(this).val();
+        if(dateValue!=""){
+                var arr_date=dateValue.split("-"); // ถ้าใช้ตัวแบ่งรูปแบบอื่น ให้เปลี่ยนเป็นตามรูปแบบนั้น
+                // ในที่นี้อยู่ในรูปแบบ 00-00-0000 เป็น d-m-Y  แบ่งด่วย - ดังนั้น ตัวแปรที่เป็นปี จะอยู่ใน array
+                //  ตัวที่สอง arr_date[2] โดยเริ่มนับจาก 0
+                if(e.type=="mouseenter"){
+                    var yearT=arr_date[2]-543;
+                }
+                if(e.type=="mouseleave"){
+                    var yearT=parseInt(arr_date[2])+543;
+                }
+                dateValue=dateValue.replace(arr_date[2],yearT);
+                $(this).val(dateValue);
+        }
+    });
+
+
 });
 </script>
+
+
 
 
 <script>

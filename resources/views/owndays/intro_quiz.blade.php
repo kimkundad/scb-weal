@@ -20,7 +20,7 @@
     </header>
 
     <!-- Main Content -->
-    <main class="page-content" style="width: 100%;">
+    <main class="page-content" >
 
 
 
@@ -34,7 +34,7 @@
 
                         <img src="{{ url('img/owndays/ภาพ ‘ตัวตนของฉัน’ ที่คุณรั@3x.png') }}"
                         alt="intro"
-                        class="intro-img">
+                        class="mt-10 img-w">
 
 
 

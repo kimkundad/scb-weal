@@ -20,7 +20,7 @@
         </header>
 
         <!-- Main Content -->
-        <main class="page-content" style="width: 100%;">
+        <main class="page-content" >
 
 
 
@@ -71,7 +71,7 @@
                     </a>
 
                     <a href="{{ url('/') }}" style="margin-bottom: 30px;">
-                        <img src="{{ url('img/owndays/reNew.png') }}" style="width: 100%">
+                        <img src="{{ url('img/owndays/reNew.png') }}" style="width: 80%">
                     </a>
 
                     <br><br>
