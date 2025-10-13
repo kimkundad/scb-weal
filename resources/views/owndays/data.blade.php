@@ -7,7 +7,7 @@
     <title>OWNDAYS</title>
     <link rel="stylesheet" href="{{ url('/home/assets/css/intro.css') }}?v={{ time() }}" type="text/css" />
     <link rel="icon" type="image/x-icon" sizes="32x32" href="{{ url('/img/owndays/favicon.ico') }}">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/airbnb.css">
 
 
 </head>
@@ -87,17 +87,12 @@
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   flatpickr("#birthday", {
-    locale: "th",              // ภาษาไทย
-    dateFormat: "d/m/Y",       // แสดงแบบไทย
-    maxDate: "today",          // ห้ามเลือกอนาคต
-    disableMobile: true,
+    locale: "th",           // ✅ ภาษาไทย + พ.ศ.
+    dateFormat: "d M Y",    // ✅ วันที่ เดือน (ย่อ) ปี พ.ศ.
+    maxDate: "today",
+    disableMobile: true,    // ✅ บังคับให้ใช้ UI Flatpickr บนมือถือ
     allowInput: true,
-
-
   });
-
-
-
 });
 </script>
 
