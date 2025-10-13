@@ -1,5 +1,5 @@
-@font-face {
-    font-family: 'TTB Regular';
+/* @font-face {
+    font-family: 'Aktiv Grotesk Thai';
     src: url('../../../fonts/ttb-regular.woff2') format('woff2'),
          url('../../../fonts/ttb-regular.woff') format('woff'),
          url('../../../fonts/ttb-regular.eot') format('embedded-opentype');
@@ -17,34 +17,56 @@
 }
 
 @font-face {
-    font-family: 'TTB ExtraBold';
+    font-family: 'Aktiv Grotesk Thai';
     src: url('../../../fonts/ttb-bold.woff2') format('woff2'),
          url('../../../fonts/ttb-bold.woff') format('woff'),
          url('../../../fonts/ttb-bold.eot') format('embedded-opentype');
     font-weight: 800;
     font-style: normal;
+} */
+
+/* === Aktiv Grotesk TWHK === */
+@font-face {
+  font-family: 'Aktiv Grotesk Thai';
+  src: url('/fonts/AktivGroteskThai-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Aktiv Grotesk Thai';
+  src: url('/fonts/AktivGroteskThai-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
 }
 
 
 body {
-    font-family: 'TTB Regular', sans-serif;
+    font-family: 'Aktiv Grotesk Thai', sans-serif !important;
 }
 .quiz-question{
-    font-family: 'TTB ExtraBold', sans-serif;
+    font-family: 'Aktiv Grotesk Thai', sans-serif;
+    font-weight: 700;
     font-size: 16px;
 }
 h1, h2, h3, h4, h5, h6, button {
-  font-family: 'TTB ExtraBold', sans-serif !important;
+  font-family: 'Aktiv Grotesk Thai', sans-serif !important;
+  font-weight: 700;
 }
 span, p , li ,strong, option , label, input, a, b, textarea {
-  font-family: 'TTB Regular', sans-serif !important;
+  font-family: 'Aktiv Grotesk Thai', sans-serif !important;
+font-weight: 400;
 }
 .copyright{
-    font-family: 'TTB Regular', sans-serif !important;
+    font-family: 'Aktiv Grotesk Thai', sans-serif !important;
+    font-weight: 400;
 }
 
 .message{
-    font-family: 'TTB ExtraBold', sans-serif !important;
+    font-family: 'Aktiv Grotesk Thai', sans-serif !important;
+    font-weight: 700;
 }
 
 .question-section {
@@ -76,7 +98,8 @@ span, p , li ,strong, option , label, input, a, b, textarea {
   .head-text{
     font-size: 18px;
     color: white;
-    font-family: 'TTB ExtraBold', sans-serif !important;
+    font-family: 'Aktiv Grotesk Thai', sans-serif !important;
+    font-weight: 700;
   }
   .question-list {
     display: flex;
@@ -361,6 +384,7 @@ line-height: 18px;
 
   /* ========================== Desktop Style ========================== */
   @media (min-width: 768px) {
+
     .wrapper {
       background: #9CA6C1;
       align-items: center;
@@ -667,7 +691,7 @@ line-height: 18px;
   margin: 0 auto;
   background: transparent;
   color: #4a3f2b;
-  font-family: 'TTB Regular', sans-serif;
+  font-family: 'Aktiv Grotesk Thai', sans-serif;
 }
 
 .form-group label {
@@ -712,7 +736,7 @@ input[type="tel"],
 input[type="email"],
 textarea,
 select {
-  font-family: 'TTB Regular', sans-serif !important;  /* ✅ ใช้ฟอนต์ TTB Regular */
+  font-family: 'Aktiv Grotesk Thai', sans-serif !important;  /* ✅ ใช้ฟอนต์ Aktiv Grotesk Thai */
   font-size: 16px;
   color: #333;
 }
@@ -720,7 +744,7 @@ select {
 /* ให้ placeholder ก็ใช้ฟอนต์เดียวกันด้วย */
 input::placeholder,
 textarea::placeholder {
-  font-family: 'TTB Regular', sans-serif !important;
+  font-family: 'Aktiv Grotesk Thai', sans-serif !important;
   color: #999;
 }
 
@@ -828,39 +852,40 @@ textarea::placeholder {
 }
 
 .quiz-option span {
-  font-family: 'TTB Regular', sans-serif;
+  font-family: 'Aktiv Grotesk Thai', sans-serif;
   font-size: 16px;
   color: #574319;
 }
 
-/* ✅ หัวข้อใหญ่: ใช้ TTB ExtraBold */
+/* ✅ หัวข้อใหญ่: ใช้ Aktiv Grotesk Thai */
 .result-title {
-  font-family: 'TTB ExtraBold', sans-serif;
+  font-family: 'Aktiv Grotesk Thai', sans-serif;
   font-size: 22px !important;
   color: #BF888A; /* สีแดงเข้ม */
   line-height: 1.2;
   margin-bottom: 15px;
+  font-weight: 700;
 
 }
 
-/* ✅ หัวข้อรอง: ใช้ TTB Regular */
+/* ✅ หัวข้อรอง: ใช้ Aktiv Grotesk Thai */
 .result-subtitle {
-  font-family: 'TTB Regular', sans-serif;
+  font-family: 'Aktiv Grotesk Thai', sans-serif;
   color: #574319;
   font-size: 15px;
   margin-bottom: 10px;
   line-height: 1.3;
-  font-weight: 700;
+  font-weight: 500;
 }
 
-/* ✅ เนื้อหาอธิบาย: ใช้ TTB Regular */
+/* ✅ เนื้อหาอธิบาย: ใช้ Aktiv Grotesk Thai */
 .result-desc {
-  font-family: 'TTB Regular', sans-serif;
+  font-family: 'Aktiv Grotesk Thai', sans-serif;
   color: #AB3B3F;
   font-size: 15px;
   line-height: 1.3;
   margin-bottom: 30px;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 /* ✅ รูปแว่น */
@@ -878,15 +903,15 @@ textarea::placeholder {
 }
 
 .result-footer-title {
-  font-family: 'TTB ExtraBold', sans-serif;
+  font-family: 'Aktiv Grotesk Thai', sans-serif;
   font-size: 16px;
   color: #574319;
   margin-bottom: 5px;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .result-footer-desc {
-  font-family: 'TTB Regular', sans-serif;
+  font-family: 'Aktiv Grotesk Thai', sans-serif;
   font-size: 14px;
   color: #574319;
   opacity: 0.8;
@@ -994,7 +1019,7 @@ textarea::placeholder {
   margin-bottom: 2px;
   line-height: 1.5;
   cursor: pointer;
-  font-family: 'TTB Regular', sans-serif;
+  font-family: 'Aktiv Grotesk Thai', sans-serif;
 }
 
 .quiz-option input[type="radio"] {
@@ -1023,13 +1048,13 @@ textarea::placeholder {
   background: #fff;
   font-size: 14px;
   color: #5a4b3b;
-  font-family: 'TTB Regular', sans-serif;
+  font-family: 'Aktiv Grotesk Thai', sans-serif;
 }
 
 .flatpickr-calendar {
   border-radius: 12px;
   box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-  font-family: 'TTB Regular', sans-serif;
+  font-family: 'Aktiv Grotesk Thai', sans-serif;
 }
 
 .flatpickr-day.today {
@@ -1042,4 +1067,63 @@ textarea::placeholder {
   background: #bca983;
   color: white;
   font-weight: bold;
+}
+
+.bgfi {
+  /* ทำให้พื้นหลังเต็มหน้าจอ */
+  background: url('../../../img/owndays/backgroung-intro@3x.png') no-repeat center top;
+  background-size: cover;         /* ใช้ cover ให้เต็มขอบ */
+  background-position: center;
+
+  /* ทำให้เนื้อหาภายในจัด layout ได้ */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;      /* ให้ปุ่มอยู่ด้านล่าง */
+  align-items: center;            /* จัดให้อยู่ตรงกลางแนวนอน */
+
+  /* ให้สูงเต็มจอจริง */
+  height: 100vh;
+  min-height: 100vh;
+
+  /* เผื่อ Safari / iOS */
+  height: 100dvh;
+  min-height: 100dvh;
+
+  /* ตัด margin / padding ที่อาจรบกวน */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* optional — ปรับให้ข้อความอยู่กลางหรือด้านบน */
+.bgfi p {
+  color: #333;
+  font-size: 14px;
+  line-height: 1.6;
+  text-align: center;
+  max-width: 85%;
+  margin: 0 auto 2rem;
+}
+
+
+/* ✅ BG เต็มหน้าจอแน่นอน */
+.wrapper {
+  position: relative;
+  width: 100%;
+  height: 100vh;          /* ความสูงเท่ากับจอ */
+  min-height: 100vh;
+  background: url('../../../img/owndays/BG.png') no-repeat center center;
+  background-size: cover; /* ✅ ให้ภาพคลุมทั้งจอ */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* ถ้ามีปุ่มด้านล่าง */
+  align-items: center;
+  overflow: hidden;       /* ป้องกัน scroll เกิน */
+}
+
+/* รองรับ Safari / iOS */
+@supports (height: 100dvh) {
+  .wrapper {
+    height: 100dvh;
+  }
 }

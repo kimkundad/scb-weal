@@ -35,18 +35,26 @@
 
   <div class="quiz-wrapper">
     @foreach ($questions as $index => $q)
-      <div class="quiz-block" id="question-{{ $index }}" style="display: {{ $index == 0 ? 'block' : 'none' }};">
+      <div class="quiz-block" id="question-{{ $index }}"
+       style="display: {{ $index == 0 ? 'block' : 'none' }}; {{ $index == 7 ? 'display:none;' : '' }}">
 
-        <div class="quiz-progress">{{ $index + 1 }}/{{ count($questions) }}</div>
+        {{-- โปรเกรส: ปกติแสดง 1/7 ... 7/7; ข้อ 8 จะอัปเดตเป็น 8/8 ทาง JS ตอนปลดล็อก --}}
+        <div class="quiz-progress">
+            <span class="cur">{{ min($index+1, 7) }}</span>/<span class="total">7</span>
+        </div>
         <div class="quiz-question">{{ $q['question'] }}</div>
 
         <div class="quiz-options">
-          @foreach ($q['choices'] as $choice)
+          @foreach ($q['choices'] as $cIdx => $choice)
             <label class="quiz-option">
-              <input type="radio" name="answers[{{ $index }}]" value="{{ $choice }}">
-              <span>{{ $choice }}</span>
+                {{-- เก็บ index ของ choice ด้วย จะช่วยนับคะแนน --}}
+                <input type="radio"
+                    name="answers[{{ $index }}]"
+                    value="{{ $cIdx + 1 }}"
+                    data-choice-index="{{ $cIdx }}">
+                <span>{{ $choice }}</span>
             </label>
-          @endforeach
+            @endforeach
         </div>
 
         {{-- ปุ่มต่อไป --}}
@@ -92,20 +100,48 @@
 
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const questions = document.querySelectorAll('.quiz-block');
-  const total = questions.length;
+document.addEventListener('DOMContentLoaded', function () {
+  const blocks   = [...document.querySelectorAll('.quiz-block')];
+  const totalAll = blocks.length;       // จริง ๆ = 8
+  const q8       = document.querySelector('#question-7'); // บล็อกข้อ 8
+  const chosenIdx = {}; // เก็บ choice-index ที่เลือกในแต่ละข้อ: {0:2, 1:5, ...}
 
-  questions.forEach((block, index) => {
+  // ฟังก์ชันช่วย: เช็คว่ามี "เสมอกันที่อันดับ 1" ไหม
+  function isTopTie(countMap) {
+    // countMap เช่น [2,3,0,3,1,0]
+    const max = Math.max(...countMap);
+    const howManyMax = countMap.filter(v => v === max).length;
+    return howManyMax >= 2; // เสมอถ้าจำนวนที่มีค่ามากสุดมากกว่า 1
+  }
+
+  // นับคะแนนจากคำตอบ 7 ข้อแรก (เฉพาะข้อ 0..6)
+  function buildCountsFromFirst7() {
+    // เรามีตัวเลือก 6 ตัว (A..F) → สร้าง array 6 ช่องไว้เก็บนับ
+    const counts = [0,0,0,0,0,0];
+    for (let q = 0; q <= 6; q++) {
+      const c = chosenIdx[q];
+      if (typeof c === 'number' && c >=0 && c < 6) counts[c]++;
+    }
+    return counts;
+  }
+
+  // อัปเดตปุ่มข้อ 7 (index 6) ให้แสดงภาพ check (เพราะจะไปสู่การตัดสิน)
+  const lastOfFirst7 = document.querySelector('#question-6 .next-btn img');
+  if (lastOfFirst7) {
+    lastOfFirst7.src = "{{ url('img/owndays/checkBtn@3x.png') }}";
+    lastOfFirst7.alt = "ยืนยันคำตอบ";
+  }
+
+  // ตั้งค่า enable/disable ปุ่มเมื่อยังไม่เลือก
+  blocks.forEach((block, index) => {
     const nextBtn = block.querySelector('.next-btn');
-    const radios = block.querySelectorAll('input[type="radio"]');
-    let selected = false;
+    const radios  = block.querySelectorAll('input[type="radio"]');
+    let selected  = false;
 
-    // เริ่มต้นปิดปุ่มไว้ก่อน
+    // disable ปุ่มก่อนเลือก
     nextBtn.style.pointerEvents = 'none';
     nextBtn.style.opacity = '0.5';
 
-    // เมื่อเลือก radio
     radios.forEach(radio => {
       radio.addEventListener('change', () => {
         selected = true;
@@ -114,35 +150,77 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
 
-    if(index === 6){
-        nextBtn.innerHTML = `
-          <img src="{{ url('img/owndays/checkBtn@3x.png') }}"
-               alt="ยืนยันคำตอบ"
-               class="btn-image">`;
-      }
-
-    // เมื่อคลิก "ต่อไป"
     nextBtn.addEventListener('click', () => {
-      if (!selected) return; // ยังไม่ได้เลือก หยุดไว้ก่อน
-      console.log('index', index, 'total', total)
+      if (!selected) return;
 
-
-      // ถ้ายังไม่ใช่คำถามสุดท้าย
-      if (index < total - 1) {
-        block.style.display = 'none';
-        questions[index + 1].style.display = 'block';
+      // บันทึก index ของ choice ที่เลือก (ไว้คำนวณคะแนน)
+      const picked = block.querySelector('input[type="radio"]:checked');
+      if (picked) {
+        const cIdx = Number(picked.dataset.choiceIndex); // 0..5
+        chosenIdx[index] = cIdx;
       }
-      else {
-        // ✅ ถ้าคำถามสุดท้าย — เปลี่ยนปุ่มเป็น checkBtn
 
+      // --- กรณี index <= 5: ไปข้อถัดไปปกติ
+      if (index < 6) {
+        block.style.display = 'none';
+        blocks[index + 1].style.display = 'block';
+        return;
+      }
 
-        // ✅ เมื่อกดครั้งสุดท้าย ให้ submit form
+      // --- เมื่ออยู่ที่ข้อ 7 (index === 6) → ตรวจเสมอ
+      if (index === 6) {
+        const counts = buildCountsFromFirst7();
+        const tie = isTopTie(counts);
+
+        if (tie) {
+          // ปลดล็อกข้อ 8
+          if (q8) {
+            // อัปเดต progress ของข้อ 8 เป็น 8/8
+            const cur = q8.querySelector('.quiz-progress .cur');
+            const total = q8.querySelector('.quiz-progress .total');
+            if (cur) cur.textContent = '8';
+            if (total) total.textContent = '8';
+
+            block.style.display = 'none';
+            q8.style.display = 'block';
+
+            // เปลี่ยนปุ่มของข้อ 8 เป็นปุ่ม check (และกดแล้ว submit)
+            const q8BtnImg = q8.querySelector('.next-btn img');
+            if (q8BtnImg) {
+              q8BtnImg.src = "{{ url('img/owndays/checkBtn@3x.png') }}";
+              q8BtnImg.alt = "ยืนยันคำตอบ";
+            }
+
+            const q8Btn = q8.querySelector('.next-btn');
+            const q8Radios = q8.querySelectorAll('input[type="radio"]');
+            // ตัวตรวจเลือกสำหรับข้อ 8
+            q8Btn.style.pointerEvents = 'none';
+            q8Btn.style.opacity = '0.5';
+            q8Radios.forEach(r => {
+              r.addEventListener('change', () => {
+                q8Btn.style.pointerEvents = 'auto';
+                q8Btn.style.opacity   = '1';
+              });
+            });
+            q8Btn.onclick = () => document.getElementById('quizForm').submit();
+          }
+        } else {
+          // ไม่มีเสมอ → ส่งเลย
+          document.getElementById('quizForm').submit();
+        }
+
+        return;
+      }
+
+      // --- เผื่อกรณีมาถึงข้อ 8 แล้ว (index === 7) → ส่งเลย
+      if (index === 7) {
         document.getElementById('quizForm').submit();
       }
     });
   });
 });
 </script>
+
 
 
 

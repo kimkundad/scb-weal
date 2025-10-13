@@ -124,12 +124,16 @@ class OwndaysQuizController extends Controller
 
         public function submitQuiz(Request $request)
         {
+
+
             try {
                 // ✅ ดึงข้อมูลส่วนตัวจาก Session
                 $userInfo = session('user_info', []);
 
                 // ✅ ดึงคำตอบทั้งหมดจากฟอร์ม
                 $answers = $request->input('answers', []);
+
+            //    dd($answers);
 
                 // ✅ ตรวจสอบว่ามีข้อมูลหรือไม่
                 if (empty($userInfo) || empty($answers)) {
@@ -156,8 +160,12 @@ class OwndaysQuizController extends Controller
                     $row
                 );
 
+                // ✅ เก็บคำตอบไว้ใน session เพื่อใช้ตอนคำนวณ result
+                session(['quiz_answers' => $answers]);
+
                 // ✅ เคลียร์ session หลังบันทึกเสร็จ
                 $request->session()->forget('user_info');
+
 
                 // ✅ ไปหน้า result
                 return redirect('/result')->with('success', 'ส่งข้อมูลเรียบร้อยแล้ว!');
@@ -248,14 +256,65 @@ class OwndaysQuizController extends Controller
                 'footer' => 'ลองเติมมุมมองนี้ด้วยแว่นตาปางประกานพร ...',
                 'path' => '5'
             ],
+            'F' => [
+                'color_main' => '#6F5B45',
+                'color_sub' => '#574319',
+                'color_desc' => '#31200E',
+                'color_footer' => '#574319',
+                'bg' => 'linear-gradient(180deg, rgba(253, 231, 226, 1) 0%, rgba(249, 224, 194, 1) 51%, rgba(194, 207, 212, 1) 100%)',
+                'title' => 'เติมมุมมองแห่งความสงบเยือกเย็นและความลึกซึ้งในสีฟ้าเทา',
+                'subtitle' => 'แทนความสบายใจ ความเรียบง่าย และความมั่นคงในใจ',
+                'desc' => 'คุณมั่นใจในความสงบของตนเอง และพร้อมส่งพลังบวกไปให้คนรอบข้าง<br>เส้นทางของคุณคือความเรียบง่ายที่เปี่ยมด้วยความหมาย',
+                'footer' => 'ลองเติมมุมมองนี้ด้วยแว่นตาปางประกานพร ...',
+                'path' => '6'
+            ],
         ];
 
 
-        // ✅ สุ่มสินค้า 1 ตัว
-        $randomKey = array_rand($products);
-        $product = $products[$randomKey];
+        // ✅ ดึงคำตอบจาก session
+    $answers = session('quiz_answers', []);
 
-        return view('owndays.resulte', compact('product'));
+    if (empty($answers)) {
+        return redirect('/')->with('error', 'ไม่พบคำตอบในระบบ');
+    }
+
+    // ✅ Mapping จาก index → product key
+    $map = ['1' => 'A', '2' => 'B', '3' => 'C', '4' => 'D', '5' => 'E', '6' => 'F'];
+
+    // ✅ ถ้ามีข้อ 8 → ใช้ข้อ 8 เป็นหลัก
+    if (count($answers) >= 8 && isset($answers[7])) {
+        $choice8 = $answers[7];
+        $selectedKey = $map[$choice8] ?? 'A';
+    } else {
+        // ✅ นับจำนวนการเลือกในข้อ 1–7
+        $count = array_fill(1, 6, 0); // 1–6
+
+        foreach (array_slice($answers, 0, 7) as $ans) {
+            foreach ($map as $num => $letter) {
+                if (strpos($ans, $num) !== false) {
+                    $count[$num]++;
+                }
+            }
+        }
+
+        // ✅ หาค่ามากสุด
+        $max = max($count);
+        $topChoices = array_keys($count, $max);
+
+        if (count($topChoices) > 1) {
+            // ❌ มีเสมอกันมากกว่า 1 → ต้องตอบข้อ 8 เท่านั้น
+            return redirect('/quiz?show=8')
+                ->with('error', 'มีคะแนนเสมอกัน กรุณาทำข้อ 8 เพื่อสรุปผลลัพธ์');
+        }
+
+        // ✅ ไม่มีเสมอ → ใช้ choice ที่ได้คะแนนสูงสุด
+        $selectedKey = $map[$topChoices[0]] ?? 'A';
+    }
+
+    // ✅ ดึงข้อมูลสินค้า
+    $product = $products[$selectedKey];
+
+    return view('owndays.resulte', compact('product'));
     }
 
 }

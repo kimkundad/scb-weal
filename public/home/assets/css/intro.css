@@ -1,0 +1,186 @@
+/* ===============================
+   🟡 Global Layout
+=============================== */
+
+
+@font-face {
+  font-family: 'Aktiv Grotesk Thai';
+  src: url('/fonts/AktivGroteskThai-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Aktiv Grotesk Thai';
+  src: url('/fonts/AktivGroteskThai-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Aktiv Grotesk Thai', sans-serif !important;
+  font-weight: 400;
+}
+
+body {
+  font-family: 'Aktiv Grotesk Thai', sans-serif;
+  background: url('../../../img/owndays/BG.png') no-repeat center center;
+  background-size: cover;
+  color: #4a3f2b;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.page-wrapper {
+        height: fit-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  max-width: 480px;
+  background: url('../../../img/owndays/backgroung-intro@3x.png') no-repeat center top;
+  background-size: cover;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* ===============================
+   🟡 Header
+=============================== */
+.page-header {
+  width: 100%;
+  text-align: left;
+  background: #fff;
+  padding: 10px 0;
+}
+
+.page-header img {
+  width: 120px;
+  height: auto;
+}
+
+/* ===============================
+   🟡 Content
+=============================== */
+.page-content {
+  flex: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 20px;
+  font-family: 'Aktiv Grotesk Thai', sans-serif !important;
+}
+
+.main-image {
+  width: 90%;
+  max-width: 400px;
+  height: auto;
+  margin-bottom: 25px;
+}
+
+.intro-text {
+
+color: rgba(87, 67, 25, 1);
+font-family: 'Aktiv Grotesk Thai', sans-serif !important;
+font-size: 14px;
+font-weight: 500;
+font-style: medium;
+text-align: center;
+line-height: 20px;
+}
+
+/* ===============================
+   🟡 Button
+=============================== */
+.start-btn {
+  display: block;
+  width: 85%;
+  max-width: 360px;
+  margin-bottom: 50px;
+     display: inline-table;
+}
+
+.start-btn img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.start-btn img:hover {
+  transform: scale(1.03);
+  filter: brightness(1.05);
+}
+
+/* ===============================
+   🟡 Footer
+=============================== */
+.page-footer {
+  width: 100%;
+  background: rgba(210, 211, 209, 0.3);
+  padding: 12px 0px;
+  text-align: center;
+}
+
+.copyright {
+  font-size: 11px;
+  color: rgba(148, 152, 152, 1);
+  line-height: 1.5;
+}
+
+.intro-con{
+    margin-top: 450px;
+}
+
+/* ===============================
+   🟡 Responsive
+=============================== */
+@media (min-width: 768px) {
+  .page-wrapper {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .intro-text {
+    font-size: 18px;
+    max-width: 100%;
+
+    line-height: 25px;
+  }
+
+  .intro-con{
+    text-align: center;
+    margin-top: 550px;
+}
+
+  .start-btn {
+    width: 90%;
+  }
+}
+
+@media (min-width: 1080px) and (min-height: 1000px) {
+
+      .page-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+}
+
+@supports (height: 100dvh) {
+  .page-wrapper {
+    min-height: 100dvh;
+  }
+}
