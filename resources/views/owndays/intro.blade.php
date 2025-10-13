@@ -14,7 +14,9 @@
 
     <!-- Header -->
     <header class="page-header">
+        <a href="{{ url('/') }}">
       <img src="{{ url('img/owndays/logo.png') }}" alt="OWNDAYS logo" style="margin-left:20px">
+      </a>
     </header>
 
     <!-- Main Content -->
