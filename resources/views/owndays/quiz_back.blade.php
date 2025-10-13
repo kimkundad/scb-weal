@@ -1,88 +1,102 @@
 <!DOCTYPE html>
 <html lang="th">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>OWNDAYS</title>
-    <link rel="stylesheet" href="{{ url('/home/assets/css/intro.css') }}?v={{ time() }}" type="text/css" />
-    <link rel="icon" type="image/x-icon" sizes="32x32" href="{{ url('/img/owndays/favicon.ico') }}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OwnDays</title>
+  <link rel="stylesheet" href="{{ url('/home/assets/css/owndays.css') }}?v={{ time() }}" type="text/css" />
+  <link rel="icon" type="image/x-icon" sizes="32x32" href="{{ url('/img/owndays/favicon.ico') }}?v={{ time() }}">
 </head>
-
 <body>
-    <div class="page-wrapper2">
+  <div class="wrapper">
+    <header>
+      <a href="{{ url('/') }}">
+        <img src="{{ url('img/owndays/logo.png') }}" alt="owndays logo" />
+      </a>
+    </header>
 
-        <!-- Header -->
-        <header class="page-header">
-            <img src="{{ url('img/owndays/logo.png') }}" alt="OWNDAYS logo" style="margin-left:20px">
-        </header>
+        <main>
 
-        <!-- Main Content -->
-        <main class="page-content" style="width: 100%;">
+            <div class="question-section">
+                <div class="intro-bg">
+                    <div class="intro-inner" style="padding: 5px 15px; ">
+                    <div class="intro-container">
 
+                      {{-- <!-- ลำดับข้อ -->
+                    <div class="quiz-progress">1/8</div>
 
+                    <!-- คำถาม -->
+                    <div class="quiz-question" style="margin-top:55px">
+                        ในสายตาของเพื่อนๆ จุดแข็งและความโดดเด่นของคุณคือ..
+                    </div> --}}
 
-
-            <div class="intro-bg">
-                <div class="intro-inner" style="padding: 5px 15px; ">
-
-                    <br>
                     <form id="quizForm" method="POST" action="{{ url('/quiz/submit') }}">
-                        @csrf
+  @csrf
 
-                        <div class="quiz-wrapper">
-                            @foreach ($questions as $index => $q)
-                                <div class="quiz-block" id="question-{{ $index }}"
-                                    style="display: {{ $index == 0 ? 'block' : 'none' }}; {{ $index == 7 ? 'display:none;' : '' }}">
+  <div class="quiz-wrapper">
+    @foreach ($questions as $index => $q)
+      <div class="quiz-block" id="question-{{ $index }}"
+       style="display: {{ $index == 0 ? 'block' : 'none' }}; {{ $index == 7 ? 'display:none;' : '' }}">
 
-                                    {{-- โปรเกรส: ปกติแสดง 1/7 ... 7/7; ข้อ 8 จะอัปเดตเป็น 8/8 ทาง JS ตอนปลดล็อก --}}
-                                    <div class="quiz-progress">
-                                        <span class="cur">{{ min($index + 1, 7) }}</span>/<span class="total">7</span>
-                                    </div>
-                                    <br><br>
-                                    <div class="quiz-question">{{ $q['question'] }}</div>
+        {{-- โปรเกรส: ปกติแสดง 1/7 ... 7/7; ข้อ 8 จะอัปเดตเป็น 8/8 ทาง JS ตอนปลดล็อก --}}
+        <div class="quiz-progress">
+            <span class="cur">{{ min($index+1, 7) }}</span>/<span class="total">7</span>
+        </div>
+        <div class="quiz-question">{{ $q['question'] }}</div>
 
-                                    <div class="quiz-options">
-                                        @foreach ($q['choices'] as $cIdx => $choice)
-                                            <label class="quiz-option">
-                                                {{-- เก็บ index ของ choice ด้วย จะช่วยนับคะแนน --}}
-                                                <input type="radio" name="answers[{{ $index }}]"
-                                                    value="{{ $cIdx + 1 }}"
-                                                    data-choice-index="{{ $cIdx }}">
-                                                <span style="margin-top:5px; text-align: left;">{{ $choice }}</span>
-                                            </label>
-                                        @endforeach
-                                    </div>
+        <div class="quiz-options">
+          @foreach ($q['choices'] as $cIdx => $choice)
+            <label class="quiz-option">
+                {{-- เก็บ index ของ choice ด้วย จะช่วยนับคะแนน --}}
+                <input type="radio"
+                    name="answers[{{ $index }}]"
+                    value="{{ $cIdx + 1 }}"
+                    data-choice-index="{{ $cIdx }}">
+                <span>{{ $choice }}</span>
+            </label>
+            @endforeach
+        </div>
 
-                                    <a href="javascript:void(0)" class="start-btn next-btn" data-index="{{ $index }}">
-                                        <img src="{{ url('img/owndays/nextBtn.png') }}" alt="พร้อมแล้ว ไปต่อกันเลย"
-                                            class="btn-image">
-                                    </a>
+        {{-- ปุ่มต่อไป --}}
+        <div class="quiz-button " style="text-align: -webkit-center;">
+          <a href="javascript:void(0)" style="margin-top: 80px; display: block; width:80%"
+             class=" pt-45-res w-btn-90 next-btn"
+             data-index="{{ $index }}">
+            <img src="{{ url('img/owndays/nextBtn.png') }}"
+                 alt="ต่อไป"
+                 class="btn-image">
+          </a>
+        </div>
 
-                                </div>
-                            @endforeach
-                        </div>
-                    </form>
+
+        {{-- <a href="{{ url('/finalQuiz') }}" class="btn-image-link pt-45-res w-btn-90" style="bottom: auto;">
+                        <img src="{{ url('img/owndays/nextBtn.png') }}"
+                            alt="พร้อมแล้ว ไปต่อกันเลย"
+                            class="btn-image">
+                        </a> --}}
+
+      </div>
+    @endforeach
+  </div>
+</form>
 
 
 
-
+                    </div>
+                    </div>
                 </div>
-
             </div>
-
         </main>
 
-        <!-- Footer -->
-        <footer class="page-footer2">
-            <div class="copyright2">
-                COPYRIGHT (C) OWNDAYS co., ltd. ALL RIGHTS RESERVED.<br>
-                นโยบายความเป็นส่วนตัว | ข้อตกลงและเงื่อนไขในการบริการ
-            </div>
-        </footer>
 
-    </div>
+    <footer>
+      <div class="copyright">
+        COPYRIGHT (C) OWNDAYS co., ltd. ALL RIGHTS RESERVED. <br> นโยบายความเป็นส่วนตัว | ข้อตกลงและเงื่อนไขในการบริการ
+      </div>
+    </footer>
+  </div>
 </body>
+
 
 
 <script>
@@ -206,5 +220,6 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 </script>
+
 
 </html>

@@ -2,60 +2,60 @@
 <html lang="th">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>OwnDays</title>
-    <link rel="stylesheet" href="{{ url('/home/assets/css/owndays.css') }}?v={{ time() }}" type="text/css" />
-    <link rel="icon" type="image/x-icon" sizes="32x32" href="{{ url('/img/owndays/favicon.ico') }}?v={{ time() }}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OWNDAYS</title>
+  <link rel="stylesheet" href="{{ url('/home/assets/css/intro.css') }}?v={{ time() }}" type="text/css" />
+  <link rel="icon" type="image/x-icon" sizes="32x32" href="{{ url('/img/owndays/favicon.ico') }}">
 </head>
 
 <body>
-    <div class="wrapper">
-        <header>
-            <a href="{{ url('/') }}">
-                <img src="{{ url('img/owndays/logo.png') }}" alt="owndays logo" />
-            </a>
-        </header>
+  <div class="page-wrapper2">
 
-        <main>
+    <!-- Header -->
+    <header class="page-header">
+      <img src="{{ url('img/owndays/logo.png') }}" alt="OWNDAYS logo" style="margin-left:20px">
+    </header>
 
-            <div class="question-section">
-                <div class="intro-bg">
-                    <div class="intro-inner">
-                        <div class="intro-container" style="padding-bottom: 40px;">
-                            <img src="{{ url('img/owndays/text@3x@3x.png') }}" style="width: 278px; margin-top:10px">
-
-
-                            <img src="{{ url('img/owndays/ภาพ ‘ตัวตนของฉัน’ ที่คุณรั@3x.png') }}"
-                                style="width: 100%; margin-top:8px; margin-bottom: 40px;">
+    <!-- Main Content -->
+    <main class="page-content" style="width: 100%;">
 
 
 
-                            <!-- ปุ่มซ้อนอยู่บนรูป -->
-                            <a href="{{ url('/quiz') }}" class="btn-image-link">
+
+        <div class="intro-bg">
+                    <div class="intro-inner" style="padding: 5px 15px; ">
+
+                    <img src="{{ url('img/owndays/text@3x@3x.png') }}"
+                        alt="intro"
+                        class="intro-img">
+
+                        <img src="{{ url('img/owndays/ภาพ ‘ตัวตนของฉัน’ ที่คุณรั@3x.png') }}"
+                        alt="intro"
+                        class="intro-img">
+
+
+
+        <a href="{{ url('/quiz') }}" class="start-btn">
                                 <img src="{{ url('img/owndays/start.png') }}" alt="พร้อมแล้ว ไปต่อกันเลย"
                                     class="btn-image">
                             </a>
 
 
+      </div>
 
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
+      </div>
 
+    </main>
 
-        <footer>
-            <div class="copyright">
-                COPYRIGHT (C) OWNDAYS co., ltd. ALL RIGHTS RESERVED. <br> นโยบายความเป็นส่วนตัว |
-                ข้อตกลงและเงื่อนไขในการบริการ
-            </div>
-        </footer>
-    </div>
+    <!-- Footer -->
+    <footer class="page-footer2">
+      <div class="copyright2">
+        COPYRIGHT (C) OWNDAYS co., ltd. ALL RIGHTS RESERVED.<br>
+        นโยบายความเป็นส่วนตัว | ข้อตกลงและเงื่อนไขในการบริการ
+      </div>
+    </footer>
+
+  </div>
 </body>
-
-
-
-
 </html>
