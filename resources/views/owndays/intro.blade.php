@@ -22,7 +22,6 @@
     <!-- Main Content -->
     <main class="page-content">
 
-
       <div class="intro-con">
         <p class="intro-text">
             Interactive Quiz นี้จัดทำขึ้นในโอกาส <br> 10th ANNIVERSARY OF OWNDAYS THAILAND<br>

@@ -125,6 +125,26 @@ text-align: center;
 line-height: 20px;
 }
 
+.index-text{
+    color: rgba(87, 67, 25, 1);
+font-family: 'Aktiv Grotesk Thai', sans-serif !important;
+font-size: 16px;
+font-weight: 500;
+font-style: medium;
+text-align: center;
+line-height: 20px;
+}
+
+.index-text-sub{
+        color: rgba(87, 67, 25, 1);
+font-family: 'Aktiv Grotesk Thai', sans-serif !important;
+font-size: 12px;
+font-weight: 500;
+font-style: medium;
+text-align: center;
+line-height: 20px;
+}
+
 /* ===============================
    🟡 Button
 =============================== */
@@ -196,6 +216,23 @@ line-height: 20px;
 .mt-10{
     margin-top: 10px;
 }
+
+@media (min-width: 468px) {
+
+
+        .index-text {
+        font-size: 20px;
+    max-width: 100%;
+    line-height: 28px;
+  }
+
+  .index-text-sub{
+    font-size: 14px;
+    max-width: 100%;
+    line-height: 22px;
+  }
+
+}
 /* ===============================
    🟡 Responsive
 =============================== */
@@ -225,6 +262,21 @@ line-height: 20px;
     max-width: 100%;
 
     line-height: 25px;
+  }
+
+
+    .index-text {
+    font-size: 26px;
+    max-width: 100%;
+
+    line-height: 38px;
+  }
+
+  .index-text-sub{
+    font-size: 18px;
+    max-width: 100%;
+
+    line-height: 32px;
   }
 
   .intro-con{

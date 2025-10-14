@@ -32,9 +32,22 @@
                         alt="intro"
                         class="intro-img ">
 
-                        <img src="{{ url('img/owndays/หลายความสำเร็จที่มีความหม@3x.png') }}"
-                        alt="intro"
-                        class="mt-10 img-w">
+
+
+                        <p class="index-text">
+                           หลายความสำเร็จที่มีความหมาย <br>
+                            เริ่มต้นได้จากมุมมองเล็กๆ
+<br><br>
+                            มาร่วมค้นหา<br>
+                            <b>‘มุมมองความมั่นใจ’</b> กับ OWNDAYS<br>
+                            เพื่อเติมทุกวันให้เต็มไปด้วยความสำเร็จ<br>
+                            ในแบบของคุณ
+                        </p>
+
+                        <p class="index-text-sub">
+                        *Interactive Quiz นี้ไม่ใช่แบบบทสอบทางจิตวิทยา <br>
+                        แต่เป็นพื้นที่ให้คุณได้สบตากับตัวเองที่มีพลังความมั่นใจอยู่ภายใน
+                        </p>
 
         <a href="{{ url('/intro') }}" class="start-btn">
             <img src="{{ url('img/owndays/พร้อมแล้ว-ไปต่อกันเลย@3x.png') }}"
