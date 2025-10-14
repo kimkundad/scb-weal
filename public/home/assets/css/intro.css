@@ -227,6 +227,15 @@ line-height: 20px;
     margin-top: 10px;
 }
 
+.stars {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  font-size: 30px;
+  color: #d2c6a8;
+  margin-bottom: 25px;
+}
+
 @media (min-width: 468px) {
 
 
@@ -248,8 +257,19 @@ line-height: 20px;
 =============================== */
 @media (min-width: 768px) {
 
+
+
     body {
   background-size: cover;
+}
+
+  .stars {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  font-size: 38px;
+  color: #d2c6a8;
+  margin-bottom: 25px;
 }
 
 
@@ -683,14 +703,7 @@ textarea::placeholder {
   font-weight: 500;
 }
 
-.stars {
-  display: flex;
-  justify-content: center;
-  gap: 5px;
-  font-size: 38px;
-  color: #d2c6a8;
-  margin-bottom: 25px;
-}
+
 
 .stars span {
   cursor: pointer;
@@ -733,4 +746,6 @@ textarea::placeholder {
   .br-mobile br {
     display: inline;
   }
+
+
 }

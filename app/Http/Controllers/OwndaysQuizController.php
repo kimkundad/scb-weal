@@ -186,19 +186,40 @@ class OwndaysQuizController extends Controller
                     return back()->with('error', 'ข้อมูลไม่ครบ กรุณากรอกใหม่อีกครั้ง');
                 }
 
-                // ✅ เก็บข้อมูลไว้ใน session ยังไม่ส่ง Google Sheet
+                // ✅ เตรียมข้อมูลสำหรับ Google Sheet
+                $row = [
+                    now('Asia/Bangkok')->format('Y-m-d H:i:s'),
+                    $userInfo['gender'] ?? '',
+                    $userInfo['age'] ?? '',
+                ];
+
+                foreach ($answers as $ans) {
+                    $row[] = $ans;
+                }
+
+                // ✅ บันทึกข้อมูลลง Google Sheet
+                $appendResult = $this->googleSheet->appendRowFlexible(
+                    $this->spreadsheetId,
+                    $this->sheetName,
+                    $row
+                );
+
+                // ✅ เก็บ user_info, answers, และตำแหน่งแถวสุดท้ายไว้ใน Session
+                // สมมติ appendRowFlexible คืนค่า rowIndex หรือคุณเพิ่มการคำนวณเอง
+                $lastRowIndex = $this->googleSheet->getLastRowIndex($this->spreadsheetId, $this->sheetName);
                 session([
-                    'quiz_answers' => $answers,
-                    'user_info' => $userInfo
+                    'quiz_row' => $lastRowIndex - 1,
+                    'user_info' => $userInfo,
+                    'quiz_answers' => $answers
                 ]);
 
-                // ไปหน้า result
                 return redirect('/result')->with('success', 'ส่งข้อมูลเรียบร้อยแล้ว!');
             } catch (\Exception $e) {
                 \Log::error('Quiz Submit Error: ' . $e->getMessage());
                 return back()->with('error', 'เกิดข้อผิดพลาดในการส่งข้อมูล');
             }
         }
+
 
 
     public function storeUserInfo(Request $request)
@@ -301,15 +322,15 @@ class OwndaysQuizController extends Controller
 
 
         // ตรวจสอบว่ามี key ตรงกับ $id ไหม
-    if (!array_key_exists($id, $products)) {
-        abort(404, 'Product not found');
-    }
+        if (!array_key_exists($id, $products)) {
+            abort(404, 'Product not found');
+        }
 
-    // ดึงสินค้าออกมา
-    $product = $products[$id];
+        // ดึงสินค้าออกมา
+        $product = $products[$id];
 
-    // ส่งข้อมูลไปยัง view
-    return view('owndays.resulte', compact('product'));
+        // ส่งข้อมูลไปยัง view
+        return view('owndays.resulte', compact('product'));
 
     }
 
@@ -400,93 +421,72 @@ class OwndaysQuizController extends Controller
 
 
         // ✅ ดึงคำตอบจาก session
-    $answers = session('quiz_answers', []);
+            $answers = session('quiz_answers', []);
 
-    if (empty($answers)) {
-        return redirect('/')->with('error', 'ไม่พบคำตอบในระบบ');
-    }
-
-    // ✅ Mapping จาก index → product key
-    $map = ['1' => 'A', '2' => 'B', '3' => 'C', '4' => 'D', '5' => 'E', '6' => 'F'];
-
-    // ✅ ถ้ามีข้อ 8 → ใช้ข้อ 8 เป็นหลัก
-    if (count($answers) >= 8 && isset($answers[7])) {
-        $choice8 = $answers[7];
-        $selectedKey = $map[$choice8] ?? 'A';
-    } else {
-        // ✅ นับจำนวนการเลือกในข้อ 1–7
-        $count = array_fill(1, 6, 0); // 1–6
-
-        foreach (array_slice($answers, 0, 7) as $ans) {
-            foreach ($map as $num => $letter) {
-                if (strpos($ans, $num) !== false) {
-                    $count[$num]++;
-                }
+            if (empty($answers)) {
+                return redirect('/')->with('error', 'ไม่พบคำตอบในระบบ');
             }
-        }
 
-        // ✅ หาค่ามากสุด
-        $max = max($count);
-        $topChoices = array_keys($count, $max);
+            // ✅ Mapping จาก index → product key
+            $map = ['1' => 'A', '2' => 'B', '3' => 'C', '4' => 'D', '5' => 'E', '6' => 'F'];
 
-        if (count($topChoices) > 1) {
-            // ❌ มีเสมอกันมากกว่า 1 → ต้องตอบข้อ 8 เท่านั้น
-            return redirect('/quiz?show=8')
-                ->with('error', 'มีคะแนนเสมอกัน กรุณาทำข้อ 8 เพื่อสรุปผลลัพธ์');
-        }
+            // ✅ ถ้ามีข้อ 8 → ใช้ข้อ 8 เป็นหลัก
+            if (count($answers) >= 8 && isset($answers[7])) {
+                $choice8 = $answers[7];
+                $selectedKey = $map[$choice8] ?? 'A';
+            } else {
+                // ✅ นับจำนวนการเลือกในข้อ 1–7
+                $count = array_fill(1, 6, 0); // 1–6
 
-        // ✅ ไม่มีเสมอ → ใช้ choice ที่ได้คะแนนสูงสุด
-        $selectedKey = $map[$topChoices[0]] ?? 'A';
-    }
+                foreach (array_slice($answers, 0, 7) as $ans) {
+                    foreach ($map as $num => $letter) {
+                        if (strpos($ans, $num) !== false) {
+                            $count[$num]++;
+                        }
+                    }
+                }
 
-    // ✅ ดึงข้อมูลสินค้า
-    $product = $products[$selectedKey];
+                // ✅ หาค่ามากสุด
+                $max = max($count);
+                $topChoices = array_keys($count, $max);
 
-    return view('owndays.resulte', compact('product'));
+                if (count($topChoices) > 1) {
+                    // ❌ มีเสมอกันมากกว่า 1 → ต้องตอบข้อ 8 เท่านั้น
+                    return redirect('/quiz?show=8')
+                        ->with('error', 'มีคะแนนเสมอกัน กรุณาทำข้อ 8 เพื่อสรุปผลลัพธ์');
+                }
+
+                // ✅ ไม่มีเสมอ → ใช้ choice ที่ได้คะแนนสูงสุด
+                $selectedKey = $map[$topChoices[0]] ?? 'A';
+            }
+
+            // ✅ ดึงข้อมูลสินค้า
+            $product = $products[$selectedKey];
+
+            return view('owndays.resulte', compact('product'));
     }
 
     public function submitRating(Request $request)
     {
         try {
             $rating = $request->input('rating');
-            $userInfo = session('user_info', []);
-            $answers = session('quiz_answers', []);
+            $rowIndex = session('quiz_row');
 
-            if (empty($userInfo) || empty($answers) || !$rating) {
-                return back()->with('error', 'ข้อมูลไม่ครบ กรุณาทำใหม่อีกครั้ง');
+            if (empty($rowIndex) || !$rating) {
+                return back()->with('error', 'ไม่พบข้อมูลแบบสอบถาม กรุณาทำใหม่อีกครั้ง');
             }
 
-            // ✅ รวมข้อมูลทั้งหมด (A–K)
-            $row = [
-                now('Asia/Bangkok')->format('Y-m-d H:i:s'),   // A
-                $userInfo['gender'] ?? '',                    // B
-                $userInfo['age'] ?? '',                       // C
-            ];
-
-            // ✅ เพิ่มคำตอบทั้ง 7 ข้อ (D–J)
-            foreach ($answers as $ans) {
-                $row[] = $ans;
-            }
-
-            // ✅ เพิ่มช่องว่าง (ถ้ายังไม่ถึงคอลัมน์ L)
-            while (count($row) < 11) {
-                $row[] = '';
-            }
-
-            // ✅ ใส่คะแนน Rating ลงคอลัมน์ L (ตำแหน่งที่ 12)
-            $row[] = $rating;
-
-            // ✅ ส่งข้อมูลทั้งหมดไป Google Sheet
-            $this->googleSheet->appendRowFlexible(
+            // ✅ อัปเดตเฉพาะคอลัมน์ L ของแถวที่บันทึกไว้
+            $this->googleSheet->updateCellFixed(
                 $this->spreadsheetId,
                 $this->sheetName,
-                $row
+                "L{$rowIndex}",
+                $rating
             );
 
-            // ✅ ล้าง Session
-            session()->forget(['user_info', 'quiz_answers']);
+            // ✅ ล้าง session
+            session()->forget(['user_info', 'quiz_answers', 'quiz_row']);
 
-            // ✅ ไปหน้า /final หลังส่งเสร็จ
           //  return redirect('/final')->with('success', 'ขอบคุณสำหรับการให้คะแนนของคุณ!');
 
           return response()->json([
@@ -500,6 +500,7 @@ class OwndaysQuizController extends Controller
             return back()->with('error', 'เกิดข้อผิดพลาดในการส่งข้อมูล');
         }
     }
+
 
 
 }

@@ -33,6 +33,7 @@
 
                         <section class="rating-section">
 
+       {{-- <p>Row index ที่ถูกบันทึกไว้: {{ session()->get('quiz_row') }}</p> --}}
 
 
                         <div class="stars" id="ratingStars">
