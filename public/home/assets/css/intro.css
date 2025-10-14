@@ -125,6 +125,16 @@ text-align: center;
 line-height: 20px;
 }
 
+.intro-text-2{
+    color: rgba(87, 67, 25, 1);
+font-family: 'Aktiv Grotesk Thai', sans-serif !important;
+font-size: 9px;
+font-weight: 500;
+font-style: medium;
+text-align: center;
+line-height: 20px;
+}
+
 .index-text{
     color: rgba(87, 67, 25, 1);
 font-family: 'Aktiv Grotesk Thai', sans-serif !important;
@@ -264,9 +274,16 @@ line-height: 20px;
     line-height: 25px;
   }
 
+    .intro-text-2 {
+    font-size: 12px;
+    max-width: 100%;
+
+    line-height: 25px;
+  }
+
 
     .index-text {
-    font-size: 26px;
+    font-size: 25px;
     max-width: 100%;
 
     line-height: 38px;
@@ -703,4 +720,17 @@ textarea::placeholder {
 .rating-submit:hover {
   background-color: #d2c6a8;
   color: #fff;
+}
+
+
+/* ซ่อน <br> ในจอ desktop */
+.br-mobile br {
+  display: none;
+}
+
+/* แสดงเฉพาะในมือถือ */
+@media (max-width: 768px) {
+  .br-mobile br {
+    display: inline;
+  }
 }

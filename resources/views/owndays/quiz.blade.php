@@ -42,7 +42,7 @@
                                         <span class="cur">{{ min($index + 1, 7) }}</span>/<span class="total">7</span>
                                     </div>
                                     <br><br>
-                                    <div class="quiz-question">{{ $q['question'] }}</div>
+                                    <div class="quiz-question">{!! $q['question'] !!}</div>
 
                                     <div class="quiz-options">
                                         @foreach ($q['choices'] as $cIdx => $choice)
@@ -51,7 +51,7 @@
                                                 <input type="radio" name="answers[{{ $index }}]"
                                                     value="{{ $cIdx + 1 }}"
                                                     data-choice-index="{{ $cIdx }}">
-                                                <span style="margin-top:5px; text-align: left;">{{ $choice }}</span>
+                                                <span style="margin-top:5px; text-align: left;">{!! $choice !!}</span>
                                             </label>
                                         @endforeach
                                     </div>

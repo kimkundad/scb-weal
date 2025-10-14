@@ -26,7 +26,7 @@
 
 
         <div class="intro-bg">
-                    <div class="intro-inner" style="padding: 5px 15px; ">
+                    <div class="intro-inner" style="padding: 5px 0px; ">
 
                     <img src="{{ url('img/owndays/text@3x@3x.png') }}"
                         alt="intro"
@@ -37,14 +37,19 @@
                         <p class="index-text">
                            หลายความสำเร็จที่มีความหมาย <br>
                             เริ่มต้นได้จากมุมมองเล็กๆ
-<br><br>
+
+
+                        </p>
+                        <p class="index-text" style="margin-top: -10px">
+
+
                             มาร่วมค้นหา<br>
                             <b>‘มุมมองความมั่นใจ’</b> กับ OWNDAYS<br>
                             เพื่อเติมทุกวันให้เต็มไปด้วยความสำเร็จ<br>
                             ในแบบของคุณ
                         </p>
 
-                        <p class="index-text-sub">
+                        <p class="index-text-sub" style="margin-bottom: 30px">
                         *Interactive Quiz นี้ไม่ใช่แบบบทสอบทางจิตวิทยา <br>
                         แต่เป็นพื้นที่ให้คุณได้สบตากับตัวเองที่มีพลังความมั่นใจอยู่ภายใน
                         </p>

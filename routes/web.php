@@ -30,7 +30,7 @@ Route::domain('ttb.idx.co.th')->group(function () {
 });
 
 
-    Route::domain('owndays.ideavivat.com')->group(function () {
+  //  Route::domain('owndays.ideavivat.com')->group(function () {
 
         Route::get('/', function () {
                 return view('owndays.index'); // หรือ controller ก็ได้
@@ -58,6 +58,8 @@ Route::domain('ttb.idx.co.th')->group(function () {
 
         Route::get('/result', [OwndaysQuizController::class, 'showResult']);
 
+        Route::get('/myResult/{id}', [OwndaysQuizController::class, 'myResult']);
+
         Route::get('/quiz', [QuizController::class, 'show']);
 
         Route::post('/quiz/submit', [OwndaysQuizController::class, 'submitQuiz']);
@@ -74,7 +76,7 @@ Route::domain('ttb.idx.co.th')->group(function () {
                 return view('owndays.final'); // หรือ controller ก็ได้
         });
 
-    });
+  //  });
 
 
 
