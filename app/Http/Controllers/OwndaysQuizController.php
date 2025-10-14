@@ -216,7 +216,6 @@ class OwndaysQuizController extends Controller
         return redirect('/intro_quiz');
     }
 
-
     public function myResult($id){
 
          $products = [
