@@ -70,8 +70,8 @@
                         <img src="{{ url('img/owndays/link@3x.png') }}" alt="พร้อมแล้ว ไปต่อกันเลย" class="btn-image">
                     </a>
 
-                    <a href="{{ url('/') }}" style="margin-bottom: 30px;">
-                        <img src="{{ url('img/owndays/reNew.png') }}" style="width: 80%">
+                    <a href="{{ url('/rating') }}" class="a-link" style="margin-bottom: 30px; margin-top: 20px">
+                        <p>ให้คะแนนแบบสอบถาม</p>
                     </a>
 
                     <br><br>

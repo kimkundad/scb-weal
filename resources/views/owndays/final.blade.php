@@ -14,7 +14,7 @@
 
     <!-- Header -->
     <header class="page-header">
-        <a href="{{ url('/') }}">
+      <a href="{{ url('/') }}">
       <img src="{{ url('img/owndays/logo.png') }}" alt="OWNDAYS logo" style="margin-left:20px">
       </a>
     </header>
@@ -22,25 +22,26 @@
     <!-- Main Content -->
     <main class="page-content" >
 
-
-
-
         <div class="intro-bg">
                     <div class="intro-inner" style="padding: 5px 15px; ">
 
-                    <img src="{{ url('img/owndays/text@3x@3x.png') }}"
-                        alt="intro"
-                        class="intro-img ">
 
-                        <img src="{{ url('img/owndays/หลายความสำเร็จที่มีความหม@3x.png') }}"
+                        <img src="{{ url('img/owndays/ขอบคุณสำหรับการใช้เวลา เ@2x.png') }}"
                         alt="intro"
-                        class="mt-10 img-w">
+                        class="mt-100 img-w">
 
-        <a href="{{ url('/data') }}" class="start-btn">
-            <img src="{{ url('img/owndays/พร้อมแล้ว-ไปต่อกันเลย@3x.png') }}"
-                        alt="พร้อมแล้ว ไปต่อกันเลย"
-                        class="btn-image">
-        </a>
+
+
+        <a href="https://www.owndays.com" class="start-btn" style="margin-bottom: 15px;">
+                                <img src="{{ url('img/owndays/toWeb.png') }}" alt="พร้อมแล้ว ไปต่อกันเลย"
+                                    class="btn-image">
+                            </a>
+
+                            <a href="{{ url('/') }}" style="margin-bottom: 30px;">
+                        <img src="{{ url('img/owndays/กลับไปหน้าแรก@3x.png') }}" style="width: 80%">
+                    </a>
+                    <br><br><br><br>
+
       </div>
 
       </div>

@@ -22,9 +22,6 @@
     <!-- Main Content -->
     <main class="page-content" >
 
-
-
-
         <div class="intro-bg">
                     <div class="intro-inner" style="padding: 5px 15px; ">
 
@@ -42,9 +39,6 @@
                                 <img src="{{ url('img/owndays/start.png') }}" alt="พร้อมแล้ว ไปต่อกันเลย"
                                     class="btn-image">
                             </a>
-
-
-
 
       </div>
 

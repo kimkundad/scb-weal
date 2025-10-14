@@ -10,46 +10,37 @@
 </head>
 
 <body>
-  <div class="page-wrapper2">
+  <div class="page-wrapper">
 
     <!-- Header -->
     <header class="page-header">
-        <a href="{{ url('/') }}">
+      <a href="{{ url('/') }}">
       <img src="{{ url('img/owndays/logo.png') }}" alt="OWNDAYS logo" style="margin-left:20px">
       </a>
     </header>
 
     <!-- Main Content -->
-    <main class="page-content" >
+    <main class="page-content">
 
 
-
-
-        <div class="intro-bg">
-                    <div class="intro-inner" style="padding: 5px 15px; ">
-
-                    <img src="{{ url('img/owndays/text@3x@3x.png') }}"
-                        alt="intro"
-                        class="intro-img ">
-
-                        <img src="{{ url('img/owndays/หลายความสำเร็จที่มีความหม@3x.png') }}"
-                        alt="intro"
-                        class="mt-10 img-w">
-
+      <div class="intro-con">
+        <p class="intro-text">
+            Interactive Quiz นี้จัดทำขึ้นในโอกาส <br> 10th ANNIVERSARY OF OWNDAYS THAILAND<br>
+            โดยบริษัท อะบัฟทูว์ จำกัด<br> วัตถุประสงค์เพื่อสำรวจความคิดเห็นและรวบรวมข้อมูลเชิงสถิติ<br><br>
+            แบบทดสอบนี้พัฒนาภายใต้คำแนะนำของ<br>ทีมนักจิตวิทยา บริษัท มาสเตอร์พีซ มายด์ แคร์ เซอร์วิส จำกัด<br>
+            คำตอบทั้งหมดจะถูกเก็บเป็นความลับ <br> และไม่มีคำถามใดที่สามารถระบุตัวตนผู้ตอบได้
+        </p>
+        <br><br>
         <a href="{{ url('/data') }}" class="start-btn">
-            <img src="{{ url('img/owndays/พร้อมแล้ว-ไปต่อกันเลย@3x.png') }}"
-                        alt="พร้อมแล้ว ไปต่อกันเลย"
-                        class="btn-image">
+            <img src="{{ url('img/owndays/ยอมรับและเริ่มทำแบบทดสอบ@3x.png') }}" alt="เริ่มทำแบบทดสอบ">
         </a>
-      </div>
-
       </div>
 
     </main>
 
     <!-- Footer -->
-    <footer class="page-footer2">
-      <div class="copyright2">
+    <footer class="page-footer">
+      <div class="copyright">
         COPYRIGHT (C) OWNDAYS co., ltd. ALL RIGHTS RESERVED.<br>
         นโยบายความเป็นส่วนตัว | ข้อตกลงและเงื่อนไขในการบริการ
       </div>

@@ -122,55 +122,80 @@ class OwndaysQuizController extends Controller
 // }
 
 
+        // public function submitQuiz(Request $request)
+        // {
+
+
+        //     try {
+        //         // ✅ ดึงข้อมูลส่วนตัวจาก Session
+        //         $userInfo = session('user_info', []);
+
+        //         // ✅ ดึงคำตอบทั้งหมดจากฟอร์ม
+        //         $answers = $request->input('answers', []);
+
+        //     //    dd($answers);
+
+        //         // ✅ ตรวจสอบว่ามีข้อมูลหรือไม่
+        //         if (empty($userInfo) || empty($answers)) {
+        //             return back()->with('error', 'ข้อมูลไม่ครบ กรุณากรอกใหม่อีกครั้ง');
+        //         }
+
+        //         // ✅ เตรียมข้อมูลสำหรับ Google Sheet
+        //         // เริ่มตั้งแต่ row 2 โดยใช้ appendRowFlexible
+        //         $row = [
+        //             now('Asia/Bangkok')->format('Y-m-d H:i:s'),
+        //             $userInfo['gender'] ?? '',
+        //             $userInfo['age'] ?? '',
+        //         ];
+
+        //         // ✅ เพิ่มคำตอบทั้ง 7 ข้อเข้าไป
+        //         foreach ($answers as $ans) {
+        //             $row[] = $ans;
+        //         }
+
+        //         // ✅ ส่งไป Google Sheets
+        //         $this->googleSheet->appendRowFlexible(
+        //             $this->spreadsheetId,
+        //             $this->sheetName,
+        //             $row
+        //         );
+
+        //         // ✅ เก็บคำตอบไว้ใน session เพื่อใช้ตอนคำนวณ result
+        //         session(['quiz_answers' => $answers]);
+
+        //         // ✅ เคลียร์ session หลังบันทึกเสร็จ
+        //         $request->session()->forget('user_info');
+
+
+        //         // ✅ ไปหน้า result
+        //         return redirect('/result')->with('success', 'ส่งข้อมูลเรียบร้อยแล้ว!');
+        //     } catch (\Exception $e) {
+        //         \Log::error('Google Sheet Error: ' . $e->getMessage());
+        //         return back()->with('error', 'เกิดข้อผิดพลาดในการส่งข้อมูล');
+        //     }
+        // }
+
+
         public function submitQuiz(Request $request)
         {
-
-
             try {
-                // ✅ ดึงข้อมูลส่วนตัวจาก Session
                 $userInfo = session('user_info', []);
-
-                // ✅ ดึงคำตอบทั้งหมดจากฟอร์ม
                 $answers = $request->input('answers', []);
 
-            //    dd($answers);
-
-                // ✅ ตรวจสอบว่ามีข้อมูลหรือไม่
                 if (empty($userInfo) || empty($answers)) {
                     return back()->with('error', 'ข้อมูลไม่ครบ กรุณากรอกใหม่อีกครั้ง');
                 }
 
-                // ✅ เตรียมข้อมูลสำหรับ Google Sheet
-                // เริ่มตั้งแต่ row 2 โดยใช้ appendRowFlexible
-                $row = [
-                    now('Asia/Bangkok')->format('Y-m-d H:i:s'),
-                    $userInfo['gender'] ?? '',
-                    $userInfo['age'] ?? '',
-                ];
+                // ✅ เก็บข้อมูลไว้ใน session ยังไม่ส่ง Google Sheet
+                session([
+                    'quiz_answers' => $answers,
+                    'user_info' => $userInfo
+                ]);
 
-                // ✅ เพิ่มคำตอบทั้ง 7 ข้อเข้าไป
-                foreach ($answers as $ans) {
-                    $row[] = $ans;
-                }
-
-                // ✅ ส่งไป Google Sheets
-                $this->googleSheet->appendRowFlexible(
-                    $this->spreadsheetId,
-                    $this->sheetName,
-                    $row
-                );
-
-                // ✅ เก็บคำตอบไว้ใน session เพื่อใช้ตอนคำนวณ result
-                session(['quiz_answers' => $answers]);
-
-                // ✅ เคลียร์ session หลังบันทึกเสร็จ
-                $request->session()->forget('user_info');
-
-
-                // ✅ ไปหน้า result
+                // ไปหน้า result
                 return redirect('/result')->with('success', 'ส่งข้อมูลเรียบร้อยแล้ว!');
             } catch (\Exception $e) {
-                \Log::error('Google Sheet Error: ' . $e->getMessage());
+                \Log::error('Quiz Submit Error: ' . $e->getMessage());
                 return back()->with('error', 'เกิดข้อผิดพลาดในการส่งข้อมูล');
             }
         }
@@ -322,5 +347,62 @@ class OwndaysQuizController extends Controller
 
     return view('owndays.resulte', compact('product'));
     }
+
+    public function submitRating(Request $request)
+    {
+        try {
+            $rating = $request->input('rating');
+            $userInfo = session('user_info', []);
+            $answers = session('quiz_answers', []);
+
+            if (empty($userInfo) || empty($answers) || !$rating) {
+                return back()->with('error', 'ข้อมูลไม่ครบ กรุณาทำใหม่อีกครั้ง');
+            }
+
+            // ✅ รวมข้อมูลทั้งหมด (A–K)
+            $row = [
+                now('Asia/Bangkok')->format('Y-m-d H:i:s'),   // A
+                $userInfo['gender'] ?? '',                    // B
+                $userInfo['age'] ?? '',                       // C
+            ];
+
+            // ✅ เพิ่มคำตอบทั้ง 7 ข้อ (D–J)
+            foreach ($answers as $ans) {
+                $row[] = $ans;
+            }
+
+            // ✅ เพิ่มช่องว่าง (ถ้ายังไม่ถึงคอลัมน์ L)
+            while (count($row) < 11) {
+                $row[] = '';
+            }
+
+            // ✅ ใส่คะแนน Rating ลงคอลัมน์ L (ตำแหน่งที่ 12)
+            $row[] = $rating;
+
+            // ✅ ส่งข้อมูลทั้งหมดไป Google Sheet
+            $this->googleSheet->appendRowFlexible(
+                $this->spreadsheetId,
+                $this->sheetName,
+                $row
+            );
+
+            // ✅ ล้าง Session
+            session()->forget(['user_info', 'quiz_answers']);
+
+            // ✅ ไปหน้า /final หลังส่งเสร็จ
+          //  return redirect('/final')->with('success', 'ขอบคุณสำหรับการให้คะแนนของคุณ!');
+
+          return response()->json([
+            'success' => true,
+            'redirect' => url('/final')
+            ]);
+
+
+        } catch (\Exception $e) {
+            \Log::error('Rating Submit Error: ' . $e->getMessage());
+            return back()->with('error', 'เกิดข้อผิดพลาดในการส่งข้อมูล');
+        }
+    }
+
 
 }

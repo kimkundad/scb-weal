@@ -63,6 +63,17 @@ Route::domain('ttb.idx.co.th')->group(function () {
         Route::post('/quiz/submit', [OwndaysQuizController::class, 'submitQuiz']);
 
         Route::post('/submitForm', [OwndaysQuizController::class, 'storeUserInfo']);
+
+        Route::post('/submitRating', [OwndaysQuizController::class, 'submitRating']);
+
+        Route::get('/rating', function () {
+                return view('owndays.rating'); // หรือ controller ก็ได้
+        });
+
+        Route::get('/final', function () {
+                return view('owndays.final'); // หรือ controller ก็ได้
+        });
+
     });
 
 
