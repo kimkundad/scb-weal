@@ -54,7 +54,7 @@
 
 
 
-                    <a href="{{ url('/quiz') }}" class="start-btn" id="submitRating">
+                    <a class="start-btn" id="submitRating">
                         <img src="{{ url('img/owndays/pointBtn.png') }}" alt="พร้อมแล้ว ไปต่อกันเลย" class="btn-image">
                     </a>
 
