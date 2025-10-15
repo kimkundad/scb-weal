@@ -28,7 +28,7 @@
         <div class="intro-bg">
                     <div class="intro-inner" style="padding: 5px 0px; ">
 
-                    <img src="{{ url('img/owndays/text@3x@3x.png') }}"
+                    <img src="{{ url('img/owndays/fix-title.png') }}"
                         alt="intro"
                         class="intro-img ">
 
