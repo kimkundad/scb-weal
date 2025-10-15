@@ -39,7 +39,7 @@
                         </p>
 
                         <p class="index-text-sub" style="margin-bottom: 30px">
-                        *Interactive Quiz นี้ไม่ใช่แบบบทสอบทางจิตวิทยา <br>
+                        *Interactive Quiz นี้ไม่ใช่แบบทดสอบทางจิตวิทยา <br>
                         แต่เป็นพื้นที่ให้คุณได้สบตากับตัวเองที่มีพลังความมั่นใจอยู่ภายใน
                         </p>
 

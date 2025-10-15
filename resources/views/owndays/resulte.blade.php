@@ -27,12 +27,18 @@
 
             <div class="intro-bg">
                 <div class="intro-inner" style="padding: 5px 15px; ">
-                    <br><br>
-                    <img src="{{ url('img/owndays/' . $product['path'] . '/img.png') }}" style="width:30%;">
+                    <br>
 
+
+                    {{-- <img src="{{ url('img/owndays/' . $product['path'] . '/img.png') }}" style="width:30%;"> --}}
+<img src="{{ url('img/owndays/fix-title.png') }}"
+                        alt="intro"
+                        class="intro-img " style=" margin-top: 0px;">
+
+                        <img src="{{ url('img/owndays/' . $product['path'] . '/img.png') }}" style="width:30%;">
 
                     <!-- หัวข้อหลัก -->
-                    <h2 class="result-title" style="color: {{ $product['color_main'] }}">
+                    <h2 class="result-title" style="color: {{ $product['color_main'] }}" >
                         {!! $product['title'] !!}
                     </h2>
 
