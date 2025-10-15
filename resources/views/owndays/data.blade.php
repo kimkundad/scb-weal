@@ -45,7 +45,7 @@
             <div class="intro-bg">
                 <div class="intro-inner" style="padding: 5px 15px; ">
 
-                    <img src="{{ url('img/owndays/text@3x@3x.png') }}" alt="intro" class="intro-img">
+                    <img src="{{ url('img/owndays/fix-title.png') }}" alt="intro" class="intro-img">
                     <br><br><br>
                     <form action="{{ url('/submitForm') }}" method="POST" id="infoForm" class="form-container">
                         @csrf

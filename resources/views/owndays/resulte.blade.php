@@ -26,7 +26,7 @@
 
 
             <div class="intro-bg">
-                <div class="intro-inner" style="padding: 5px 25px; ">
+                <div class="intro-inner" style="padding: 5px 15px; ">
                     <br><br>
                     <img src="{{ url('img/owndays/' . $product['path'] . '/img.png') }}" style="width:30%;">
 
@@ -64,14 +64,14 @@
                         </p>
                     </div>
 
+                    <br>
 
-
-                    <a href="{{ $product['link'] }}" class="start-btn" style="margin-bottom: 15px;">
+                    <a href="{{ $product['link'] }}" class="start-btn" style="margin-bottom: 1px;     width: 90%;">
                         <img src="{{ url('img/owndays/link@3x.png') }}" alt="พร้อมแล้ว ไปต่อกันเลย" class="btn-image">
                     </a>
 
-                    <a href="{{ url('/rating') }}" class="a-link" style="margin-bottom: 30px; margin-top: 20px">
-                        <p>ให้คะแนนแบบสอบถาม</p>
+                    <a href="{{ url('/rating') }}" class="a-link" style="margin-bottom: 30px; margin-top: 15px">
+                        <p style="margin: 15px auto">ให้คะแนนแบบสอบถาม</p>
                     </a>
 
                     <br><br>

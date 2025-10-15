@@ -572,7 +572,7 @@ textarea::placeholder {
 /* ✅ หัวข้อใหญ่: ใช้ Aktiv Grotesk Thai */
 .result-title {
   font-family: 'Aktiv Grotesk Thai', sans-serif;
-  font-size: 22px !important;
+  font-size: 18px !important;
   color: #BF888A; /* สีแดงเข้ม */
   line-height: 1.2;
   margin-bottom: 15px;

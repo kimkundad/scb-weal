@@ -10,19 +10,29 @@
 </head>
 
 <body>
-  <div class="page-wrapper">
+  <div class="page-wrapper2">
 
     <!-- Header -->
     <header class="page-header">
-      <a href="{{ url('/') }}">
+        <a href="{{ url('/') }}">
       <img src="{{ url('img/owndays/logo.png') }}" alt="OWNDAYS logo" style="margin-left:20px">
       </a>
     </header>
 
     <!-- Main Content -->
-    <main class="page-content" style="    margin: 30px 0px;">
+    <main class="page-content" >
 
-      <div class="intro-con">
+        <div class="intro-bg">
+                    <div class="intro-inner" style="padding: 5px 0px; ">
+
+                    <img src="{{ url('img/owndays/fix-title.png') }}"
+                        alt="intro"
+                        class="intro-img ">
+
+
+
+
+
         <p class="intro-text-2" >
             Interactive Quiz นี้เป็นส่วนหนึ่งของโปรเจกต์ 10th ANNIVERSARY OF OWNDAYS THAILAND<br>
             ดำเนินการโดยบริษัท โอนเดส์ (ประเทศไทย) จำกัด<br>
@@ -36,13 +46,18 @@
         <a href="{{ url('/data') }}" class="start-btn">
             <img src="{{ url('img/owndays/click@3x.png') }}" alt="เริ่มทำแบบทดสอบ">
         </a>
+
+
+
+      </div>
+
       </div>
 
     </main>
 
     <!-- Footer -->
-    <footer class="page-footer">
-      <div class="copyright">
+    <footer class="page-footer2">
+      <div class="copyright2">
         COPYRIGHT (C) OWNDAYS co., ltd. ALL RIGHTS RESERVED.<br>
         นโยบายความเป็นส่วนตัว | ข้อตกลงและเงื่อนไขในการบริการ
       </div>

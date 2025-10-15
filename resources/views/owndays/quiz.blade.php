@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // อัปเดตปุ่มข้อ 7 (index 6) ให้แสดงภาพ check (เพราะจะไปสู่การตัดสิน)
   const lastOfFirst7 = document.querySelector('#question-6 .next-btn img');
   if (lastOfFirst7) {
-    lastOfFirst7.src = "{{ url('img/owndays/checkBtn@3x.png') }}";
+    lastOfFirst7.src = "{{ url('img/owndays/xxRectangle@3x.png') }}";
     lastOfFirst7.alt = "ยืนยันคำตอบ";
   }
 

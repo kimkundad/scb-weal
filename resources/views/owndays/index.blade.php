@@ -8,33 +8,22 @@
   <link rel="stylesheet" href="{{ url('/home/assets/css/intro.css') }}?v={{ time() }}" type="text/css" />
   <link rel="icon" type="image/x-icon" sizes="32x32" href="{{ url('/img/owndays/favicon.ico') }}">
 </head>
-
 <body>
-  <div class="page-wrapper2">
+  <div class="page-wrapper">
 
     <!-- Header -->
     <header class="page-header">
-        <a href="{{ url('/') }}">
+      <a href="{{ url('/') }}">
       <img src="{{ url('img/owndays/logo.png') }}" alt="OWNDAYS logo" style="margin-left:20px">
       </a>
     </header>
 
     <!-- Main Content -->
-    <main class="page-content" >
+    <main class="page-content" style="    margin: 30px 0px;">
 
+      <div class="intro-con">
 
-
-
-        <div class="intro-bg">
-                    <div class="intro-inner" style="padding: 5px 0px; ">
-
-                    <img src="{{ url('img/owndays/fix-title.png') }}"
-                        alt="intro"
-                        class="intro-img ">
-
-
-
-                        <p class="index-text">
+        <p class="index-text">
                            หลายความสำเร็จที่มีความหมาย <br>
                             เริ่มต้นได้จากมุมมองเล็กๆ
 
@@ -59,15 +48,14 @@
                         alt="พร้อมแล้ว ไปต่อกันเลย"
                         class="btn-image">
         </a>
-      </div>
 
       </div>
 
     </main>
 
     <!-- Footer -->
-    <footer class="page-footer2">
-      <div class="copyright2">
+    <footer class="page-footer">
+      <div class="copyright">
         COPYRIGHT (C) OWNDAYS co., ltd. ALL RIGHTS RESERVED.<br>
         นโยบายความเป็นส่วนตัว | ข้อตกลงและเงื่อนไขในการบริการ
       </div>
