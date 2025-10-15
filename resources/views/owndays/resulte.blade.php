@@ -32,12 +32,27 @@
 
                     {{-- <img src="{{ url('img/owndays/' . $product['path'] . '/img.png') }}" style="width:30%;"> --}}
 
+                        <div style="
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;   /* กลางแนวตั้ง */
+                            align-items: center;       /* กลางแนวนอน */
+                            text-align: center;
+                            margin: 0;
+                            padding: 0;
+                            box-sizing: border-box;
+                            margin-bottom: 30px;
+                            ">
 
                         <img src="{{ url('img/owndays/' . $product['path'] . '/img.png') }}" style="width:30%;">
 
                         <img src="{{ url('img/owndays/' . $product['path'] . '/fix.png') }}"
                         alt="intro"
-                        class="intro-img " style=" margin-top: 0px;">
+                        class="intro-img " style=" margin-top: 20px; width: 50%;">
+
+                        </div>
+
+
 
                     <!-- หัวข้อหลัก -->
                     <h2 class="result-title" style="color: {{ $product['color_main'] }}" >
