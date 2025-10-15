@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // เปลี่ยนปุ่มของข้อ 8 เป็นปุ่ม check (และกดแล้ว submit)
             const q8BtnImg = q8.querySelector('.next-btn img');
             if (q8BtnImg) {
-              q8BtnImg.src = "{{ url('img/owndays/checkBtn@3x.png') }}";
+              q8BtnImg.src = "{{ url('img/owndays/xxRectangle@3x.png') }}";
               q8BtnImg.alt = "ยืนยันคำตอบ";
             }
 

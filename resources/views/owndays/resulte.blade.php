@@ -31,11 +31,13 @@
 
 
                     {{-- <img src="{{ url('img/owndays/' . $product['path'] . '/img.png') }}" style="width:30%;"> --}}
-<img src="{{ url('img/owndays/fix-title.png') }}"
-                        alt="intro"
-                        class="intro-img " style=" margin-top: 0px;">
+
 
                         <img src="{{ url('img/owndays/' . $product['path'] . '/img.png') }}" style="width:30%;">
+
+                        <img src="{{ url('img/owndays/' . $product['path'] . '/fix.png') }}"
+                        alt="intro"
+                        class="intro-img " style=" margin-top: 0px;">
 
                     <!-- หัวข้อหลัก -->
                     <h2 class="result-title" style="color: {{ $product['color_main'] }}" >
