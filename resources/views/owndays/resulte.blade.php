@@ -123,11 +123,12 @@
                         </a>
                         </li>
                         <li>
-                        <a href="https://twitter.com/intent/tweet?url={{ urlencode(url()->current()) }}"
-                            target="_blank" class="twitter">
-                            <i class="fab fa-twitter"></i>
-                        </a>
+                            <a href="https://x.com/intent/post?url={{ urlencode(url()->current()) }}"
+                                target="_blank" class="x">
+                                <i class="fa-brands fa-x-twitter"></i>
+                            </a>
                         </li>
+
                         <li>
                         <a href="https://www.instagram.com/"
                             target="_blank" class="instagram">
