@@ -7,6 +7,24 @@
     <title>OWNDAYS</title>
     <link rel="stylesheet" href="{{ url('/home/assets/css/intro.css') }}?v={{ time() }}" type="text/css" />
     <link rel="icon" type="image/x-icon" sizes="32x32" href="{{ url('/img/owndays/favicon.ico') }}">
+
+    <!-- ✅ สำหรับ Facebook / Line / LinkedIn -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="{{ strip_tags($product['title']) }}">
+    <meta property="og:description" content="{{ strip_tags($product['subtitle']) }}">
+    <meta property="og:image" content="{{ url('img/owndays/' . $product['path'] . '/p1.png') }}?v={{ time() }}">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- ✅ สำหรับ Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ strip_tags($product['title']) }}">
+    <meta name="twitter:description" content="{{ strip_tags($product['subtitle']) }}">
+    <meta name="twitter:image" content="{{ url('img/owndays/' . $product['path'] . '/p1.png') }}?v={{ time() }}">
+
+
 </head>
 
 <body>
@@ -72,9 +90,9 @@
                     <!-- ✅ สไลด์สินค้า -->
                     <div class="product-carousel">
                         <div class="carousel-track">
-                            <img src="{{ url('img/owndays/' . $product['path'] . '/p1.png') }}" alt="Product 1">
-                            <img src="{{ url('img/owndays/' . $product['path'] . '/p2.png') }}" alt="Product 2">
-                            <img src="{{ url('img/owndays/' . $product['path'] . '/p3.png') }}" alt="Product 3">
+                            <img src="{{ url('img/owndays/' . $product['path'] . '/p1.png') }}?v={{ time() }}" alt="Product 1">
+                            <img src="{{ url('img/owndays/' . $product['path'] . '/p2.png') }}?v={{ time() }}" alt="Product 2">
+                            <img src="{{ url('img/owndays/' . $product['path'] . '/p3.png') }}?v={{ time() }}" alt="Product 3">
                         </div>
                         <!-- ปุ่มเลื่อน -->
 
@@ -86,6 +104,40 @@
                             {!! $product['footer'] !!}
                         </p>
                     </div>
+
+                    <br>
+
+
+                    <div class="share-container">
+                    <ul class="share-menu">
+                        <li>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}"
+                            target="_blank" class="facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        </li>
+                        <li>
+                        <a href="https://social-plugins.line.me/lineit/share?url={{ urlencode(url()->current()) }}"
+                            target="_blank" class="line">
+                            <i class="fab fa-line"></i>
+                        </a>
+                        </li>
+                        <li>
+                        <a href="https://twitter.com/intent/tweet?url={{ urlencode(url()->current()) }}"
+                            target="_blank" class="twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        </li>
+                        <li>
+                        <a href="https://www.instagram.com/"
+                            target="_blank" class="instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        </li>
+                    </ul>
+                    </div>
+
+
 
                     <br>
 
@@ -120,6 +172,7 @@
 
     </div>
 </body>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         const track = document.querySelector(".carousel-track");
@@ -187,6 +240,19 @@
         updateCarousel();
         startAutoSlide();
     });
+</script>
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const shareContainer = document.querySelector(".share-container");
+  const toggleBtn = document.querySelector(".share-toggle");
+
+  toggleBtn.addEventListener("click", () => {
+    shareContainer.classList.toggle("active");
+  });
+});
 </script>
 
 </html>

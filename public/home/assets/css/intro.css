@@ -753,3 +753,44 @@ textarea::placeholder {
 
 
 }
+
+
+.share-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 25px 0;
+}
+
+.share-menu {
+  list-style: none;
+  display: flex;
+  gap: 10px;
+  padding: 0;
+  margin: 0;
+}
+
+.share-menu li a {
+  width: 45px;
+  height: 45px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 22px;
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.share-menu li a:hover {
+  transform: translateY(-5px);
+}
+
+.share-menu li a.facebook { background: #3b5998; }
+.share-menu li a.line { background: #00B900; }
+.share-menu li a.twitter { background: #1da1f2; }
+.share-menu li a.instagram {
+  background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+}
+
