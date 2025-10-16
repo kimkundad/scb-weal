@@ -569,6 +569,7 @@ textarea::placeholder {
   font-family: 'Aktiv Grotesk Thai', sans-serif;
   font-size: 16px;
   color: #574319;
+  text-align: justify;
 }
 
 
