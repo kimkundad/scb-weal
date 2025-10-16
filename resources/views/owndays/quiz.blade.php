@@ -165,27 +165,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // ถ้ามีเสมอ → แสดงข้อ 8
         if (tiedIndices.length > 0) {
-          const labels = [
-            'ตัวตนที่พร้อมเติบโตอย่างสว่างไสว',
-            'ตัวตนที่พร้อมสร้างเส้นทางใหม่',
-            'ตัวตนที่พร้อมเป็นพลังปกป้อง',
-            'ตัวตนที่พร้อมฉายแสงไม่เหมือนใคร',
-            'ตัวตนที่พร้อมให้พึ่งพาความรู้ความเข้าใจ',
-            'ตัวตนที่พร้อมเชื่อมโยงผู้คนไว้ด้วยกัน'
-          ];
 
-          const tiedLabels = mapIndicesToLabels(tiedIndices, labels);
-          const optionsContainer = q8.querySelector('.quiz-options');
-          optionsContainer.innerHTML = '';
+          // --- สร้างตัวเลือกใหม่จาก "ตัวเลือกที่เสมอกัน"
+            const labels = [
+            { key: 'A', text: 'ตัวตนที่พร้อมเติบโตอย่างสว่างไสว' },
+            { key: 'B', text: 'ตัวตนที่พร้อมสร้างเส้นทางใหม่' },
+            { key: 'C', text: 'ตัวตนที่พร้อมเป็นพลังปกป้อง' },
+            { key: 'D', text: 'ตัวตนที่พร้อมฉายแสงไม่เหมือนใคร' },
+            { key: 'E', text: 'ตัวตนที่พร้อมให้พึ่งพาความรู้ความเข้าใจ' },
+            { key: 'F', text: 'ตัวตนที่พร้อมเชื่อมโยงผู้คนไว้ด้วยกัน' },
+            ];
 
-          tiedLabels.forEach(txt => {
+            const tiedLabels = tiedIndices.map(i => labels[i]);
+            const optionsContainer = q8.querySelector('.quiz-options');
+            optionsContainer.innerHTML = '';
+
+            tiedLabels.forEach(opt => {
             const label = document.createElement('label');
             label.classList.add('quiz-option');
             label.innerHTML = `
-              <input type="radio" name="answers[7]" value="${txt}">
-              <span>${txt}</span>`;
+                <input type="radio" name="answers[7]" value="${opt.key}">
+                <span>${opt.text}</span>`;
             optionsContainer.appendChild(label);
-          });
+            });
 
           // ปรับ progress เป็น 8/8 และเปลี่ยนปุ่มเป็นยืนยัน
           const cur = q8.querySelector('.quiz-progress .cur');

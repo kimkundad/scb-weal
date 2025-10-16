@@ -432,8 +432,8 @@ class OwndaysQuizController extends Controller
 
             // ✅ ถ้ามีข้อ 8 → ใช้ข้อ 8 เป็นหลัก
             if (count($answers) >= 8 && isset($answers[7])) {
-                $choice8 = $answers[7];
-                $selectedKey = $map[$choice8] ?? 'A';
+                // ตอนนี้ค่าที่ส่งมาคือ A–F จาก radio ในข้อ 8
+                $selectedKey = $answers[7];
             } else {
                 // ✅ นับจำนวนการเลือกในข้อ 1–7
                 $count = array_fill(1, 6, 0); // 1–6
