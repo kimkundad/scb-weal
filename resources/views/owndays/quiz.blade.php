@@ -89,44 +89,47 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-  const blocks   = [...document.querySelectorAll('.quiz-block')];
-  const totalAll = blocks.length;       // จริง ๆ = 8
-  const q8       = document.querySelector('#question-7'); // บล็อกข้อ 8
+  const blocks = [...document.querySelectorAll('.quiz-block')];
+  const q8 = document.querySelector('#question-7');
   const chosenIdx = {}; // เก็บ choice-index ที่เลือกในแต่ละข้อ: {0:2, 1:5, ...}
 
-  // ฟังก์ชันช่วย: เช็คว่ามี "เสมอกันที่อันดับ 1" ไหม
-  function isTopTie(countMap) {
-    // countMap เช่น [2,3,0,3,1,0]
-    const max = Math.max(...countMap);
-    const howManyMax = countMap.filter(v => v === max).length;
-    return howManyMax >= 2; // เสมอถ้าจำนวนที่มีค่ามากสุดมากกว่า 1
-  }
-
-  // นับคะแนนจากคำตอบ 7 ข้อแรก (เฉพาะข้อ 0..6)
+  // ✅ ฟังก์ชันนับคะแนนจากคำตอบ 7 ข้อแรก (เฉพาะข้อ 0–6)
   function buildCountsFromFirst7() {
-    // เรามีตัวเลือก 6 ตัว (A..F) → สร้าง array 6 ช่องไว้เก็บนับ
-    const counts = [0,0,0,0,0,0];
+    const counts = [0, 0, 0, 0, 0, 0];
     for (let q = 0; q <= 6; q++) {
       const c = chosenIdx[q];
-      if (typeof c === 'number' && c >=0 && c < 6) counts[c]++;
+      if (typeof c === 'number' && c >= 0 && c < 6) counts[c]++;
     }
     return counts;
   }
 
-  // อัปเดตปุ่มข้อ 7 (index 6) ให้แสดงภาพ check (เพราะจะไปสู่การตัดสิน)
+  // ✅ ฟังก์ชันหาว่ามี "กลุ่มที่เสมอกันบนสุด" อะไรบ้าง
+  function getTopTiedIndices(counts) {
+    const max = Math.max(...counts);
+    const topIndices = counts
+      .map((v, i) => (v === max ? i : -1))
+      .filter(i => i !== -1);
+    return topIndices.length > 1 ? topIndices : []; // เสมอเฉพาะถ้ามากกว่า 1 กลุ่ม
+  }
+
+  // ✅ ฟังก์ชันแปลง index → label ของกลุ่ม
+  function mapIndicesToLabels(indices, labels) {
+    return indices.map(i => labels[i]);
+  }
+
+  // อัปเดตปุ่มข้อ 7 ให้เป็น “ยืนยันคำตอบ”
   const lastOfFirst7 = document.querySelector('#question-6 .next-btn img');
   if (lastOfFirst7) {
     lastOfFirst7.src = "{{ url('img/owndays/xxRectangle@3x.png') }}";
     lastOfFirst7.alt = "ยืนยันคำตอบ";
   }
 
-  // ตั้งค่า enable/disable ปุ่มเมื่อยังไม่เลือก
+  // ✅ ตั้งค่า enable/disable ปุ่มแต่ละข้อ
   blocks.forEach((block, index) => {
     const nextBtn = block.querySelector('.next-btn');
-    const radios  = block.querySelectorAll('input[type="radio"]');
-    let selected  = false;
+    const radios = block.querySelectorAll('input[type="radio"]');
+    let selected = false;
 
-    // disable ปุ่มก่อนเลือก
     nextBtn.style.pointerEvents = 'none';
     nextBtn.style.opacity = '0.5';
 
@@ -141,66 +144,82 @@ document.addEventListener('DOMContentLoaded', function () {
     nextBtn.addEventListener('click', () => {
       if (!selected) return;
 
-      // บันทึก index ของ choice ที่เลือก (ไว้คำนวณคะแนน)
+      // เก็บคำตอบที่เลือก
       const picked = block.querySelector('input[type="radio"]:checked');
       if (picked) {
-        const cIdx = Number(picked.dataset.choiceIndex); // 0..5
+        const cIdx = Number(picked.dataset.choiceIndex);
         chosenIdx[index] = cIdx;
       }
 
-      // --- กรณี index <= 5: ไปข้อถัดไปปกติ
+      // ถ้าเป็นข้อ 1–6 → ไปข้อต่อไป
       if (index < 6) {
         block.style.display = 'none';
         blocks[index + 1].style.display = 'block';
         return;
       }
 
-      // --- เมื่ออยู่ที่ข้อ 7 (index === 6) → ตรวจเสมอ
+      // ✅ เมื่อถึงข้อ 7 → ตรวจเสมอ
       if (index === 6) {
         const counts = buildCountsFromFirst7();
-        const tie = isTopTie(counts);
+        const tiedIndices = getTopTiedIndices(counts);
 
-        if (tie) {
-          // ปลดล็อกข้อ 8
-          if (q8) {
-            // อัปเดต progress ของข้อ 8 เป็น 8/8
-            const cur = q8.querySelector('.quiz-progress .cur');
-            const total = q8.querySelector('.quiz-progress .total');
-            if (cur) cur.textContent = '8';
-            if (total) total.textContent = '8';
+        // ถ้ามีเสมอ → แสดงข้อ 8
+        if (tiedIndices.length > 0) {
+          const labels = [
+            'ตัวตนที่พร้อมเติบโตอย่างสว่างไสว',
+            'ตัวตนที่พร้อมสร้างเส้นทางใหม่',
+            'ตัวตนที่พร้อมเป็นพลังปกป้อง',
+            'ตัวตนที่พร้อมฉายแสงไม่เหมือนใคร',
+            'ตัวตนที่พร้อมให้พึ่งพาความรู้ความเข้าใจ',
+            'ตัวตนที่พร้อมเชื่อมโยงผู้คนไว้ด้วยกัน'
+          ];
 
-            block.style.display = 'none';
-            q8.style.display = 'block';
+          const tiedLabels = mapIndicesToLabels(tiedIndices, labels);
+          const optionsContainer = q8.querySelector('.quiz-options');
+          optionsContainer.innerHTML = '';
 
-            // เปลี่ยนปุ่มของข้อ 8 เป็นปุ่ม check (และกดแล้ว submit)
-            const q8BtnImg = q8.querySelector('.next-btn img');
-            if (q8BtnImg) {
-              q8BtnImg.src = "{{ url('img/owndays/xxRectangle@3x.png') }}";
-              q8BtnImg.alt = "ยืนยันคำตอบ";
-            }
+          tiedLabels.forEach(txt => {
+            const label = document.createElement('label');
+            label.classList.add('quiz-option');
+            label.innerHTML = `
+              <input type="radio" name="answers[7]" value="${txt}">
+              <span>${txt}</span>`;
+            optionsContainer.appendChild(label);
+          });
 
-            const q8Btn = q8.querySelector('.next-btn');
-            const q8Radios = q8.querySelectorAll('input[type="radio"]');
-            // ตัวตรวจเลือกสำหรับข้อ 8
-            q8Btn.style.pointerEvents = 'none';
-            q8Btn.style.opacity = '0.5';
-            q8Radios.forEach(r => {
-              r.addEventListener('change', () => {
-                q8Btn.style.pointerEvents = 'auto';
-                q8Btn.style.opacity   = '1';
-              });
-            });
-            q8Btn.onclick = () => document.getElementById('quizForm').submit();
+          // ปรับ progress เป็น 8/8 และเปลี่ยนปุ่มเป็นยืนยัน
+          const cur = q8.querySelector('.quiz-progress .cur');
+          const total = q8.querySelector('.quiz-progress .total');
+          if (cur) cur.textContent = '8';
+          if (total) total.textContent = '8';
+          const q8BtnImg = q8.querySelector('.next-btn img');
+          if (q8BtnImg) {
+            q8BtnImg.src = "{{ url('img/owndays/xxRectangle@3x.png') }}";
+            q8BtnImg.alt = "ยืนยันคำตอบ";
           }
+
+          block.style.display = 'none';
+          q8.style.display = 'block';
+
+          // ปุ่ม submit เฉพาะเมื่อเลือก
+          const q8Btn = q8.querySelector('.next-btn');
+          const q8Radios = q8.querySelectorAll('input[type="radio"]');
+          q8Btn.style.pointerEvents = 'none';
+          q8Btn.style.opacity = '0.5';
+          q8Radios.forEach(r => {
+            r.addEventListener('change', () => {
+              q8Btn.style.pointerEvents = 'auto';
+              q8Btn.style.opacity = '1';
+            });
+          });
+          q8Btn.onclick = () => document.getElementById('quizForm').submit();
         } else {
-          // ไม่มีเสมอ → ส่งเลย
+          // ไม่มีเสมอ → ส่งฟอร์มทันที
           document.getElementById('quizForm').submit();
         }
-
-        return;
       }
 
-      // --- เผื่อกรณีมาถึงข้อ 8 แล้ว (index === 7) → ส่งเลย
+      // เผื่อกรณีข้อ 8
       if (index === 7) {
         document.getElementById('quizForm').submit();
       }
@@ -208,5 +227,6 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 </script>
+
 
 </html>

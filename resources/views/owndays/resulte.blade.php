@@ -93,9 +93,14 @@
                         <img src="{{ url('img/owndays/link@3x.png') }}" alt="พร้อมแล้ว ไปต่อกันเลย" class="btn-image">
                     </a>
 
-                    <a href="{{ url('/rating') }}" class="a-link" style="margin-bottom: 30px; margin-top: 15px">
-                        <p style="margin: 15px auto">ให้คะแนนแบบสอบถาม</p>
+
+                    <a href="{{ url('/rating') }}" class="start-btn" style="margin-bottom: 30px;     width: 90%; margin-top: 15px">
+                        <img src="{{ url('img/owndays/getPointv2.png') }}" alt="พร้อมแล้ว ไปต่อกันเลย" class="btn-image">
                     </a>
+
+                    {{-- <a href="{{ url('/rating') }}" class="a-link" style="margin-bottom: 30px; margin-top: 15px">
+                        <p style="margin: 15px auto">ให้คะแนนแบบสอบถาม</p>
+                    </a> --}}
 
                     <br><br>
 
