@@ -82,40 +82,40 @@ Route::domain('ttb.idx.co.th')->group(function () {
 
 Route::middleware(['auth'])->group(function () {
 
-    //  Route::domain('toyota.idx.co.th')->group(function () {
+     Route::domain('toyota.idx.co.th')->group(function () {
 
-     //   Route::get('/', [App\Http\Controllers\ToyataController::class, 'index']);
+       Route::get('/', [App\Http\Controllers\ToyataController::class, 'index']);
 
-    // Dashboard
-    // Route::get('/admin/dashboard', [App\Http\Controllers\ToyataController::class, 'index'])
-    //     ->name('dashboard.index');
+  //  Dashboard
+    Route::get('/admin/dashboard', [App\Http\Controllers\ToyataController::class, 'index'])
+        ->name('dashboard.index');
 
-    // Route::get('/members/create', [ToyataController::class, 'create'])->name('members.create');
+    Route::get('/members/create', [ToyataController::class, 'create'])->name('members.create');
 
-    // // AJAX check-in
-    // Route::post('/toyota/checkin', [ToyataController::class, 'checkIn'])->name('toyota.checkin');
+    // AJAX check-in
+    Route::post('/toyota/checkin', [ToyataController::class, 'checkIn'])->name('toyota.checkin');
 
-    // Route::post('/toyota/checkin-toggle', [ToyataController::class, 'toggleCheckin'])
-    // ->name('toyota.checkin.toggle');
+    Route::post('/toyota/checkin-toggle', [ToyataController::class, 'toggleCheckin'])
+    ->name('toyota.checkin.toggle');
 
-    // Route::get('/toyota/edit',  [ToyataController::class, 'edit'])->name('toyota.edit');
-    // Route::post('/toyota/update', [ToyataController::class, 'update'])->name('toyota.update');
+    Route::get('/toyota/edit',  [ToyataController::class, 'edit'])->name('toyota.edit');
+    Route::post('/toyota/update', [ToyataController::class, 'update'])->name('toyota.update');
 
-    // Route::get('/members/create', [ToyataController::class, 'create'])->name('members.create');
-    // Route::post('/members',        [ToyataController::class, 'store'])->name('members.store');
+    Route::get('/members/create', [ToyataController::class, 'create'])->name('members.create');
+    Route::post('/members',        [ToyataController::class, 'store'])->name('members.store');
 
-    // // Route::get('/toyota/instead/{spreadsheetId}/{sheetName}/{row}/{Name}', [ToyataController::class,'insteadForm'])
-    // // ->name('toyota.instead.form');
+    // Route::get('/toyota/instead/{spreadsheetId}/{sheetName}/{row}/{Name}', [ToyataController::class,'insteadForm'])
+    // ->name('toyota.instead.form');
 
-    // Route::get(
-    //     '/toyota/instead/{spreadsheetId}/{sheetName}/{row}/{Name?}',
-    //     [ToyataController::class, 'insteadForm']
-    // )->name('toyota.instead.form');
+    Route::get(
+        '/toyota/instead/{spreadsheetId}/{sheetName}/{row}/{Name?}',
+        [ToyataController::class, 'insteadForm']
+    )->name('toyota.instead.form');
 
-    // Route::post('/toyota/instead', [ToyataController::class,'insteadStore'])
-    //     ->name('toyota.instead.store');
+    Route::post('/toyota/instead', [ToyataController::class,'insteadStore'])
+        ->name('toyota.instead.store');
 
-    //  });
+     });
 
 
 
