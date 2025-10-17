@@ -110,6 +110,13 @@
 
                     <div class="share-container">
                     <ul class="share-menu">
+
+                    <li>
+                        <a href="javascript:void(0)" class="copy-link" id="copyLinkBtn" title="คัดลอกลิงก์">
+                            <i class="fa-solid fa-link"></i>
+                        </a>
+                    </li>
+
                         <li>
                         <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}"
                             target="_blank" class="facebook">
@@ -129,12 +136,7 @@
                             </a>
                         </li>
 
-                        <li>
-                        <a href="https://www.instagram.com/"
-                            target="_blank" class="instagram">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        </li>
+
                     </ul>
                     </div>
 
@@ -243,7 +245,23 @@
     });
 </script>
 
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const copyBtn = document.getElementById('copyLinkBtn');
 
+  copyBtn.addEventListener('click', () => {
+    const link = window.location.href;
+    navigator.clipboard.writeText(link).then(() => {
+      copyBtn.classList.add('copied');
+      copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
+      setTimeout(() => {
+        copyBtn.innerHTML = '<i class="fa-solid fa-link"></i>';
+        copyBtn.classList.remove('copied');
+      }, 1500);
+    });
+  });
+});
+</script>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {

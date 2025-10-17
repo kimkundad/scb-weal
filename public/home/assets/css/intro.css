@@ -794,6 +794,8 @@ textarea::placeholder {
   background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
 }
 
+.share-menu li a.copy-link { background: #666; }
+
 .share-menu li a.x {
   background: #000000;
 }
