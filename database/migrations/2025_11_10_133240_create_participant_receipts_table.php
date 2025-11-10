@@ -1,0 +1,39 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('participant_receipts', function (Blueprint $table) {
+            $table->id();
+            $table->string('phone', 10)->index();
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->string('email')->nullable();
+            $table->string('province')->nullable();
+            $table->date('purchase_date')->nullable();
+            $table->time('purchase_time')->nullable();
+            $table->string('receipt_number')->nullable();
+            $table->string('imei', 15)->nullable();
+            $table->string('store_name')->nullable();
+            $table->string('receipt_file_path')->nullable();
+            $table->enum('status', ['pending','approved','failed'])->default('pending');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('participant_receipts');
+    }
+};

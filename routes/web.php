@@ -9,6 +9,7 @@ use App\Http\Controllers\SrichanController;
 use App\Http\Controllers\ToyataController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\OwndaysQuizController;
+use App\Http\Controllers\RegistrationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +29,34 @@ Route::domain('ttb.idx.co.th')->group(function () {
         return view('welcome'); // หรือ controller ก็ได้
     });
 });
+
+
+Route::domain('honor.mawathecreation.com')->group(function () {
+        Route::get('/', function () {
+                return view('honor.index'); // หรือ controller ก็ได้
+        });
+        Route::get('/privacy', function () {
+                return view('honor.privacy'); // หรือ controller ก็ได้
+        });
+
+        Route::get('/regis_honor', [RegistrationController::class, 'showPhoneForm']);
+        Route::post('/regis_honor', [RegistrationController::class, 'storePhone']);
+
+        Route::get('/regis_user_data', [RegistrationController::class, 'showUserDataForm']);
+        Route::post('/regis_user_data', [RegistrationController::class, 'storeUserData']);
+
+        Route::get('/regis_user_upslip', [RegistrationController::class, 'showUploadForm']);
+        Route::post('/regis_user_upslip', [RegistrationController::class, 'storeUpload']);
+
+        Route::get('/regis_confirm', [RegistrationController::class, 'showConfirm']);
+
+        Route::get('/my-rights', [RegistrationController::class, 'showLoginOrRedirect']);
+        Route::get('/dashboard', [RegistrationController::class, 'showDashboard']);
+
+});
+
+
+
 
 
     Route::domain('owndays.ideavivat.com')->group(function () {
