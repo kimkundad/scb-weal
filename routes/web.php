@@ -10,6 +10,9 @@ use App\Http\Controllers\ToyataController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\OwndaysQuizController;
 use App\Http\Controllers\RegistrationController;
+use App\Http\Controllers\AdminHonor\ReceiptController;
+use App\Http\Controllers\AdminHonor\LoginController;
+use App\Http\Controllers\AdminHonor\ReceiptLogController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,7 +56,50 @@ Route::domain('honor.mawathecreation.com')->group(function () {
         Route::get('/my-rights', [RegistrationController::class, 'showLoginOrRedirect']);
         Route::get('/dashboard', [RegistrationController::class, 'showDashboard']);
 
-});
+//});
+
+// ---------- ROUTE LOGIN ใหม่ (ไม่เกี่ยวกับ login เดิมของ Laravel) ----------
+Route::get('/admin-honor/login', [LoginController::class, 'showLoginForm'])
+    ->name('adminHonor.login');
+
+Route::post('/admin-honor/login', [LoginController::class, 'login'])
+    ->name('adminHonor.login.post');
+
+Route::post('/admin-honor/logout', [LoginController::class, 'logout'])
+    ->name('adminHonor.logout');
+
+
+Route::prefix('admin-honor')
+    ->name('adminHonor.')
+    ->middleware(['auth']) // ถ้าต้องการล็อกอินก่อนค่อยใส่ middleware ตรงนี้
+    ->group(function () {
+
+        Route::get('/receipt-logs', [ReceiptLogController::class, 'index'])
+                ->name('receipts.logs');
+
+        // หน้า Dashboard / รายการใบเสร็จ
+        Route::get('/receipts', [ReceiptController::class, 'index'])
+            ->name('receipts.index');
+
+        // ดูรายละเอียดใบเสร็จ
+        Route::get('/receipts/{receipt}', [ReceiptController::class, 'show'])
+            ->name('receipts.show');
+
+        // อนุมัติ
+        Route::patch('/receipts/{receipt}/approve', [ReceiptController::class, 'approve'])
+            ->name('receipts.approve');
+
+        // ปฏิเสธ / ไม่ผ่าน
+        Route::patch('/receipts/{receipt}/reject', [ReceiptController::class, 'reject'])
+            ->name('receipts.reject');
+
+        // Export ข้อมูล (ตัวอย่างเป็น CSV)
+        Route::get('/receipts-export', [ReceiptController::class, 'export'])
+            ->name('receipts.export');
+    });
+
+
+    });
 
 
 
@@ -110,6 +156,10 @@ Route::domain('honor.mawathecreation.com')->group(function () {
 
 
 Route::middleware(['auth'])->group(function () {
+
+
+
+
 
      Route::domain('toyota.idx.co.th')->group(function () {
 

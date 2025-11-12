@@ -7,11 +7,23 @@ use Illuminate\Http\Request;
 
 class Authenticate extends Middleware
 {
-    /**
-     * Get the path the user should be redirected to when they are not authenticated.
-     */
     protected function redirectTo(Request $request): ?string
     {
-        return $request->expectsJson() ? null : route('login');
+        if (! $request->expectsJson()) {
+
+            // ✅ ถ้าเป็นเส้นทางของ honor admin
+            if (
+                $request->is('admin-honor/*') ||                 // URL path ขึ้นต้นด้วย admin-honor
+                $request->routeIs('adminHonor.*') ||             // ชื่อ route ขึ้นต้นด้วย adminHonor.
+                $request->getHost() === 'honor.mawathecreation.com' // หรือมาจากโดเมน honor โดยตรง
+            ) {
+                return route('adminHonor.login');
+            }
+
+            // ✅ เคสอื่น ๆ ใช้ login เดิมของระบบ
+            return route('login');
+        }
+
+        return null;
     }
 }
