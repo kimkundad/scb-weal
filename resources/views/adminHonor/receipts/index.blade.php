@@ -588,6 +588,36 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
+document.addEventListener('DOMContentLoaded', function () {
+
+    let modal = null;
+    const modalEl = document.getElementById('receiptDetailModal');
+
+    // สร้าง modal แค่ครั้งเดียว
+    if (!modal) {
+        modal = new bootstrap.Modal(modalEl);
+    }
+
+    const buttons = document.querySelectorAll('.btn-show-receipt');
+    const downloadBtn = document.getElementById('detail-download-btn');
+
+    buttons.forEach(btn => {
+        btn.addEventListener('click', function () {
+
+            // ... (ใส่ข้อมูลลง modal ตามเดิม)
+
+            modal.show();
+        });
+    });
+
+    // ล้าง backdrop เมื่อ modal ปิด
+    modalEl.addEventListener('hidden.bs.modal', function () {
+        document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+        document.body.classList.remove('modal-open');
+        document.body.style = "";
+    });
+});
+
     </script>
 
 
