@@ -85,48 +85,78 @@ class ReceiptController extends Controller
     /**
      * อนุมัติใบเสร็จ
      */
-    public function approve(participant_receipt $receipt)
-    {
-        $oldStatus = $receipt->status;
+public function approve(participant_receipt $receipt)
+{
+    $oldStatus = $receipt->status;
 
-        $receipt->update([
-            'status' => 'approved',
-        ]);
+    $receipt->update([
+        'status'      => 'approved',
+        'approved_at' => now(),                // 🟢 เวลาอนุมัติ
+        'rejected_at' => null,                 // เคลียร์ rejected
+        'checked_by'  => Auth::user()->username ?? Auth::user()->name ?? Auth::id(), // 🟢 ผู้ตรวจสอบ
+    ]);
 
-        // บันทึก log
+    // บันทึก log
     ParticipantReceiptLog::create([
         'participant_receipt_id' => $receipt->id,
-        'user_id'                => Auth::id(),   // admin คนปัจจุบัน
+        'user_id'                => Auth::id(),
         'action'                 => 'approved',
         'old_status'             => $oldStatus,
         'new_status'             => 'approved',
     ]);
 
-        return back()->with('success', 'อนุมัติใบเสร็จเรียบร้อยแล้ว');
-    }
+    return back()->with('success', 'อนุมัติใบเสร็จเรียบร้อยแล้ว');
+}
 
-    /**
-     * ปฏิเสธ / ไม่ผ่านใบเสร็จ
-     */
-    public function reject(participant_receipt $receipt)
-    {
 
-        $oldStatus = $receipt->status;
-
-        $receipt->update([
-            'status' => 'failed',   // ใน DB ใช้ failed
-        ]);
-
-        ParticipantReceiptLog::create([
-        'participant_receipt_id' => $receipt->id,
-        'user_id'                => Auth::id(),
-        'action'                 => 'rejected',
-        'old_status'             => $oldStatus,
-        'new_status'             => 'failed',
+/**
+ * ปฏิเสธ / ไม่ผ่านใบเสร็จ
+ */
+public function reject(Request $request, participant_receipt $receipt)
+{
+    $request->validate([
+        'reject_reason' => 'required|string|max:1000'
     ]);
 
-        return back()->with('success', 'ปฏิเสธใบเสร็จเรียบร้อยแล้ว');
+    $oldStatus = $receipt->status;
+
+    $receipt->update([
+        'status'        => 'failed',
+        'rejected_at'   => now(),
+        'approved_at'   => null,
+        'checked_by'    => Auth::user()->name ?? Auth::id(),
+        'reject_reason' => $request->reject_reason,
+    ]);
+
+    ParticipantReceiptLog::create([
+        'participant_receipt_id' => $receipt->id,
+        'user_id'    => Auth::id(),
+        'action'     => 'rejected',
+        'old_status' => $oldStatus,
+        'new_status' => 'failed',
+    ]);
+
+    return back()->with('success', 'ปฏิเสธใบเสร็จเรียบร้อย');
+}
+
+
+public function downloadReceipt(Request $request)
+{
+    $url = $request->query('url');
+    $filename = $request->query('filename', 'receipt.jpg');
+
+    if (!$url) {
+        abort(404, "File not found");
     }
+
+    // ดึงข้อมูลจาก Spaces
+    $fileContent = file_get_contents($url);
+
+    return response($fileContent)
+        ->header('Content-Type', 'application/octet-stream')
+        ->header('Content-Disposition', "attachment; filename=\"$filename\"");
+}
+
 
     /**
      * Export ข้อมูลเป็น CSV อย่างง่าย

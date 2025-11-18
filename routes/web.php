@@ -34,12 +34,16 @@ Route::domain('ttb.idx.co.th')->group(function () {
 });
 
 
-Route::domain('honor.mawathecreation.com')->group(function () {
+ Route::domain('honor.mawathecreation.com')->group(function () {
         Route::get('/', function () {
                 return view('honor.index'); // หรือ controller ก็ได้
         });
         Route::get('/privacy', function () {
                 return view('honor.privacy'); // หรือ controller ก็ได้
+        });
+
+        Route::get('/pdpa', function () {
+                return view('honor.pdpa'); // หรือ controller ก็ได้
         });
 
         Route::get('/regis_honor', [RegistrationController::class, 'showPhoneForm']);
@@ -55,6 +59,15 @@ Route::domain('honor.mawathecreation.com')->group(function () {
 
         Route::get('/my-rights', [RegistrationController::class, 'showLoginOrRedirect']);
         Route::get('/dashboard', [RegistrationController::class, 'showDashboard']);
+        Route::get('/dashboard2', [RegistrationController::class, 'showDashboard2']);
+
+        Route::post('/check-imei', [RegistrationController::class, 'checkIMEI']);
+
+        Route::get('/logout-honor', function () {
+    session()->flush();     // ล้าง Session ทั้งหมด
+    return redirect('/');   // กลับหน้าแรก
+});
+
 
 //});
 
@@ -97,6 +110,10 @@ Route::prefix('admin-honor')
         Route::get('/receipts-export', [ReceiptController::class, 'export'])
             ->name('receipts.export');
     });
+
+
+    Route::get('/adminHonor/receipt/download', [ReceiptController::class, 'downloadReceipt'])
+    ->name('adminHonor.receipt.download');
 
 
     });

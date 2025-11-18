@@ -50,15 +50,18 @@
         }
 
         .status-pending {
-            color: #F6A609; /* เหลืองส้ม */
+            color: #F6A609;
+            /* เหลืองส้ม */
         }
 
         .status-approved {
-            color: #17C653; /* เขียว */
+            color: #17C653;
+            /* เขียว */
         }
 
         .status-rejected {
-            color: #F1416C; /* แดง */
+            color: #F1416C;
+            /* แดง */
         }
 
         .btn-light-gray {
@@ -182,11 +185,8 @@
                     {{-- Search --}}
                     <div class="col-md-5">
                         <div class="position-relative">
-                            <input type="text"
-                                   class="form-control"
-                                   name="q"
-                                   value="{{ request('q') }}"
-                                   placeholder="ค้นหาใบเสร็จ / IMEI / ชื่อผู้ใช้...">
+                            <input type="text" class="form-control" name="q" value="{{ request('q') }}"
+                                placeholder="ค้นหาใบเสร็จ / IMEI / ชื่อผู้ใช้...">
                         </div>
                     </div>
 
@@ -194,9 +194,12 @@
                     <div class="col-md-3">
                         <select name="status" class="form-select">
                             <option value="">ทั้งหมด</option>
-                            <option value="pending"  {{ request('status') === 'pending' ? 'selected' : '' }}>รอตรวจสอบ</option>
-                            <option value="approved" {{ request('status') === 'approved' ? 'selected' : '' }}>อนุมัติแล้ว</option>
-                            <option value="rejected" {{ request('status') === 'rejected' ? 'selected' : '' }}>ไม่ผ่าน</option>
+                            <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>รอตรวจสอบ
+                            </option>
+                            <option value="approved" {{ request('status') === 'approved' ? 'selected' : '' }}>อนุมัติแล้ว
+                            </option>
+                            <option value="rejected" {{ request('status') === 'rejected' ? 'selected' : '' }}>ไม่ผ่าน
+                            </option>
                         </select>
                     </div>
 
@@ -220,28 +223,50 @@
                     <table class="table align-middle table-row-dashed fs-7 gy-4 mb-0">
                         <thead>
                             <tr class="text-start text-gray-500 fw-bold text-uppercase">
-                                <th class="min-w-80px">วันที่ส่ง</th>
+                                <th class="min-w-60px">ลำดับ</th>
+                                <th class="min-w-120px">เวลาที่ลงทะเบียน</th>
                                 <th class="min-w-160px">ชื่อผู้ใช้</th>
                                 <th class="min-w-140px">หมายเลขใบเสร็จ</th>
                                 <th class="min-w-140px">IMEI</th>
                                 <th class="min-w-100px">รุ่น</th>
                                 <th class="min-w-100px">สถานะ</th>
+                                <th class="min-w-180px">วันที่ตรวจสอบ</th>
+                                <th class="min-w-180px">ผู้ตรวจสอบ</th>
                                 <th class="min-w-200px text-end">จัดการ</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($receipts as $r)
+                            @forelse($receipts as $index => $r)
                                 <tr>
-                                    <td>{{ \Carbon\Carbon::parse($r->submitted_at ?? $r->created_at)->format('d M Y') }}</td>
+                                    {{-- ลำดับ --}}
+                                    <td>{{ $index + 1 }}</td>
+
+                                    {{-- วันเดือนปี + เวลา (ภาษาไทย) --}}
+                                    <td>
+                                        @php
+                                            \Carbon\Carbon::setLocale('th');
+                                            $dt = \Carbon\Carbon::parse($r->created_at);
+                                        @endphp
+                                        {{ $dt->translatedFormat('j F Y') }}<br>
+                                        <small class="text-muted">{{ $dt->format('H:i') }} น.</small>
+                                    </td>
+
+                                    {{-- ชื่อผู้ใช้ --}}
                                     <td>{{ $r->user_name ?? '-' }}</td>
-                                    <td>{{ $r->receipt_no ?? '-' }}</td>
+
+                                    {{-- หมายเลขใบเสร็จ --}}
+                                    <td>{{ $r->receipt_number ?? '-' }}</td>
+
+                                    {{-- IMEI --}}
                                     <td>{{ $r->imei ?? '-' }}</td>
+
+                                    {{-- รุ่น --}}
                                     <td>{{ $r->model ?? '-' }}</td>
 
                                     {{-- สถานะ --}}
                                     <td>
                                         @php($status = $r->status ?? 'pending')
-                                        @if($status === 'approved')
+                                        @if ($status === 'approved')
                                             <span class="status-text status-approved">อนุมัติ</span>
                                         @elseif($status === 'failed')
                                             <span class="status-text status-rejected">ไม่ผ่าน</span>
@@ -250,171 +275,320 @@
                                         @endif
                                     </td>
 
+                                    {{-- วันที่ตรวจสอบ --}}
+                                    <td>
+                                        @if ($r->approved_at)
+                                            <span class="text-success">
+                                                {{ \Carbon\Carbon::parse($r->approved_at)->translatedFormat('j F Y H:i') }}
+                                                น.
+                                            </span>
+                                        @elseif($r->rejected_at)
+                                            <span class="text-danger">
+                                                {{ \Carbon\Carbon::parse($r->rejected_at)->translatedFormat('j F Y H:i') }}
+                                                น.
+                                            </span>
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+
+                                    {{-- ผู้ตรวจสอบ --}}
+                                    <td>{{ $r->checked_by ?? '-' }}</td>
+
                                     {{-- ปุ่มจัดการ --}}
                                     <td class="text-end">
                                         <div class="d-inline-flex gap-1">
-                                            {{-- ปุ่มดูรายละเอียด แทนที่จะวิ่งไป route --}}
+
+                                            {{-- ปุ่มดูรายละเอียด --}}
                                             <button type="button"
-                                                    class="btn btn-light-gray btn-sm btn-show-receipt"
-                                                    data-fullname="{{ trim(($r->first_name ?? '') . ' ' . ($r->last_name ?? '')) }}"
-                                                    data-phone="{{ $r->phone }}"
-                                                    data-email="{{ $r->email }}"
-                                                    data-province="{{ $r->province }}"
-                                                    data-purchase-date="{{ $r->purchase_date }}"
-                                                    data-purchase-time="{{ $r->purchase_time }}"
-                                                    data-receipt-number="{{ $r->receipt_number }}"
-                                                    data-imei="{{ $r->imei }}"
-                                                    data-store="{{ $r->store_name }}"
-                                                    data-status="{{ $r->status }}"
-                                                    data-receipt-file="{{ $r->receipt_file_path }}">
+                                                class="btn btn-light-gray btn-sm btn-show-receipt"
+                                                data-index="{{ $index + 1 }}"
+                                                data-created="{{ $r->created_at }}"
+                                                data-approved="{{ $r->approved_at }}"
+                                                data-rejected="{{ $r->rejected_at }}"
+                                                data-checked-by="{{ $r->checked_by }}"
+                                                data-reject-reason="{{ $r->reject_reason }}"
+                                                data-receipt-file="{{ $r->receipt_file_path }}"
+                                                data-status="{{ $r->status }}"
+                                                data-fullname="{{ trim(($r->first_name ?? '').' '.($r->last_name ?? '')) }}"
+                                                data-phone="{{ $r->phone }}"
+                                                data-email="{{ $r->email }}"
+                                                data-province="{{ $r->province }}"
+                                                data-purchase-date="{{ $r->purchase_date }}"
+                                                data-purchase-time="{{ $r->purchase_time }}"
+                                                data-receipt-number="{{ $r->receipt_number }}"
+                                                data-imei="{{ $r->imei }}"
+                                                data-store="{{ $r->store_name }}">
                                                 <i class="fa-solid fa-eye me-1"></i> ดูรายละเอียด
                                             </button>
 
-                                            <form action="{{ route('adminHonor.receipts.approve', $r->id) ?? '#' }}"
-                                                  method="POST">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit"
-                                                        class="btn btn-dark btn-sm">
-                                                    ✓ อนุมัติ
-                                                </button>
+                                            {{-- อนุมัติ --}}
+                                            <form action="{{ route('adminHonor.receipts.approve', $r->id) }}"
+                                                method="POST">
+                                                @csrf @method('PATCH')
+                                                <button type="submit" class="btn btn-dark btn-sm">✓ อนุมัติ</button>
                                             </form>
 
-                                            <form action="{{ route('adminHonor.receipts.reject', $r->id) ?? '#' }}"
-                                                  method="POST">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit"
-                                                        class="btn btn-danger btn-sm">
-                                                    ✕ ปฏิเสธ
-                                                </button>
+                                            {{-- ปฏิเสธ --}}
+                                            <form action="{{ route('adminHonor.receipts.reject', $r->id) }}"
+                                                method="POST">
+                                                @csrf @method('PATCH')
+                                                <button type="submit" class="btn btn-danger btn-sm">✕ ปฏิเสธ</button>
                                             </form>
                                         </div>
                                     </td>
+
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="text-center py-10 text-muted">
-                                        ไม่พบรายการใบเสร็จ
-                                    </td>
+                                    <td colspan="10" class="text-center py-10 text-muted">ไม่พบรายการใบเสร็จ</td>
                                 </tr>
                             @endforelse
                         </tbody>
+
                     </table>
                 </div>
             </div>
 
             {{-- Pagination (ถ้ามี) --}}
-            @if(method_exists($receipts, 'links'))
+            @if (method_exists($receipts, 'links'))
                 <div class="card-footer py-4">
                     {{ $receipts->withQueryString()->links() }}
                 </div>
             @endif
         </div>
+
+
+
     </div>
 
 
     {{-- Modal แสดงรายละเอียดใบเสร็จ --}}
-<div class="modal fade" id="receiptDetailModal" tabindex="-1" aria-labelledby="receiptDetailModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="receiptDetailModalLabel">รายละเอียดใบเสร็จ</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <div class="modal-body">
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <p class="mb-1"><strong>ชื่อ-นามสกุล:</strong> <span id="detail-fullname">-</span></p>
-                        <p class="mb-1"><strong>เบอร์โทร:</strong> <span id="detail-phone">-</span></p>
-                        <p class="mb-1"><strong>Email:</strong> <span id="detail-email">-</span></p>
-                        <p class="mb-1"><strong>จังหวัด:</strong> <span id="detail-province">-</span></p>
-                    </div>
-                    <div class="col-md-6">
-                        <p class="mb-1"><strong>วันที่ซื้อ:</strong> <span id="detail-purchase-date">-</span></p>
-                        <p class="mb-1"><strong>เวลาที่ซื้อ:</strong> <span id="detail-purchase-time">-</span></p>
-                        <p class="mb-1"><strong>หมายเลขใบเสร็จ:</strong> <span id="detail-receipt-number">-</span></p>
-                        <p class="mb-1"><strong>IMEI:</strong> <span id="detail-imei">-</span></p>
-                        <p class="mb-1"><strong>ร้านค้า:</strong> <span id="detail-store">-</span></p>
-                        <p class="mb-1"><strong>สถานะ:</strong>
-                            <span id="detail-status" class="status-text">-</span>
-                        </p>
-                    </div>
+    <div class="modal fade" id="receiptDetailModal" tabindex="-1" aria-labelledby="receiptDetailModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="receiptDetailModalLabel">รายละเอียดใบเสร็จ</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
-                <hr>
+                <div class="modal-body">
 
-                <div>
-                    <h6 class="mb-2">หลักฐานการซื้อ (Slip / ใบเสร็จ)</h6>
-                    <div class="border rounded p-2 text-center">
-                        <img id="detail-receipt-image" src="" alt="หลักฐานการซื้อ"
-                             class="img-fluid" style="max-height: 450px; object-fit: contain;">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p class="mb-1"><strong>ชื่อ-นามสกุล:</strong> <span id="detail-fullname">-</span></p>
+                            <p class="mb-1"><strong>เบอร์โทร:</strong> <span id="detail-phone">-</span></p>
+                            <p class="mb-1"><strong>Email:</strong> <span id="detail-email">-</span></p>
+                            <p class="mb-1"><strong>จังหวัด:</strong> <span id="detail-province">-</span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-1"><strong>วันที่ซื้อ:</strong> <span id="detail-purchase-date">-</span></p>
+                            <p class="mb-1"><strong>เวลาที่ซื้อ:</strong> <span id="detail-purchase-time">-</span></p>
+                            <p class="mb-1"><strong>หมายเลขใบเสร็จ:</strong> <span id="detail-receipt-number">-</span>
+                            </p>
+                            <p class="mb-1"><strong>IMEI:</strong> <span id="detail-imei">-</span></p>
+                            <p class="mb-1"><strong>ร้านค้า:</strong> <span id="detail-store">-</span></p>
+                            <p class="mb-1"><strong>สถานะ:</strong>
+                                <span id="detail-status" class="status-text">-</span>
+                            </p>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal">ปิด</button>
+                    <div class="row mb-3">
+
+                        <div class="col-md-6">
+                            <p class="mb-1"><strong>ลงทะเบียนในระบบวันที่:</strong>
+                                <span id="detail-created">-</span>
+                            </p>
+
+                            <p class="mb-1"><strong>ลำดับใบเสร็จที่ลงทะเบียน:</strong>
+                                <span id="detail-index">-</span>
+                            </p>
+
+                            <p class="mb-1"><strong>อนุมัติวันที่:</strong>
+                                <span id="detail-approved-at">-</span>
+                            </p>
+
+                            <p class="mb-1"><strong>เจ้าหน้าที่ที่อนุมัติ:</strong>
+                                <span id="detail-checked-by">-</span>
+                            </p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <p class="mb-1"><strong>ไม่อนุมัติวันที่:</strong>
+                                <span id="detail-rejected-at">-</span>
+                            </p>
+
+                            <p class="mb-1"><strong>สาเหตุที่ไม่อนุมัติ:</strong>
+                                <span id="detail-reject-reason">-</span>
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <hr>
+
+                    <div>
+                        <h6 class="mb-2">หลักฐานการซื้อ (Slip / ใบเสร็จ)</h6>
+                        <div class="border rounded p-2 text-center">
+
+                            <img id="detail-receipt-image" src="" class="img-fluid" style="max-height: 450px;">
+
+                            <br>
+<a id="detail-download-btn" href="#" class="btn btn-dark mt-3">
+    ดาวน์โหลดภาพใบเสร็จ
+</a>
+
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">ปิด</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-
-
 @endsection
 
 @section('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const buttons = document.querySelectorAll('.btn-show-receipt');
-        const modalEl = document.getElementById('receiptDetailModal');
-        if (!modalEl) return;
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const buttons = document.querySelectorAll('.btn-show-receipt');
+            const modalEl = document.getElementById('receiptDetailModal');
+            if (!modalEl) return;
 
-        const modal = new bootstrap.Modal(modalEl);
+            const modal = new bootstrap.Modal(modalEl);
 
-        buttons.forEach(function (btn) {
-            btn.addEventListener('click', function (e) {
-                e.preventDefault();
+            buttons.forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
 
-                // เติมข้อมูล text
-                document.getElementById('detail-fullname').textContent      = this.dataset.fullname || '-';
-                document.getElementById('detail-phone').textContent         = this.dataset.phone || '-';
-                document.getElementById('detail-email').textContent         = this.dataset.email || '-';
-                document.getElementById('detail-province').textContent      = this.dataset.province || '-';
-                document.getElementById('detail-purchase-date').textContent = this.dataset.purchaseDate || '-';
-                document.getElementById('detail-purchase-time').textContent = this.dataset.purchaseTime || '-';
-                document.getElementById('detail-receipt-number').textContent= this.dataset.receiptNumber || '-';
-                document.getElementById('detail-imei').textContent          = this.dataset.imei || '-';
-                document.getElementById('detail-store').textContent         = this.dataset.store || '-';
+                    // เติมข้อมูล text
+                    document.getElementById('detail-fullname').textContent = this.dataset
+                        .fullname || '-';
+                    document.getElementById('detail-phone').textContent = this.dataset.phone || '-';
+                    document.getElementById('detail-email').textContent = this.dataset.email || '-';
+                    document.getElementById('detail-province').textContent = this.dataset
+                        .province || '-';
+                    document.getElementById('detail-purchase-date').textContent = this.dataset
+                        .purchaseDate || '-';
+                    document.getElementById('detail-purchase-time').textContent = this.dataset
+                        .purchaseTime || '-';
+                    document.getElementById('detail-receipt-number').textContent = this.dataset
+                        .receiptNumber || '-';
+                    document.getElementById('detail-imei').textContent = this.dataset.imei || '-';
+                    document.getElementById('detail-store').textContent = this.dataset.store || '-';
 
-                // สถานะ + สี
-                const statusEl = document.getElementById('detail-status');
-                const status = this.dataset.status || 'pending';
-                statusEl.classList.remove('status-pending', 'status-approved', 'status-rejected');
+                    // สถานะ + สี
+                    const statusEl = document.getElementById('detail-status');
+                    const status = this.dataset.status || 'pending';
+                    statusEl.classList.remove('status-pending', 'status-approved',
+                        'status-rejected');
 
-                if (status === 'approved') {
-                    statusEl.textContent = 'อนุมัติ';
-                    statusEl.classList.add('status-approved');
-                } else if (status === 'failed') {
-                    // ใน DB ใช้ failed แต่บน UI ใช้ "ไม่ผ่าน"
-                    statusEl.textContent = 'ไม่ผ่าน';
-                    statusEl.classList.add('status-rejected');
-                } else {
-                    statusEl.textContent = 'รอตรวจสอบ';
-                    statusEl.classList.add('status-pending');
-                }
+                    if (status === 'approved') {
+                        statusEl.textContent = 'อนุมัติ';
+                        statusEl.classList.add('status-approved');
+                    } else if (status === 'failed') {
+                        // ใน DB ใช้ failed แต่บน UI ใช้ "ไม่ผ่าน"
+                        statusEl.textContent = 'ไม่ผ่าน';
+                        statusEl.classList.add('status-rejected');
+                    } else {
+                        statusEl.textContent = 'รอตรวจสอบ';
+                        statusEl.classList.add('status-pending');
+                    }
 
-                // รูปใบเสร็จ
-                const img = document.getElementById('detail-receipt-image');
-                img.src = this.dataset.receiptFile || '';
-                img.style.display = this.dataset.receiptFile ? 'block' : 'none';
+                    // รูปใบเสร็จ
+                    const img = document.getElementById('detail-receipt-image');
+                    img.src = this.dataset.receiptFile || '';
+                    img.style.display = this.dataset.receiptFile ? 'block' : 'none';
 
-                // เปิด modal
-                modal.show();
+                    // เปิด modal
+                    modal.show();
+                });
             });
         });
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+    const buttons = document.querySelectorAll('.btn-show-receipt');
+    const modal = new bootstrap.Modal(document.getElementById('receiptDetailModal'));
+
+    buttons.forEach(btn => {
+        btn.addEventListener('click', function () {
+
+            // ลำดับใบเสร็จ
+            document.getElementById('detail-index').textContent = this.dataset.index;
+
+            // ลงทะเบียนวันที่ (ภาษาไทย)
+            document.getElementById('detail-created').textContent =
+                this.dataset.created
+                    ? new Date(this.dataset.created).toLocaleString('th-TH')
+                    : '-';
+
+            // อนุมัติวันที่
+            document.getElementById('detail-approved-at').textContent =
+                this.dataset.approved
+                    ? new Date(this.dataset.approved).toLocaleString('th-TH')
+                    : '-';
+
+            // เจ้าหน้าที่
+            document.getElementById('detail-checked-by').textContent =
+                this.dataset.checkedBy || '-';
+
+            // ไม่อนุมัติวันที่
+            document.getElementById('detail-rejected-at').textContent =
+                this.dataset.rejected
+                    ? new Date(this.dataset.rejected).toLocaleString('th-TH')
+                    : '-';
+
+            // สาเหตุ reject
+            document.getElementById('detail-reject-reason').textContent =
+                this.dataset.rejectReason || '-';
+
+            // โหลดรูปใบเสร็จ
+            const img = document.getElementById('detail-receipt-image');
+            img.src = this.dataset.receiptFile || '';
+
+            // ปุ่มดาวน์โหลด
+            const downloadBtn = document.getElementById('detail-download-btn');
+            downloadBtn.href = this.dataset.receiptFile || '#';
+
+            // เปิด modal
+            modal.show();
+        });
     });
-</script>
+
+});
+
+
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const buttons = document.querySelectorAll('.btn-show-receipt');
+    const downloadBtn = document.getElementById('detail-download-btn');
+
+    buttons.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+
+            let fileUrl = this.dataset.receiptFile;
+            let imei = this.dataset.imei ?? 'unknown';
+            let filename = `receipt_${imei}.jpg`;
+
+            // ส่งไป controller เพื่อบังคับโหลด
+            downloadBtn.href = `/adminHonor/receipt/download?url=${encodeURIComponent(fileUrl)}&filename=${filename}`;
+        });
+    });
+
+});
+
+
+
+    </script>
+
+
 @endsection

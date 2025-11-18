@@ -21,7 +21,7 @@
   <main class="page-content">
   <div class="regis-container">
 
-    <h1 class="regis-title">เข้าสู่ระบบเพื่อดูสิทธิ์</h1>
+    <h1 class="regis-title">เข้าร่วมกิจกรรมด้วยเบอร์โทรของคุณ</h1>
 
     @php
       $sessionPhone = session('phone');
@@ -50,6 +50,8 @@
         inputmode="numeric"
         required
       >
+      <p class="mt-20" style="margin-top: -10px;font-size: 14px;color: #64748b;">กรอกเบอร์โทรศัพท์ของคุณที่ได้ลงทะเบียนไว้กับเรา</p>
+
       <button type="submit" class="btn-secondary mt-20">ดูข้อมูลเบอร์นี้</button>
     </form>
 

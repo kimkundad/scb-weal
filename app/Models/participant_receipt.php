@@ -10,9 +10,9 @@ class participant_receipt extends Model
     use HasFactory;
 
     protected $fillable = [
-        'phone', 'first_name', 'last_name', 'email', 'province',
+        'phone', 'first_name', 'last_name', 'email', 'province', 'hbd',
         'purchase_date', 'purchase_time', 'receipt_number', 'imei',
-        'store_name', 'receipt_file_path', 'status'
+        'store_name', 'receipt_file_path', 'status', 'approved_at', 'rejected_at', 'checked_by',
     ];
 
 

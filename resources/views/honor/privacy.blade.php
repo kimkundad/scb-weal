@@ -74,7 +74,7 @@
 
             </div>
 
-            <a href="{{ url('/regis_honor') }}" class="btn-confirm mt-20">เข้าร่วมกิจกรรม</a>
+            <a href="{{ url('/pdpa') }}" class="btn-confirm mt-20">เข้าร่วมกิจกรรม</a>
             <br><br>
 
         </main>
