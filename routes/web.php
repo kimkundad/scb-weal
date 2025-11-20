@@ -36,7 +36,7 @@ Route::domain('ttb.idx.co.th')->group(function () {
 
 
 
- Route::domain('honor.mawathecreation.com')->group(function () {
+// Route::domain('honor.mawathecreation.com')->group(function () {
         Route::get('/', function () {
                 return view('honor.index'); // หรือ controller ก็ได้
         });
@@ -118,7 +118,7 @@ Route::prefix('admin-honor')
     ->name('adminHonor.receipt.download');
 
 
-    });
+  //  });
 
 
 

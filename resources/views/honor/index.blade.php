@@ -23,7 +23,7 @@
 
             <div class="intro-bg">
                 <div class="intro-inner">
-                    <img src="{{ url('img/honor/Group@4x.png') }}" alt="intro" class="intro-img ">
+                    <img src="{{ url('img/honor/219423.jpg') }}" alt="intro" class="intro-img ">
                     <a href="{{ url('/privacy') }}" class="btn-confirm mt-20">เข้าร่วมกิจกรรม</a>
                 </div>
             </div>
