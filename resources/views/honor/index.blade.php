@@ -9,7 +9,62 @@
     <link rel="icon" type="image/x-icon" sizes="32x32" href="{{ url('/img/honor/favicon.ico') }}">
 </head>
 
-<body>
+
+<style>
+/* ───────────────────────────────────────────
+   Responsive Intro Cover (เฉพาะหน้านี้)
+──────────────────────────────────────────── */
+.intro-bg {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.intro-inner {
+    width: 100%;
+    max-width: 900px; /* กำหนด Max สำหรับ Desktop */
+    margin: 0 auto;
+}
+
+.intro-img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;   /* ควบคุมสัดส่วนรูป */
+    object-fit: cover;      /* ครอบพื้นที่อย่างสวยงาม */
+    border-radius: 6px;
+}
+
+/* ปุ่มใต้ภาพขยายตามความกว้าง */
+.intro-inner .btn-confirm {
+    display: block;
+    margin: 20px auto 0 auto;
+    width: 80%;
+    max-width: 350px;
+}
+
+/* สำหรับจอใหญ่ (Desktop 1200px+) */
+@media (min-width: 1200px) {
+    .intro-inner {
+        max-width: 1100px; /* ใหญ่ขึ้น แต่ไม่ล้น */
+    }
+}
+
+/* สำหรับมือถือ */
+@media (max-width: 767px) {
+    .intro-img {
+        aspect-ratio: unset;
+        height: auto;   /* ปล่อยรูปตามสัดส่วนจริง */
+        object-fit: contain; /* หรือ cover หากต้องการ */
+    }
+}
+</style>
+<style>
+body.index-page .page-wrapper2 {
+    max-width: 100% !important;
+}
+</style>
+
+<body class="index-page">
     <div class="page-wrapper2">
 
         <!-- Header -->
