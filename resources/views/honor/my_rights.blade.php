@@ -32,7 +32,7 @@
         📱 เบอร์โทรที่คุณใช้งานล่าสุดคือ<br>
         <strong>{{ $sessionPhone }}</strong>
         <br><br>
-        <a href="{{ url('/dashboard') }}" class="btn-confirm mt-20">ดูสิทธิ์ของฉัน</a>
+        <a href="{{ url('/dashboard') }}?phone={{ $sessionPhone }}" class="btn-confirm mt-20">ดูสิทธิ์ของฉัน</a>
         <p class="mt-20" style="color: #64748b;">หรือกรอกเบอร์ใหม่ด้านล่างเพื่อตรวจสอบข้อมูลอื่น</p>
       </div>
     @endif
@@ -43,13 +43,12 @@
         type="text"
         name="phone"
         id="phone"
-        class="regis-input"
-        placeholder="กรอกเบอร์โทรศัพท์"
-        maxlength="10"
-        pattern="[0-9]{10}"
+        class="regis-input phone-input"
+        placeholder="099-999-9999"
+        maxlength="12"
         inputmode="numeric"
         required
-      >
+    >
       <p class="mt-20" style="margin-top: -10px;font-size: 14px;color: #64748b;">กรอกเบอร์โทรศัพท์ของคุณที่ได้ลงทะเบียนไว้กับเรา</p>
 
       <button type="submit" class="btn-secondary mt-20">ดูข้อมูลเบอร์นี้</button>
@@ -77,5 +76,29 @@
   phoneInput.addEventListener('input', () => {
     phoneInput.value = phoneInput.value.replace(/[^0-9]/g, '').slice(0, 10);
   });
+</script>
+
+<script>
+    document.getElementById("phone").addEventListener("input", function(e) {
+        let value = e.target.value.replace(/\D/g, ""); // เอาเฉพาะตัวเลข
+
+        // จำกัดแค่ 10 หลัก
+        if (value.length > 10) value = value.slice(0, 10);
+
+        // จัดฟอร์แมต 099-999-9999
+        let formatted = "";
+
+        if (value.length > 0) {
+            formatted = value.substring(0, 3);
+        }
+        if (value.length > 3) {
+            formatted += "-" + value.substring(3, 6);
+        }
+        if (value.length > 6) {
+            formatted += "-" + value.substring(6, 10);
+        }
+
+        e.target.value = formatted;
+    });
 </script>
 </html>

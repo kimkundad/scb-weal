@@ -219,7 +219,24 @@
             generateCaptcha();
             document.getElementById("captcha_input").value = "";
         }
+
+
+        const phone = document.getElementById("phone").value.replace(/\D/g, ""); // เอาเฉพาะตัวเลข
+
+        if (phone.length !== 10) {
+            e.preventDefault();
+            alert("กรุณากรอกเบอร์โทรศัพท์ให้ครบ 10 หลัก");
+            return false;
+        }
+
+
     });
+</script>
+
+
+<script>
+// ตรวจสอบเบอร์โทรก่อน submit
+
 </script>
 
 </body>

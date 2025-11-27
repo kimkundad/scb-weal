@@ -74,7 +74,8 @@
 
             </div>
 
-            <a href="{{ url('/pdpa') }}" class="btn-confirm mt-20">เข้าร่วมกิจกรรม</a>
+            {{-- <a href="{{ url('/pdpa') }}" class="btn-confirm mt-20">เข้าร่วมกิจกรรม</a> --}}
+            <button id="join-btn" class="btn-confirm mt-20" disabled>เข้าร่วมกิจกรรม</button>
             <br><br>
 
         </main>
@@ -89,5 +90,28 @@
 
     </div>
 </body>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const checkbox = document.getElementById("agree");
+    const joinBtn = document.getElementById("join-btn");
+
+    checkbox.addEventListener("change", function () {
+        joinBtn.disabled = !checkbox.checked;
+
+        if (checkbox.checked) {
+            joinBtn.classList.add("active");
+        } else {
+            joinBtn.classList.remove("active");
+        }
+    });
+
+    joinBtn.addEventListener("click", function () {
+        if (checkbox.checked) {
+            window.location.href = "{{ url('/pdpa') }}";
+        }
+    });
+});
+</script>
 
 </html>

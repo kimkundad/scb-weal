@@ -51,6 +51,13 @@
     border: 1px solid #28a745;   /* เขียวเมื่อถูก */
 }
 
+.imei-note {
+    font-size: 14px;
+    color: #555;
+    margin-top: 5px;
+    line-height: 1.5;
+}
+
 .btn-logout {
     display: inline-block;
     background: #dc3545;     /* สีแดง */
@@ -93,11 +100,7 @@
                     <label>วันที่ซื้อสินค้า</label>
                     <input type="date" name="purchase_date" class="regis-input" required>
 
-                    <label>เวลาที่ซื้อ (โดยประมาณ)</label>
-                    <input type="time" name="purchase_time" class="regis-input" required>
 
-                    <label>หมายเลขใบเสร็จ</label>
-                    <input type="text" name="receipt_number" class="regis-input" required>
 
                     {{-- <label>หมายเลข IMEI เครื่อง</label>
                     <input type="text" name="imei" id="imei" maxlength="15" class="regis-input"
@@ -125,22 +128,18 @@
                             <span id="imei-status" class="imei-status"></span>
                         </div>
 
+                        <p class="imei-note">
+                    <strong>**หมายเหตุ:</strong><br>
+                    • สามารถตรวจสอบหมายเลข IMEI ได้โดยกด *#06# บนโทรศัพท์<br>
+                    • ใช้หมายเลข IMEI 1 เพื่อลงทะเบียนลุ้นรางวัลได้ 1 สิทธิ์<br>
+                    • ผู้ลงทะเบียน 1 คน สามารถลงทะเบียนได้มากกว่า 1 สิทธิ์
+                </p>
+
                         <p id="imei-error" class="input-error" style="display:none;">กรุณากรอก IMEI ให้ถูกต้อง</p>
 
                     <label>ร้านค้าที่ซื้อ</label>
                     <input type="text" name="store_name" class="regis-input" required>
 
-                    <label>อัปโหลดใบเสร็จ (ภาพ JPG/PNG/PDF)</label>
-                    <input type="file" name="receipt_file" id="receipt_file" class="regis-input"
-                        accept=".jpg,.jpeg,.png,.pdf" required>
-                    <!-- 🔽 ตรงนี้คือจุดแสดง preview -->
-                    <div id="preview-container" class="mt-10">
-                        <img id="preview-image" style="max-width: 100%; display: none; border-radius: 8px;"
-                            alt="Preview Receipt">
-                        <p id="preview-filename" class="info-text" style="display:none;"></p>
-                    </div>
-
-                    <p class="info-text">ขนาดไฟล์ไม่เกิน 5MB / 1 ใบเสร็จต่อ 1 สิทธิ์</p>
 
 
 
@@ -169,56 +168,7 @@
 
     </div>
 
-    <script>
-        function validateIMEI() {
-            const imei = document.getElementById('imei');
-            const error = document.getElementById('imei-error');
-            const val = imei.value.trim();
-
-            if (!/^\d{15}$/.test(val)) {
-                imei.classList.add('error');
-                error.style.display = 'block';
-                return false;
-            }
-
-            imei.classList.remove('error');
-            error.style.display = 'none';
-            return true;
-        }
-    </script>
-
-    <script>
-  document.getElementById('receipt_file').addEventListener('change', function (event) {
-    const file = event.target.files[0];
-    const image = document.getElementById('preview-image');
-    const filename = document.getElementById('preview-filename');
-
-    if (!file) return;
-
-    const fileType = file.type;
-    const validImageTypes = ['image/jpeg', 'image/png'];
-
-    if (validImageTypes.includes(fileType)) {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        image.src = e.target.result;
-        image.style.display = 'block';
-        filename.style.display = 'none';
-      };
-      reader.readAsDataURL(file);
-    } else if (fileType === 'application/pdf') {
-      image.style.display = 'none';
-      filename.textContent = `📄 ไฟล์ PDF: ${file.name}`;
-      filename.style.display = 'block';
-    } else {
-      image.style.display = 'none';
-      filename.textContent = 'ไฟล์ไม่รองรับ กรุณาเลือก JPG, PNG หรือ PDF';
-      filename.style.display = 'block';
-    }
-  });
-</script>
-
-
+ <!-- JS ตรวจสอบ IMEI -->
 <script>
 document.getElementById("check-imei-btn").addEventListener("click", function () {
 
@@ -227,20 +177,20 @@ document.getElementById("check-imei-btn").addEventListener("click", function () 
     let error = document.getElementById("imei-error");
     let imeiInput = document.getElementById("imei");
 
-    // Reset
     status.innerHTML = "";
     status.className = "imei-status";
 
     if (!/^\d{15}$/.test(imei)) {
         error.style.display = "block";
-        status.classList.add("error");
+        imeiInput.classList.add("error");
         status.innerHTML = "✕";
+        status.classList.add("error");
+        window.imei_valid = false;
         return;
     }
 
     error.style.display = "none";
 
-    // ส่ง AJAX ไปตรวจสอบ
     fetch("{{ url('/check-imei') }}", {
         method: "POST",
         headers: {
@@ -252,38 +202,25 @@ document.getElementById("check-imei-btn").addEventListener("click", function () 
     .then(res => res.json())
     .then(data => {
 
-    // เคลียร์ class ก่อน
-    imeiInput.classList.remove("error", "success");
+        imeiInput.classList.remove("error", "success");
 
-    if (data.valid) {
+        if (data.valid) {
+            imeiInput.classList.add("success");
+            status.classList.add("success");
+            status.innerHTML = "✓";
+            window.imei_valid = true;
 
-        // เปลี่ยนสี input เป็นเขียว
-        imeiInput.classList.add("success");
-
-        status.classList.add("success");
-        status.innerHTML = "✓";
-        window.imei_valid = true;
-
-    } else {
-
-        // เปลี่ยน input เป็นสีแดง
-        imeiInput.classList.add("error");
-
-        status.classList.add("error");
-        status.innerHTML = "✕";
-        window.imei_valid = false;
-
-        if (data.used) {
-            alert("หมายเลข IMEI นี้ถูกใช้สิทธิ์แล้ว");
         } else {
-            alert(data.message);
+            imeiInput.classList.add("error");
+            status.classList.add("error");
+            status.innerHTML = "✕";
+            window.imei_valid = false;
+
+            alert(data.used ? "หมายเลข IMEI นี้ถูกใช้สิทธิ์แล้ว" : data.message);
         }
-    }
-});
+    });
 });
 
-
-// ป้องกันการกด submit โดยยังไม่ได้ตรวจสอบ IMEI
 function validateIMEI() {
     if (!window.imei_valid) {
         alert("กรุณากดปุ่ม 'ตรวจสอบ' IMEI ก่อนส่งข้อมูล");

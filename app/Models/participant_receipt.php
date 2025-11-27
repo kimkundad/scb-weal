@@ -10,10 +10,29 @@ class participant_receipt extends Model
     use HasFactory;
 
     protected $fillable = [
-        'phone', 'first_name', 'last_name', 'email', 'province', 'hbd',
-        'purchase_date', 'purchase_time', 'receipt_number', 'imei',
-        'store_name', 'receipt_file_path', 'status', 'approved_at', 'rejected_at', 'checked_by',
-    ];
+    'phone',
+    'prefix',
+    'first_name',
+    'last_name',
+    'hbd',
+    'id_type',
+    'citizen_id',
+    'passport_id',
+    'email',
+    'province',
+
+    'purchase_date',
+    'purchase_time',
+    'receipt_number',
+    'imei',
+    'store_name',
+    'receipt_file_path',
+
+    'status',
+    'approved_at',
+    'rejected_at',
+    'checked_by',
+];
 
 
     public function getUserNameAttribute(): string

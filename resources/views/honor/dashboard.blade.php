@@ -25,7 +25,7 @@
       <p class="regis-subtitle">คุณมีสิทธิ์ลุ้นรางวัลทั้งหมด</p>
       <h2 style="font-size: 48px; font-weight: bold; color: #22c55e;">{{ $totalApproved }} สิทธิ์</h2>
 
-      <a href="{{ url('/regis_user_upslip') }}" class="btn-secondary mt-20">อัปโหลดใบเสร็จเพิ่ม</a>
+      <a href="{{ url('/regis_user_upslip') }}" class="btn-secondary mt-20">เพิ่มใบเสร็จ</a>
 
       <!-- ตารางรายการใบเสร็จ -->
       <div class="receipt-table mt-30">
