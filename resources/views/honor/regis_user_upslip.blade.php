@@ -58,41 +58,7 @@
     line-height: 1.5;
 }
 
-.btn-logout {
-    display: inline-block;
-    background: #dc3545;     /* สีแดง */
-    color: white;
-    padding: 12px 20px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-size: 16px;
-    font-weight: bold;
-    margin-top: 15px;
-}
 
-.btn-logout:hover {
-    background: #bb2d3b;
-}
-.page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-}
-
-.btn-logout-header {
-    background: #dc3545;   /* แดง */
-    color: white;
-    padding: 10px 16px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-size: 15px;
-    font-weight: bold;
-}
-
-.btn-logout-header:hover {
-    background: #bb2d3b;
-}
 </style>
 <body>
 
@@ -112,7 +78,7 @@
         <!-- Main Content -->
         <main class="page-content">
             <div class="regis-container">
-                <h1 class="regis-title">ส่งข้อมูลการซื้อ<br>และอัปโหลดใบเสร็จ</h1>
+                <h1 class="regis-title">ส่งข้อมูลการซื้อ</h1>
                 <p class="regis-subtitle">
                     กรอกข้อมูลการซื้อสินค้าของคุณให้ครบถ้วน และอัปโหลดใบเสร็จเพื่อรับสิทธิ์ลุ้นรางวัล
                 </p>

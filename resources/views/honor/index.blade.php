@@ -38,7 +38,7 @@
 .intro-inner .btn-confirm {
     display: block;
     margin: 20px auto 0 auto;
-    width: 80%;
+
     max-width: 350px;
 }
 
@@ -62,6 +62,28 @@
 body.index-page .page-wrapper2 {
     max-width: 100% !important;
 }
+.btn-full {
+    width: 100%;
+    display: block;
+    text-align: center;
+    padding: 14px 0;
+    border-radius: 12px;
+    font-size: 18px;
+}
+
+.intro-desktop {
+    display: none;
+}
+
+/* ถ้าเป็น Desktop ≥ 768px → ซ่อนรูปมือถือ และแสดงรูป Desktop */
+@media (min-width: 768px) {
+    .intro-mobile {
+        display: none;
+    }
+    .intro-desktop {
+        display: block;
+    }
+}
 </style>
 
 <body class="index-page">
@@ -78,10 +100,16 @@ body.index-page .page-wrapper2 {
 
             <div class="intro-bg">
                 <div class="intro-inner">
-                    <img src="{{ url('img/honor/219423.jpg') }}" alt="intro" class="intro-img ">
-                    <a href="{{ url('/privacy') }}" class="btn-confirm mt-20">เข้าร่วมกิจกรรม</a>
+                    <img src="{{ url('img/honor/219423.jpg') }}"
+     alt="intro mobile"
+     class="intro-img intro-mobile">
 
-                    <a href="{{ url('/dashboard') }}" class="btn-secondary mt-20 mw-350">
+<img src="{{ url('img/honor/224402.jpg') }}"
+     alt="intro desktop"
+     class="intro-img intro-desktop">
+                    <a href="{{ url('/privacy') }}" class="btn-full btn-confirm mt-20">เข้าร่วมกิจกรรม</a>
+
+                    <a href="{{ url('/dashboard') }}" class="btn-full btn-secondary mt-20 mw-350">
                         ตรวจสอบสิทธิ์ของคุณ
                     </a>
 

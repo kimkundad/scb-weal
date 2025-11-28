@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>นโยบายความเป็นส่วนตัว - HONOR</title>
     <link rel="stylesheet" href="{{ url('/home/assets/css/honor.css') }}">
 </head>

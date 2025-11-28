@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="th">
-
 <head>
-    <meta charset="UTF-8">
-    <title>นโยบายความเป็นส่วนตัว - HONOR</title>
-    <link rel="stylesheet" href="{{ url('/home/assets/css/honor.css') }}">
+  <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>แก้ไขข้อมูลส่วนตัว - HONOR</title>
+      <link rel="stylesheet" href="{{ url('/home/assets/css/honor.css') }}?v={{ time() }}" />
 </head>
 <style>
 
@@ -54,6 +54,9 @@
         <a href="{{ url('/') }}">
             <img src="{{ url('img/honor/logo@2x.png') }}" alt="HONOR Logo" style="margin-left:20px">
         </a>
+        <a href="{{ url('/logout-honor') }}" class="btn-logout-header">
+                ออกจากระบบ
+            </a>
     </header>
 
     <main class="page-content">
