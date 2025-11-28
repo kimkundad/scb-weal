@@ -19,8 +19,8 @@
 
   <!-- Main Content -->
   <main class="page-content">
-    <div class="regis-container" >
-      <img src="{{ url('/img/honor/🎉 ส่งข้อมูลสำเร็จ!@2x.png') }}" alt="🎉" style="width: 100%;">
+    <div class="regis-container" style="text-align: center;">
+      <img src="{{ url('/img/honor/success!@2x.png') }}" alt="🎉" style="width: 80%;">
 
       <p class="regis-subtitle2">
         คุณได้ร่วมกิจกรรม <Br> HONOR Lucky Receipt สำเร็จแล้ว<br>
