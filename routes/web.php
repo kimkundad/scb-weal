@@ -60,15 +60,30 @@ Route::domain('ttb.idx.co.th')->group(function () {
         Route::get('/regis_confirm', [RegistrationController::class, 'showConfirm']);
 
         Route::get('/my-rights', [RegistrationController::class, 'showLoginOrRedirect']);
+
+        Route::post('/go-dashboard', [RegistrationController::class, 'goDashboard']);
+        Route::get('/go-dashboard', [RegistrationController::class, 'showDashboard']);
+
         Route::get('/dashboard', [RegistrationController::class, 'showDashboard']);
         Route::get('/dashboard2', [RegistrationController::class, 'showDashboard2']);
 
         Route::post('/check-imei', [RegistrationController::class, 'checkIMEI']);
 
         Route::get('/logout-honor', function () {
-    session()->flush();     // ล้าง Session ทั้งหมด
-    return redirect('/');   // กลับหน้าแรก
-});
+            session()->flush();     // ล้าง Session ทั้งหมด
+            return redirect('/');   // กลับหน้าแรก
+        });
+
+        Route::get('/terms', function () {
+            return view('honor.terms');
+        });
+
+        Route::get('/privacy-policy', function () {
+            return view('honor.privacy2');
+        });
+
+        Route::get('/edit-profile', [RegistrationController::class, 'editProfile']);
+        Route::post('/edit-profile', [RegistrationController::class, 'updateProfile']);
 
 
 //});

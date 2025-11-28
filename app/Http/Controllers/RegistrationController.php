@@ -29,6 +29,62 @@ class RegistrationController extends Controller
     //     return redirect('/regis_user_data');
     // }
 
+    public function editProfile(Request $request)
+    {
+        $phone = $request->session()->get('phone');
+
+        if (!$phone) {
+            return redirect('/regis_honor')->withErrors(['กรุณาเข้าสู่ระบบ']);
+        }
+
+        // ดึงข้อมูลล่าสุดของผู้ใช้
+        $user = participant_receipt::where('phone', $phone)
+            ->orderBy('id', 'desc')
+            ->first();
+
+        if (!$user) {
+            return redirect('/regis_honor')->withErrors(['ไม่พบข้อมูลผู้ใช้']);
+        }
+
+        return view('honor.edit_profile', compact('user'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $phone = $request->session()->get('phone');
+
+        if (!$phone) {
+            return redirect('/regis_honor')->withErrors(['session หมดอายุ']);
+        }
+
+        $request->validate([
+            'prefix'      => 'required|string|max:20',
+            'first_name'  => 'required|string|max:255',
+            'last_name'   => 'required|string|max:255',
+            'hbd'         => 'required|date|before:today',
+            'id_type'     => 'required|in:citizen,passport',
+            'citizen_id'  => 'nullable|required_if:id_type,citizen|digits:13',
+            'passport_id' => 'nullable|required_if:id_type,passport|string|min:6',
+            'email'       => 'required|email|max:255',
+            'province'    => 'required|string|max:255',
+        ]);
+
+        participant_receipt::where('phone', $phone)->update([
+            'prefix'      => $request->prefix,
+            'first_name'  => $request->first_name,
+            'last_name'   => $request->last_name,
+            'hbd'         => $request->hbd,
+            'id_type'     => $request->id_type,
+            'citizen_id'  => $request->citizen_id,
+            'passport_id' => $request->passport_id,
+            'email'       => $request->email,
+            'province'    => $request->province,
+        ]);
+
+        return redirect('/dashboard')->with('success', 'อัปเดตข้อมูลสำเร็จ!');
+    }
+
+
 
     public function storePhone(Request $request)
     {
@@ -454,10 +510,15 @@ public function storeUpload(Request $request)
     }
 
     public function showLoginOrRedirect(Request $request)
-{
-    // แสดง my_rights เสมอ (ไม่ redirect แล้ว)
-    return view('honor.my_rights');
-}
+    {
+        // ถ้ามีเบอร์ใน session อยู่แล้ว → ไป dashboard เลย
+        if ($request->session()->has('phone')) {
+            return redirect('/dashboard');
+        }
+
+        // ถ้าไม่มี → แสดงหน้ากรอกเบอร์ (my_rights)
+        return view('honor.my_rights');
+    }
 
     // public function showDashboard(Request $request)
     // {
@@ -478,7 +539,7 @@ public function storeUpload(Request $request)
     // }
 
 
-    public function showDashboard(Request $request)
+    public function goDashboard(Request $request)
     {
         // รับจาก query string
         $phone = $request->input('phone');
@@ -508,6 +569,26 @@ public function storeUpload(Request $request)
 
         return view('honor.dashboard', compact('receipts', 'totalApproved'));
     }
+
+
+
+
+    public function showDashboard(Request $request)
+{
+    // ดึงเบอร์โทรจาก session เท่านั้น
+    $phone = $request->session()->get('phone');
+
+    // ถ้าไม่มี session -> ให้กลับไปกรอกเบอร์ก่อน
+    if (!$phone) {
+        return redirect('/my-rights');
+    }
+
+    // Query ข้อมูลตามเบอร์
+    $receipts = participant_receipt::where('phone', $phone)->latest()->get();
+    $totalApproved = $receipts->where('status', 'approved')->count();
+
+    return view('honor.dashboard', compact('receipts', 'totalApproved'));
+}
 
 
     public function showDashboard2(Request $request)

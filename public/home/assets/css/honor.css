@@ -287,6 +287,7 @@ a.btn-secondary,
   line-height: 1.6;
 }
 
+
 .privacy-check {
   display: flex;
   align-items: center;
@@ -470,4 +471,58 @@ label {
     margin-top: 6px;
     font-size: 13px;
     color: #888;
+}
+
+.mw-350{
+    max-width: 350px !important;
+}
+
+.footer-link {
+    color: #ffffff;
+    text-decoration: none;
+}
+.footer-link:hover {
+    opacity: 0.8;
+}
+
+
+/* กล่องที่ห่อ checkbox */
+.privacy-check label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* ซ่อน checkbox แบบปกติ */
+.privacy-check input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 25px;
+    height: 25px;
+    border: 2px solid #888;   /* เส้นสีเทา */
+    border-radius: 50%;       /* ทำให้เป็นวงกลม */
+    position: relative;
+    cursor: pointer;
+    outline: none;
+}
+
+/* สถานะติ๊ก */
+.privacy-check input[type="checkbox"]:checked {
+    background-color: #888;   /* วงกลมถมสีเทา */
+    border-color: #888;
+}
+
+/* ติ๊กเครื่องหมายถูก */
+.privacy-check input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute;
+    top: 4px;
+    left: 6px;
+    width: 6px;
+    height: 10px;
+    border: solid #fff;       /* สีขีดถูก (ขาว) */
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
 }

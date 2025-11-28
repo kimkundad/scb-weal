@@ -2,26 +2,23 @@
 <html lang="th">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HONOR X9C</title>
-    <link rel="stylesheet" href="{{ url('/home/assets/css/honor.css') }}?v={{ time() }}" type="text/css" />
-    <link rel="icon" type="image/x-icon" sizes="32x32" href="{{ url('/img/honor/favicon.ico') }}">
+    <meta charset="UTF-8">
+    <title>นโยบายความเป็นส่วนตัว - HONOR</title>
+    <link rel="stylesheet" href="{{ url('/home/assets/css/honor.css') }}">
 </head>
 
 <body>
-    <div class="page-wrapper2">
+<div class="page-wrapper2">
 
-        <!-- Header -->
-        <header class="page-header">
-            <a href="{{ url('/') }}">
-                <img src="{{ url('img/honor/logo@2x.png') }}" alt="HONOR logo" style="margin-left:20px">
-            </a>
-        </header>
+    <header class="page-header">
+        <a href="{{ url('/') }}">
+            <img src="{{ url('img/honor/logo@2x.png') }}" alt="HONOR Logo" style="margin-left:20px">
+        </a>
+    </header>
 
-        <!-- Main Content -->
-        <main class="page-content">
-            <div class="privacy-container">
+    <main class="page-content">
+
+        <div class="privacy-container">
 
                 <h1 class="privacy-title">
                     นโยบายความเป็นส่วนตัว<br>
@@ -468,24 +465,13 @@
                     </p>
                 </div>
 
-                <!-- Accept -->
-                <div class="privacy-check mt-20">
-                    <label>
-                        <input type="checkbox" id="agree">
-                        <span class="checkmark"></span>
-                        ยอมรับเงื่อนไขการให้บริการ และนโยบายความเป็นส่วนตัว<br>
-                        I acknowledge and accept the Terms of Service and the Privacy Policy.
-                    </label>
-                </div>
+
+
 
             </div>
+    </main>
 
-            <button id="join-btn" class="btn-confirm mt-20" disabled>ยืนยันและดำเนินการต่อ</button>
-            <br><br>
-        </main>
-
-        <!-- Footer -->
-        <footer class="page-footer2">
+    <footer class="page-footer2">
         <div class="copyright2">
             © 2025 HONOR Thailand All rights reserved. <br>
             <a href="{{ url('/terms') }}" class="footer-link">เงื่อนไขกิจกรรม</a> |
@@ -493,30 +479,6 @@
         </div>
     </footer>
 
-    </div>
+</div>
 </body>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const checkbox = document.getElementById("agree");
-        const joinBtn = document.getElementById("join-btn");
-
-        checkbox.addEventListener("change", function() {
-            joinBtn.disabled = !checkbox.checked;
-
-            if (checkbox.checked) {
-                joinBtn.classList.add("active");
-            } else {
-                joinBtn.classList.remove("active");
-            }
-        });
-
-        joinBtn.addEventListener("click", function() {
-            if (checkbox.checked) {
-                window.location.href = "{{ url('/regis_honor') }}";
-            }
-        });
-    });
-</script>
-
 </html>

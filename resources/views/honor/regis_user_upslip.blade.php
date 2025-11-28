@@ -16,7 +16,7 @@
 }
 
 .btn-check-imei {
-    background: #007bff;
+    background: #000;
     padding: 10px 16px;
     border: none;
     color: white;
@@ -73,6 +73,26 @@
 .btn-logout:hover {
     background: #bb2d3b;
 }
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+}
+
+.btn-logout-header {
+    background: #dc3545;   /* แดง */
+    color: white;
+    padding: 10px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.btn-logout-header:hover {
+    background: #bb2d3b;
+}
 </style>
 <body>
 
@@ -82,6 +102,10 @@
         <header class="page-header">
             <a href="{{ url('/') }}">
                 <img src="{{ url('img/honor/logo@2x.png') }}" alt="HONOR logo" style="margin-left:20px">
+            </a>
+            <!-- ปุ่มออกจากระบบบนขวา -->
+            <a href="{{ url('/logout-honor') }}" class="btn-logout-header">
+                ออกจากระบบ
             </a>
         </header>
 
@@ -121,7 +145,7 @@
                                 required
                             >
 
-                            <button type="button" id="check-imei-btn" class="btn-check-imei">
+                            <button type="button" id="check-imei-btn" class="btn-check-imei" style="font-family: 'Anuphan', sans-serif;font-size: 18px;padding: 16px 16px;">
                                 ตรวจสอบ
                             </button>
 
@@ -147,7 +171,7 @@
                         <button type="submit" class="btn-confirm mt-20">ส่งข้อมูลเข้าร่วมกิจกรรม</button>
     <br>  <br>
                         <!-- 🔴 ปุ่มออกจากระบบ -->
-                        <a href="{{ url('/logout-honor') }}" class="btn-logout mt-10">ออกจากระบบ</a>
+
                     </div>
 
                     <p class="info-text">
@@ -160,11 +184,12 @@
 
         <!-- Footer -->
         <footer class="page-footer2">
-            <div class="copyright2">
-                © 2025 HONOR Thailand All rights reserved. <br>
-                เงื่อนไขกิจกรรม | นโยบายความเป็นส่วนตัว
-            </div>
-        </footer>
+        <div class="copyright2">
+            © 2025 HONOR Thailand All rights reserved. <br>
+            <a href="{{ url('/terms') }}" class="footer-link">เงื่อนไขกิจกรรม</a> |
+            <a href="{{ url('/privacy-policy') }}" class="footer-link">นโยบายความเป็นส่วนตัว</a>
+        </div>
+    </footer>
 
     </div>
 

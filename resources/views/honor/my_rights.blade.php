@@ -37,8 +37,11 @@
       </div>
     @endif
 
-    <form method="get" action="{{ url('/dashboard') }}" class="regis-form mt-30">
+    <form method="POST" action="{{ url('/go-dashboard') }}" class="regis-form mt-30">
+    @csrf
+      @if(session()->get('phone'))
       <label for="phone">เปลี่ยนเบอร์โทร</label>
+      @endif
       <input
         type="text"
         name="phone"
@@ -60,11 +63,12 @@
 
   <!-- Footer -->
   <footer class="page-footer2">
-    <div class="copyright2">
-      © 2025 HONOR Thailand  All rights reserved. <br>
-      เงื่อนไขกิจกรรม | นโยบายความเป็นส่วนตัว
-    </div>
-  </footer>
+        <div class="copyright2">
+            © 2025 HONOR Thailand All rights reserved. <br>
+            <a href="{{ url('/terms') }}" class="footer-link">เงื่อนไขกิจกรรม</a> |
+            <a href="{{ url('/privacy-policy') }}" class="footer-link">นโยบายความเป็นส่วนตัว</a>
+        </div>
+    </footer>
 
 </div>
 

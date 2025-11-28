@@ -80,6 +80,11 @@ body.index-page .page-wrapper2 {
                 <div class="intro-inner">
                     <img src="{{ url('img/honor/219423.jpg') }}" alt="intro" class="intro-img ">
                     <a href="{{ url('/privacy') }}" class="btn-confirm mt-20">เข้าร่วมกิจกรรม</a>
+
+                    <a href="{{ url('/dashboard') }}" class="btn-secondary mt-20 mw-350">
+                        ตรวจสอบสิทธิ์ของคุณ
+                    </a>
+
                 </div>
             </div>
 
@@ -88,7 +93,10 @@ body.index-page .page-wrapper2 {
         <!-- Footer -->
         <footer class="page-footer2">
             <div class="copyright2">
-                © 2025 HONOR Thailand All rights reserved. <br> เงื่อนไขกิจกรรม | นโยบายความเป็นส่วนตัว
+                © 2025 HONOR Thailand All rights reserved. <br>
+
+                <a href="{{ url('/terms') }}" class="footer-link">เงื่อนไขกิจกรรม</a> |
+                <a href="{{ url('/privacy-policy') }}" class="footer-link">นโยบายความเป็นส่วนตัว</a>
             </div>
         </footer>
 

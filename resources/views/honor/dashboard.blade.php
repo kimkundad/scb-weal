@@ -21,11 +21,16 @@
   <!-- Main Content -->
   <main class="page-content">
     <div class="regis-container" style="text-align: center;">
-      <h1 class="regis-title">สิทธิ์ของฉัน</h1>
+      <h1 class="regis-title">สิทธิ์ของฉัน {{ session()->get('phone') }}</h1>
       <p class="regis-subtitle">คุณมีสิทธิ์ลุ้นรางวัลทั้งหมด</p>
       <h2 style="font-size: 48px; font-weight: bold; color: #22c55e;">{{ $totalApproved }} สิทธิ์</h2>
 
       <a href="{{ url('/regis_user_upslip') }}" class="btn-secondary mt-20">เพิ่มใบเสร็จ</a>
+
+      <a href="{{ url('/edit-profile') }}" class="btn-confirm mt-20">
+            แก้ไขข้อมูลส่วนตัว
+        </a>
+
 
       <!-- ตารางรายการใบเสร็จ -->
       <div class="receipt-table mt-30">
@@ -34,7 +39,6 @@
             <tr>
               <th>วันที่ส่ง</th>
               <th>วันที่ซื้อ</th>
-              <th>หมายเลข<br>ใบเสร็จ</th>
               <th>IMEI</th>
               <th>สถานะ</th>
             </tr>
@@ -44,7 +48,6 @@
             <tr>
             <td>{{ \Carbon\Carbon::parse($r->created_at)->format('d M Y') }}</td>
             <td>{{ \Carbon\Carbon::parse($r->purchase_date)->format('d M Y') }}</td>
-            <td>{{ $r->receipt_number }}</td>
             <td>{{ $r->imei }}</td>
             <td><span class="status {{ $r->status }}">{{ $r->status === 'approved' ? 'อนุมัติ' : ($r->status === 'pending' ? 'รอตรวจสอบ' : 'ไม่ผ่าน') }}</span></td>
             </tr>
@@ -58,11 +61,12 @@
 
   <!-- Footer -->
   <footer class="page-footer2">
-    <div class="copyright2">
-      © 2025 HONOR Thailand  All rights reserved. <br>
-      เงื่อนไขกิจกรรม | นโยบายความเป็นส่วนตัว
-    </div>
-  </footer>
+        <div class="copyright2">
+            © 2025 HONOR Thailand All rights reserved. <br>
+            <a href="{{ url('/terms') }}" class="footer-link">เงื่อนไขกิจกรรม</a> |
+            <a href="{{ url('/privacy-policy') }}" class="footer-link">นโยบายความเป็นส่วนตัว</a>
+        </div>
+    </footer>
 
 </div>
 
