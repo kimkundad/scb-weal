@@ -80,7 +80,7 @@
             <div class="regis-container">
                 <h1 class="regis-title">ส่งข้อมูลการซื้อ</h1>
                 <p class="regis-subtitle">
-                    กรอกข้อมูลการซื้อสินค้าของคุณให้ครบถ้วน และอัปโหลดใบเสร็จเพื่อรับสิทธิ์ลุ้นรางวัล
+                    กรอกข้อมูลการซื้อสินค้าของคุณให้ครบถ้วน เพื่อรับสิทธิ์ลุ้นรางวัล
                 </p>
 
                 <form method="POST" action="{{ url('/regis_user_upslip') }}" onsubmit="return validateIMEI();" class="regis-form"
@@ -88,7 +88,7 @@
                     @csrf
 
                     <label>วันที่ซื้อสินค้า</label>
-                    <input type="date" name="purchase_date" class="regis-input" required>
+                    <input type="date" name="purchase_date" class="regis-input" max="{{ date('Y-m-d') }}" required>
 
 
 

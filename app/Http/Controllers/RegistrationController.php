@@ -56,12 +56,12 @@ class RegistrationController extends Controller
         if (!$phone) {
             return redirect('/regis_honor')->withErrors(['session หมดอายุ']);
         }
-
+      //  dd($request->all());
         $request->validate([
             'prefix'      => 'required|string|max:20',
             'first_name'  => 'required|string|max:255',
             'last_name'   => 'required|string|max:255',
-            'hbd'         => 'required|date|before:today',
+            'hbd'         => 'required',
             'id_type'     => 'required|in:citizen,passport',
             'citizen_id'  => 'nullable|required_if:id_type,citizen|digits:13',
             'passport_id' => 'nullable|required_if:id_type,passport|string|min:6',
@@ -259,7 +259,7 @@ class RegistrationController extends Controller
             'prefix'      => 'required|string|max:20',
             'first_name'  => 'required|string|max:255',
             'last_name'   => 'required|string|max:255',
-            'hbd'         => 'required|date|before:today',
+            'hbd'         => 'required',
             'id_type'     => 'required|in:citizen,passport',
             'citizen_id'  => 'nullable|required_if:id_type,citizen|digits:13',
             'passport_id' => 'nullable|required_if:id_type,passport|string|min:6',

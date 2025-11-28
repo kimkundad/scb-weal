@@ -47,6 +47,17 @@
     border-color: #0056b3;
 }
 </style>
+<style>
+    .hbd-wrapper {
+        display: flex;
+        gap: 10px;
+    }
+
+    .hbd-select {
+        flex: 1;
+        padding: 12px;
+    }
+    </style>
 <body>
 <div class="page-wrapper2">
 
@@ -83,8 +94,67 @@
         <label>นามสกุล</label>
         <input type="text" name="last_name" class="regis-input" value="{{ $user->last_name }}" required>
 
-        <label>วันเดือนปีเกิด</label>
-        <input type="date" name="hbd" class="regis-input" value="{{ $user->hbd }}" required>
+        <label for="hbd_day">วัน เดือน ปีเกิด</label>
+
+<div class="hbd-wrapper">
+
+    {{-- ⭐ DAY --}}
+    <select name="hbd_day" id="hbd_day" class="regis-input hbd-select">
+        @php
+            $day = old('hbd_day') ?? \Carbon\Carbon::parse($user->hbd)->format('d');
+        @endphp
+
+        @for ($i = 1; $i <= 31; $i++)
+            <option value="{{ sprintf('%02d', $i) }}"
+                {{ $day == sprintf('%02d', $i) ? 'selected' : '' }}>
+                {{ $i }}
+            </option>
+        @endfor
+    </select>
+
+    {{-- ⭐ MONTH --}}
+    @php
+        $month = old('hbd_month') ?? \Carbon\Carbon::parse($user->hbd)->format('m');
+    @endphp
+
+    <select name="hbd_month" id="hbd_month" class="regis-input hbd-select">
+
+        <option value="01" {{ $month=='01' ? 'selected' : '' }}>มกราคม</option>
+        <option value="02" {{ $month=='02' ? 'selected' : '' }}>กุมภาพันธ์</option>
+        <option value="03" {{ $month=='03' ? 'selected' : '' }}>มีนาคม</option>
+        <option value="04" {{ $month=='04' ? 'selected' : '' }}>เมษายน</option>
+        <option value="05" {{ $month=='05' ? 'selected' : '' }}>พฤษภาคม</option>
+        <option value="06" {{ $month=='06' ? 'selected' : '' }}>มิถุนายน</option>
+        <option value="07" {{ $month=='07' ? 'selected' : '' }}>กรกฎาคม</option>
+        <option value="08" {{ $month=='08' ? 'selected' : '' }}>สิงหาคม</option>
+        <option value="09" {{ $month=='09' ? 'selected' : '' }}>กันยายน</option>
+        <option value="10" {{ $month=='10' ? 'selected' : '' }}>ตุลาคม</option>
+        <option value="11" {{ $month=='11' ? 'selected' : '' }}>พฤศจิกายน</option>
+        <option value="12" {{ $month=='12' ? 'selected' : '' }}>ธันวาคม</option>
+    </select>
+
+    {{-- ⭐ YEAR (พ.ศ.) --}}
+    @php
+        $yearAD   = \Carbon\Carbon::parse($user->hbd)->format('Y');  // ค.ศ.
+        $yearTH   = $yearAD + 543; // แปลงเป็น พ.ศ.
+        $yearOld  = old('hbd_year') ?? $yearTH;
+
+        $maxYear = date('Y') + 543 - 17;
+        $minYear = $maxYear - 80;
+    @endphp
+
+    <select name="hbd_year" id="hbd_year" class="regis-input hbd-select">
+        @foreach (range($maxYear, $minYear) as $y)
+            <option value="{{ $y }}" {{ $yearOld == $y ? 'selected' : '' }}>
+                {{ $y }}
+            </option>
+        @endforeach
+    </select>
+
+    {{-- ⭐ hidden field ส่ง พ.ศ. ไป Laravel --}}
+    <input type="hidden" id="hbd" name="hbd">
+
+</div>
 
         <!-- ประเภทเอกสาร -->
         <div class="id-wrapper">
@@ -219,41 +289,93 @@ function validateEmailFormat() {
 // ---------------------------------------------------
 function validateForm() {
 
-    // อายุ
-    if (!checkAge()) {
-        Swal.fire({
-            icon: "error",
-            title: "อายุไม่ถึงเกณฑ์",
-            text: "ผู้ใช้งานต้องมีอายุอย่างน้อย 18 ปีขึ้นไป",
-            confirmButtonText: "ตกลง"
-        });
-        return false;
-    }
+    // ------------------------------
+    // 1) ดึงค่าวัน / เดือน / ปี (พ.ศ.)
+    // ------------------------------
+    const d = document.getElementById("hbd_day").value;
+    const m = document.getElementById("hbd_month").value;
+    const y_th = document.getElementById("hbd_year").value;
 
-    // citizen / passport
-    if (!validateIdentity()) {
+    // สร้างวันเกิดแบบ พ.ศ. ส่งไป Laravel
+    document.getElementById("hbd").value = `${y_th}-${m}-${d}`;
+
+    // ------------------------------
+    // 2) ตรวจสอบอายุ >= 18 ปี + ตรวจวัน cutoff
+    // ------------------------------
+
+
+    // ------------------------------
+    // ⭐ เงื่อนไขเพิ่มเติม:
+    // ห้ามเกิดหลัง 14 มกราคม 2551
+    // ------------------------------
+    let y_ad = parseInt(y_th) - 543;
+            let birthDate = new Date(`${y_ad}-${m}-${d}`);
+            let minBirthDate = new Date("2008-01-14"); // 14 ม.ค. 2551
+
+            if (birthDate > minBirthDate) {
+                Swal.fire({
+                    icon: "error",
+                    title: "อายุไม่ถึง 18 ปีบริบูรณ์",
+                    text: "ผู้ที่เกิดหลังวันที่ 14 มกราคม 2551 ไม่สามารถเข้าร่วมกิจกรรมได้",
+                });
+                return false;
+            }
+
+            // ส่งค่า พ.ศ. ไป Laravel
+            document.getElementById("hbd").value = `${y_th}-${m}-${d}`;
+
+    // --------------------------------------------------
+    // 4) ตรวจ Citizen / Passport
+    // --------------------------------------------------
+    const type = document.querySelector("input[name='id_type']:checked");
+    const citizen = document.querySelector("input[name='citizen_id']").value.trim();
+    const passport = document.querySelector("input[name='passport_id']").value.trim();
+
+    if (!type) {
         Swal.fire({
             icon: "warning",
-            title: "ข้อมูลเอกสารถูกต้องหรือไม่?",
-            text: "กรุณาตรวจสอบเลขบัตรประชาชนหรือหมายเลขพาสปอร์ตอีกครั้ง",
-            confirmButtonText: "ตกลง"
+            title: "กรุณาเลือกประเภทเอกสาร",
         });
         return false;
     }
 
-    // email
-    if (!validateEmailFormat()) {
+    if (type.value === "citizen" && !/^\d{13}$/.test(citizen)) {
+        Swal.fire({
+            icon: "warning",
+            title: "เลขบัตรประชาชนไม่ถูกต้อง",
+            text: "กรุณากรอกเลขบัตรประชาชน 13 หลัก",
+        });
+        return false;
+    }
+
+    if (type.value === "passport" && passport.length < 6) {
+        Swal.fire({
+            icon: "warning",
+            title: "หมายเลขพาสปอร์ตไม่ถูกต้อง",
+            text: "กรุณากรอกพาสปอร์ตอย่างน้อย 6 ตัวอักษร",
+        });
+        return false;
+    }
+
+    // --------------------------------------------------
+    // 5) ตรวจ Email
+    // --------------------------------------------------
+    const email = document.querySelector("input[name='email']").value.trim();
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailPattern.test(email)) {
         Swal.fire({
             icon: "warning",
             title: "อีเมลไม่ถูกต้อง",
-            text: "กรุณากรอกอีเมลในรูปแบบที่ถูกต้อง เช่น example@mail.com",
-            confirmButtonText: "ตกลง"
+            text: "กรุณากรอกอีเมลให้ถูกต้อง เช่น example@mail.com",
         });
         return false;
     }
 
     return true;
 }
+
+
 
 </script>
 

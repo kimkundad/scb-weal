@@ -165,6 +165,18 @@
     </footer>
 
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if(session('success'))
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: '{{ session("success") }}',
+        confirmButtonText: 'ตกลง',
+        timer: 2500
+    });
+</script>
+@endif
 
 </body>
 </html>

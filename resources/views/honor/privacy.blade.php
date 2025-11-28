@@ -217,12 +217,12 @@
                     <label>
                         <input type="checkbox" id="agree">
                         <span class="checkmark"></span>
-                        ยอมรับเงื่อนไขการให้บริการ และนโยบายความเป็นส่วนตัว
+                        ยอมรับเงื่อนไขการให้บริการ และนโยบายความเป็นส่วนตัว<br>
+                        I acknowledge and accept the Terms of Service and the Privacy Policy.
                     </label>
                 </div>
 
             </div>
-
 
 
             {{-- <a href="{{ url('/pdpa') }}" class="btn-confirm mt-20">เข้าร่วมกิจกรรม</a> --}}

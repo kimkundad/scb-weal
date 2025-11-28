@@ -226,12 +226,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (phoneExists) {
         const btn = document.getElementById("btn-submit");
-        if (btn) {
+        {{-- if (btn) {
             btn.disabled = true;
             btn.style.opacity = "0.4";
             btn.style.cursor = "not-allowed";
             btn.innerText = "เบอร์นี้ถูกใช้แล้ว";
-        }
+        } --}}
     }
 
 });
