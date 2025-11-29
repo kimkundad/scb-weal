@@ -171,6 +171,11 @@ body {
   color: white;
 }
 
+.status.approved {
+  background-color: #22c55e;
+  color: white;
+}
+
 .status.pending {
   background-color: #facc15;
   color: #1e1e1e;
