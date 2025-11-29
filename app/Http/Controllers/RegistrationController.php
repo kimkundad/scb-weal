@@ -454,6 +454,8 @@ public function storeUpload(Request $request)
         'imei'          => ['required', 'digits:15'],
     ]);
 
+
+
     // ดึง session
     $phone    = $request->session()->get('phone');
     $userData = $request->session()->get('user_data');

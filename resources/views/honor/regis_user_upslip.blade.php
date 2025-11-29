@@ -60,6 +60,17 @@
 
 
 </style>
+<style>
+    .hbd-wrapper {
+        display: flex;
+        gap: 10px;
+    }
+
+    .hbd-select {
+        flex: 1;
+        padding: 12px;
+    }
+    </style>
 <body>
 
     <div class="page-wrapper2">
@@ -83,12 +94,54 @@
                     กรอกข้อมูลการซื้อสินค้าของคุณให้ครบถ้วน เพื่อรับสิทธิ์ลุ้นรางวัล
                 </p>
 
-                <form method="POST" action="{{ url('/regis_user_upslip') }}" onsubmit="return validateIMEI();" class="regis-form"
+                <form method="POST" action="{{ url('/regis_user_upslip') }}" onsubmit="return validateForm();" class="regis-form"
                     enctype="multipart/form-data">
                     @csrf
 
-                    <label>วันที่ซื้อสินค้า</label>
-                    <input type="date" name="purchase_date" class="regis-input" max="{{ date('Y-m-d') }}" required>
+                    <label for="purchase_day">วันที่ซื้อสินค้า</label>
+
+                    <div class="hbd-wrapper">
+
+                        {{-- ⭐ DAY --}}
+                        <select name="purchase_day" id="purchase_day" class="regis-input hbd-select" required>
+                            <option value="">วัน</option>
+                            @for ($i = 1; $i <= 31; $i++)
+                                <option value="{{ sprintf('%02d', $i) }}">{{ $i }}</option>
+                            @endfor
+                        </select>
+
+                        {{-- ⭐ MONTH --}}
+                        <select name="purchase_month" id="purchase_month" class="regis-input hbd-select" required>
+                            <option value="">เดือน</option>
+                            <option value="01">มกราคม</option>
+                            <option value="02">กุมภาพันธ์</option>
+                            <option value="03">มีนาคม</option>
+                            <option value="04">เมษายน</option>
+                            <option value="05">พฤษภาคม</option>
+                            <option value="06">มิถุนายน</option>
+                            <option value="07">กรกฎาคม</option>
+                            <option value="08">สิงหาคม</option>
+                            <option value="09">กันยายน</option>
+                            <option value="10">ตุลาคม</option>
+                            <option value="11">พฤศจิกายน</option>
+                            <option value="12">ธันวาคม</option>
+                        </select>
+
+                        {{-- ⭐ YEAR (พ.ศ.) --}}
+                        @php
+                            $thisYearTH = date('Y') + 543;
+                            $startYearTH = $thisYearTH + 1;  // ซื้อย้อนหลังได้ 3 ปี (ปรับได้ตามต้องการ)
+                        @endphp
+
+                        <select name="purchase_year" id="purchase_year" class="regis-input hbd-select" required>
+
+                            @foreach (range($thisYearTH, $startYearTH) as $y)
+                                <option value="{{ $y }}">{{ $y }}</option>
+                            @endforeach
+                        </select>
+
+                        <input type="hidden" name="purchase_date" id="purchase_date">
+                    </div>
 
 
 
@@ -159,6 +212,67 @@
 
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+function validateForm() {
+
+    // ------------------------------
+    // 1) ตรวจวันที่ซื้อสินค้า (วัน / เดือน / ปี พ.ศ.)
+    // ------------------------------
+    let d = document.getElementById("purchase_day").value;
+    let m = document.getElementById("purchase_month").value;
+    let y_th = document.getElementById("purchase_year").value;
+
+    if (!d || !m || !y_th) {
+        Swal.fire({
+            icon: "warning",
+            title: "กรุณาเลือกวันที่ซื้อสินค้าให้ครบถ้วน"
+        });
+        return false;
+    }
+
+    // แปลง พ.ศ. → ค.ศ.
+    let y_ad = parseInt(y_th) - 543;
+    let selectDate = new Date(`${y_ad}-${m}-${d}`);
+    let today = new Date();
+
+    if (isNaN(selectDate.getTime())) {
+        Swal.fire({
+            icon: "error",
+            title: "วันที่ไม่ถูกต้อง",
+            text: "กรุณาตรวจสอบอีกครั้ง"
+        });
+        return false;
+    }
+
+    if (selectDate > today) {
+        Swal.fire({
+            icon: "error",
+            title: "เลือกวันอนาคตไม่ได้",
+            text: "วันที่ซื้อสินค้าต้องไม่เกินวันปัจจุบัน"
+        });
+        return false;
+    }
+
+    // ส่งค่า purchase_date เป็น ค.ศ. ไป backend
+    document.getElementById("purchase_date").value = `${y_th}-${m}-${d}`;
+
+
+    // ------------------------------
+    // 2) ตรวจสอบ IMEI (ต้องตรวจสอบก่อนส่ง)
+    // ------------------------------
+    if (!window.imei_valid) {
+        Swal.fire({
+            icon: "error",
+            title: "กรุณากดปุ่มตรวจสอบ IMEI ก่อนส่งข้อมูล"
+        });
+        return false;
+    }
+
+    // ผ่านทั้งหมด → ส่งฟอร์มได้
+    return true;
+}
+</script>
  <!-- JS ตรวจสอบ IMEI -->
 <script>
 document.getElementById("check-imei-btn").addEventListener("click", function () {
@@ -212,13 +326,7 @@ document.getElementById("check-imei-btn").addEventListener("click", function () 
     });
 });
 
-function validateIMEI() {
-    if (!window.imei_valid) {
-        alert("กรุณากดปุ่ม 'ตรวจสอบ' IMEI ก่อนส่งข้อมูล");
-        return false;
-    }
-    return true;
-}
+
 </script>
 
 
