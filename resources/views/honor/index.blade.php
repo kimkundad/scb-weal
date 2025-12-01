@@ -107,10 +107,10 @@ body.index-page .page-wrapper2 {
 <img src="{{ url('img/honor/224402.jpg') }}"
      alt="intro desktop"
      class="intro-img intro-desktop">
-                    <a href="{{ url('/privacy') }}" class="btn-full btn-confirm mt-20">เข้าร่วมกิจกรรม</a>
+                    <a href="{{ url('/privacy') }}" class="btn-full btn-confirm mt-20">Join the event</a>
 
                     <a href="{{ url('/dashboard') }}" class="btn-full btn-secondary mt-20 mw-350">
-                        ตรวจสอบสิทธิ์ของคุณ
+                        Verify your eligibility
                     </a>
 
                 </div>

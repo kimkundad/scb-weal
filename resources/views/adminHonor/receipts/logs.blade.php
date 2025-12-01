@@ -42,6 +42,16 @@
 @section('content')
     <div class="container-xxl py-6">
 
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mt-5 mt-md-10 mb-6">
+
+            <div>
+                <a href="{{ url('admin-honor/receipts') ?? '#' }}" class="btn btn-danger">
+                    กลับหน้าแรก
+                </a>
+
+            </div>
+        </div>
+
         {{-- Header --}}
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mt-5 mt-md-10 mb-6">
             <div class="mb-3 mb-md-0">
@@ -162,11 +172,9 @@
                 </div>
             </div>
 
-            @if(method_exists($logs, 'links'))
-                <div class="card-footer py-4">
-                    {{ $logs->links() }}
-                </div>
-            @endif
+
+
+            @include('adminHonor.pagination.default', ['paginator' => $logs])
         </div>
     </div>
 @endsection

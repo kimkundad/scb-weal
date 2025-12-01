@@ -226,7 +226,7 @@
 
 
             {{-- <a href="{{ url('/pdpa') }}" class="btn-confirm mt-20">เข้าร่วมกิจกรรม</a> --}}
-            <button id="join-btn" class="btn-confirm mt-20" disabled>เข้าร่วมกิจกรรม</button>
+            <button id="join-btn" class="btn-confirm mt-20" disabled>Join the event</button>
             <br><br>
 
         </main>

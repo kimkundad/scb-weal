@@ -4,6 +4,8 @@ namespace App\Http\Controllers\AdminHonor;
 
 use App\Http\Controllers\Controller;
 use App\Models\ParticipantReceiptLog;
+use App\Models\HonorImei;
+use App\Models\participant_receipt;
 use Illuminate\Http\Request;
 
 class ReceiptLogController extends Controller
@@ -41,4 +43,30 @@ class ReceiptLogController extends Controller
             'logs' => $logs,
         ]);
     }
+
+
+    public function imeiIndex(Request $request)
+    {
+        $query = HonorImei::query()->orderBy('imei');
+
+        // Search
+        if ($q = $request->get('q')) {
+            $query->where('imei', 'like', "%{$q}%");
+        }
+
+        // Join รับข้อมูลผู้ใช้จาก table participant_receipt
+        $query->leftJoin('participant_receipts', 'participant_receipts.imei', '=', 'honor_imei_list.imei')
+            ->select(
+                'honor_imei_list.*',
+                'participant_receipts.first_name',
+                'participant_receipts.last_name',
+                'participant_receipts.phone'
+            );
+
+        // Pagination
+        $imeis = $query->paginate(20)->withQueryString();
+
+        return view('adminHonor.receipts.imei', compact('imeis'));
+    }
+
 }

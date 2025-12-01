@@ -480,7 +480,7 @@
 
             </div>
 
-            <button id="join-btn" class="btn-confirm mt-20" disabled>ยืนยันและดำเนินการต่อ</button>
+            <button id="join-btn" class="btn-confirm mt-20" disabled>Confirm and continue</button>
             <br><br>
         </main>
 

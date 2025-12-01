@@ -450,11 +450,15 @@ public function storeUpload(Request $request)
 {
     $request->validate([
         'purchase_date' => 'required|date',
-        'store_name'    => 'required|string|max:255',
+        'store_name_select' => 'required|string|max:255',
+        'store_name' => 'nullable|string|max:255',
         'imei'          => ['required', 'digits:15'],
     ]);
 
-
+    // เลือกร้านค้า
+    $storeName = $request->store_name_select !== "other"
+        ? $request->store_name_select
+        : $request->store_name;
 
     // ดึง session
     $phone    = $request->session()->get('phone');
@@ -492,7 +496,7 @@ public function storeUpload(Request $request)
         'purchase_time'     => null,
         'receipt_number'    => null,
         'imei'              => $request->imei,
-        'store_name'        => $request->store_name,
+        'store_name'        => $storeName,
         'receipt_file_path' => null,
     ]);
 

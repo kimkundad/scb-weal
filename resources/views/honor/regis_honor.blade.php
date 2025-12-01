@@ -84,12 +84,13 @@
         <main class="page-content">
             <div class="regis-container">
                 <h1 class="regis-title">เข้าร่วมกิจกรรมด้วย<br>เบอร์โทรของคุณ</h1>
-                <p class="regis-subtitle">กรอกเบอร์โทรศัพท์ของคุณเพื่อเริ่มต้นเข้าร่วมกิจกรรม</p>
+                <h1 class="regis-title">Join The Event<br>With Your Phone Number</h1>
+                <p class="regis-subtitle">กรอกเบอร์โทรศัพท์ของคุณเพื่อเริ่มต้นเข้าร่วมกิจกรรม <br>Enter your phone number to start participating in the event</p>
 
                 <form method="POST" action="{{ url('/regis_honor') }}" class="regis-form">
                     @csrf
                     <div class="phone-wrapper">
-                        <label for="phone" class="phone-label">เบอร์โทรศัพท์มือถือ</label>
+                        <label for="phone" class="phone-label">เบอร์โทรศัพท์มือถือ (Mobile Number)</label>
 
                         <input type="text" name="phone" id="phone" class="regis-input phone-input"
                             placeholder="099-999-9999" maxlength="12" inputmode="numeric" >
@@ -97,7 +98,7 @@
 
 
                     <div class="captcha-wrapper">
-                        <label for="captcha_input" class="phone-label">กรอกรหัสยืนยัน (Captcha)</label>
+                        <label for="captcha_input" class="phone-label">กรอกรหัสยืนยัน (Captcha) (Enter the verification code)</label>
 
                         <div class="captcha-box">
                             <span id="captcha_text" class="captcha-text"></span>
@@ -105,11 +106,11 @@
                         </div>
 
                         <input type="text" name="captcha_input" id="captcha_input" class="regis-input captcha-input"
-                            placeholder="กรอกรหัส 4 หลัก" maxlength="4" inputmode="numeric" >
+                            placeholder="Enter a 4-digit code" maxlength="4" inputmode="numeric" >
                     </div>
 
 
-                    <button type="submit" id="btn-submit" class="btn-confirm mt-20">ยืนยันเบอร์โทร</button>
+                    <button type="submit" id="btn-submit" class="btn-confirm mt-20">Confirm phone number</button>
 
 
                 </form>
@@ -136,7 +137,7 @@
                             <form method="POST" action="{{ url('/go-dashboard') }}" class="">
                                 @csrf
                                 <input type="hidden" name="phone" value="{{ $maskedPhone }}">
-                                <button type="submit" class="btn-confirm mt-20">โปรดเข้าสู่หน้าตรวจสอบสิทธิ์</button>
+                                <button type="submit" class="btn-confirm mt-20">Verify your eligibility</button>
                             </form>
                         </div>
 

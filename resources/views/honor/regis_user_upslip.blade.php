@@ -89,16 +89,16 @@
         <!-- Main Content -->
         <main class="page-content">
             <div class="regis-container">
-                <h1 class="regis-title">ส่งข้อมูลการซื้อ</h1>
+                <h1 class="regis-title">ส่งข้อมูลการซื้อ <br> Submit purchase information</h1>
                 <p class="regis-subtitle">
-                    กรอกข้อมูลการซื้อสินค้าของคุณให้ครบถ้วน เพื่อรับสิทธิ์ลุ้นรางวัล
+                    กรอกข้อมูลการซื้อสินค้าของคุณให้ครบถ้วน เพื่อรับสิทธิ์ลุ้นรางวัล <br>Fill in your purchase details completely to qualify for a lucky draw
                 </p>
 
                 <form method="POST" action="{{ url('/regis_user_upslip') }}" onsubmit="return validateForm();" class="regis-form"
                     enctype="multipart/form-data">
                     @csrf
 
-                    <label for="purchase_day">วันที่ซื้อสินค้า</label>
+                    <label for="purchase_day">วันที่ซื้อสินค้า (Purchase date)</label>
 
                     <div class="hbd-wrapper">
 
@@ -152,7 +152,7 @@
                         หลักตัวเลขเท่านั้น)</p> --}}
 
 
-                        <label>หมายเลข IMEI เครื่อง</label>
+                        <label>หมายเลข IMEI เครื่อง (Enter 15-digit IMEI number)</label>
                         <div class="imei-group">
                             <input
                                 type="text"
@@ -165,36 +165,71 @@
                             >
 
                             <button type="button" id="check-imei-btn" class="btn-check-imei" style="font-family: 'Anuphan', sans-serif;font-size: 18px;padding: 16px 16px;">
-                                ตรวจสอบ
+                                Verify
                             </button>
 
                             <span id="imei-status" class="imei-status"></span>
                         </div>
 
                         <p class="imei-note">
-                    <strong>**หมายเหตุ:</strong><br>
-                    • สามารถตรวจสอบหมายเลข IMEI ได้โดยกด *#06# บนโทรศัพท์<br>
-                    • ใช้หมายเลข IMEI 1 เพื่อลงทะเบียนลุ้นรางวัลได้ 1 สิทธิ์<br>
-                    • ผู้ลงทะเบียน 1 คน สามารถลงทะเบียนได้มากกว่า 1 สิทธิ์
-                </p>
+                            <strong>**หมายเหตุ:</strong><br>
+                            • สามารถตรวจสอบหมายเลข IMEI ได้โดยกด *#06# บนโทรศัพท์<br>
+                            • ใช้หมายเลข IMEI 1 เพื่อลงทะเบียนลุ้นรางวัลได้ 1 สิทธิ์<br>
+                            • ผู้ลงทะเบียน 1 คน สามารถลงทะเบียนได้มากกว่า 1 สิทธิ์
+                        </p>
+                        <p class="imei-note">
+                            <strong>**Remarks:</strong><br>
+                            • You can check the IMEI number by dialing *#06# on your phone<br>
+                            • Use IMEI 1 to register and receive 1 entry for the lucky draw<br>
+                            • One registrant can register for more than one entry
+                        </p>
 
                         <p id="imei-error" class="input-error" style="display:none;">กรุณากรอก IMEI ให้ถูกต้อง</p>
 
                     <label>ร้านค้าที่ซื้อ</label>
-                    <input type="text" name="store_name" class="regis-input" required>
+
+                    <select name="store_name_select" id="store_name_select" class="regis-input" required>
+                        <option value="">เลือกร้านค้า</option>
+                        <option value="HONOR EXPERIENCE STORE">ร้าน HONOR EXPERIENCE STORE</option>
+                        <option value="Banana">ร้านในเครือ Banana</option>
+                        <option value="IT CITY | CSC">ร้านในเครือ IT CITY | CSC</option>
+                        <option value="Jaymart Group">ร้านในเครือ Jaymart Group</option>
+                        <option value="TG">ร้านในเครือ TG</option>
+                        <option value="Power Mall">ร้านในเครือ Power Mall</option>
+                        <option value="Advice">ร้านในเครือ Advice</option>
+                        <option value="AIS Shop และ Telewiz">ร้าน AIS Shop และ Telewiz</option>
+                        <option value="True Shop">ร้าน True Shop</option>
+                        <option value="Dtac Shop">ร้าน Dtac Shop</option>
+                        <option value="Lazada">Lazada</option>
+                        <option value="Shopee">Shopee</option>
+                        <option value="Tiktok">Tiktok</option>
+                        <option value="other">อื่นๆ โปรดระบุ…</option>
+                    </select>
+
+                    <!-- Input ขึ้นเฉพาะเมื่อเลือก อื่นๆ -->
+                    <input
+                        type="text"
+                        id="store_name_other"
+                        name="store_name"
+                        class="regis-input mt-10"
+                        placeholder="กรุณากรอกชื่อร้านค้า"
+                        style="display:none;"
+                    >
 
 
 
 
                     <div class="text-center">
-                        <button type="submit" class="btn-confirm mt-20">ส่งข้อมูลเข้าร่วมกิจกรรม</button>
+                        <button type="submit" class="btn-confirm mt-20">Submit information</button>
     <br>  <br>
                         <!-- 🔴 ปุ่มออกจากระบบ -->
 
                     </div>
 
                     <p class="info-text">
-                        เมื่อส่งข้อมูลสำเร็จ ระบบจะแสดงข้อความยืนยัน และนับสิทธิ์ของคุณอัตโนมัติ
+                        เมื่อส่งข้อมูลสำเร็จ ระบบจะแสดงข้อความยืนยัน และนับสิทธิ์ของคุณอัตโนมัติ <br>
+                        Once the information is successfully submitted, the system will display
+a confirmation message and automatically count your entries
                     </p>
                         <br>  <br>
                 </form>
@@ -213,6 +248,25 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+document.getElementById("store_name_select").addEventListener("change", function() {
+    const otherInput = document.getElementById("store_name_other");
+
+    if (this.value === "other") {
+        otherInput.style.display = "block";
+        otherInput.required = true;
+    } else {
+        otherInput.style.display = "none";
+        otherInput.required = false;
+
+        // เมื่อเลือกอย่างอื่น ให้ส่งค่าสำเร็จตามร้านนั้น ๆ
+        document.getElementById("store_name_other").value = this.value;
+    }
+});
+</script>
+
+
 <script>
 function validateForm() {
 

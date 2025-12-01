@@ -104,6 +104,9 @@ Route::prefix('admin-honor')
     ->middleware(['auth']) // ถ้าต้องการล็อกอินก่อนค่อยใส่ middleware ตรงนี้
     ->group(function () {
 
+        Route::get('/imei-list', [ReceiptLogController::class, 'imeiIndex'])
+    ->name('imei.index');
+
         Route::get('/receipt-logs', [ReceiptLogController::class, 'index'])
                 ->name('receipts.logs');
 

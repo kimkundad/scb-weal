@@ -105,8 +105,11 @@
         <!-- Main Content -->
         <main class="page-content">
             <div class="regis-container">
-                <h1 class="regis-title">ลงทะเบียนข้อมูลผู้ใช้</h1>
-                <p class="regis-subtitle">กรอกข้อมูลของคุณเพื่อสร้างบัญชีผู้ใช้สำหรับเข้าร่วมกิจกรรม HONOR Lucky Receipt
+                <h1 class="regis-title">ลงทะเบียนข้อมูลผู้ใช้ <br>Register user information</h1>
+                <p class="regis-subtitle">กรอกข้อมูลของคุณเพื่อสร้างบัญชีผู้ใช้สำหรับเข้าร่วมกิจกรรม HONOR X9d ทนนน... จัด! คุ้มจัด ลุ้นขับ Mercedes-Benz <br>
+Fill in your details to create a user account for
+participant in the event
+
                 </p>
 
 
@@ -131,23 +134,23 @@
                     <!-- คำนำหน้า -->
                     <label>คำนำหน้า</label>
                     <select name="prefix" class="regis-input">
-                        <option value="">-- เลือก --</option>
-                        <option value="นาย" {{ old('prefix') == 'นาย' ? 'selected' : '' }}>นาย</option>
-                        <option value="นาง" {{ old('prefix') == 'นาง' ? 'selected' : '' }}>นาง</option>
-                        <option value="นางสาว" {{ old('prefix') == 'นางสาว' ? 'selected' : '' }}>นางสาว</option>
+                        <option value="">-- เลือก / Select --</option>
+                        <option value="Mr." {{ old('prefix') == 'Mr.' ? 'selected' : '' }}>Mr.</option>
+                        <option value="Mrs." {{ old('prefix') == 'Mrs.' ? 'selected' : '' }}>Mrs.</option>
+                        <option value="Ms." {{ old('prefix') == 'Ms.' ? 'selected' : '' }}>Ms.</option>
                     </select>
                     @error('prefix')
                         <p class="input-error">{{ $message }}</p>
                     @enderror
 
 
-                    <label>ชื่อ</label>
+                    <label>ชื่อ (Name)</label>
                     <input type="text" name="first_name" class="regis-input" value="{{ old('first_name') }}">
 
-                    <label>นามสกุล</label>
+                    <label>นามสกุล (Lastname)</label>
                     <input type="text" name="last_name" class="regis-input" value="{{ old('last_name') }}">
 
-                    <label for="hbd_day">วัน เดือน ปีเกิด</label>
+                    <label for="hbd_day">วัน เดือน ปีเกิด (Date of Birth)</label>
 
                     <div class="hbd-wrapper">
                         <select name="hbd_day" id="hbd_day" class="regis-input hbd-select">
@@ -198,7 +201,7 @@
                             <input type="radio" name="id_type" value="citizen"
                                 {{ old('id_type') == 'citizen' ? 'checked' : '' }}>
                             <span class="radiomark"></span>
-                            เลขบัตรประชาชน
+                            เลขบัตรประชาชน (Identification Number)
                         </label>
                         <input type="text" id="citizen_id" name="citizen_id" class="regis-input" maxlength="13"
                             value="{{ old('citizen_id') }}" placeholder="กรอกเลขบัตรประชาชน 13 หลัก">
@@ -207,7 +210,7 @@
                             <input type="radio" name="id_type" value="passport"
                                 {{ old('id_type') == 'passport' ? 'checked' : '' }}>
                             <span class="radiomark"></span>
-                            หมายเลขพาสปอร์ต
+                            หมายเลขพาสปอร์ต (Passport Number)
                         </label>
                         <input type="text" id="passport_id" name="passport_id" class="regis-input"
                             value="{{ old('passport_id') }}" placeholder="กรอกเลขพาสปอร์ต">
@@ -216,7 +219,7 @@
                     <p id="id-error" class="input-error">กรุณากรอกข้อมูลตามประเภทที่เลือก</p>
 
 
-                    <label for="email">อีเมล</label>
+                    <label for="email">อีเมล (E-mail)</label>
                     <input type="email" name="email" class="regis-input" value="{{ old('email') }}"
                         title="กรุณากรอกอีเมลให้ถูกต้อง เช่น your@email.com">
 
@@ -224,7 +227,7 @@
                         กรุณากรอกอีเมลให้ถูกต้อง
                     </p>
 
-                    <label for="province">จังหวัด</label>
+                    <label for="province">จังหวัด (Province)</label>
                     <input list="province-list" name="province" id="province" class="regis-input"
                         value="{{ old('province') }}">
 
@@ -330,7 +333,7 @@
 
                     @if (!session('email_exists'))
                         <div class="text-center">
-                            <button type="submit" class="btn-confirm mt-20">บันทึกและไปต่อ</button>
+                            <button type="submit" class="btn-confirm mt-20">Save and Continue</button>
                         </div>
                     @endif
 

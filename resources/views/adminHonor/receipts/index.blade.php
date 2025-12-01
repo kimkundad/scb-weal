@@ -99,6 +99,12 @@
             </div>
 
             <div>
+                <a href="{{ url('admin-honor/imei-list') ?? '#' }}" class="btn btn-dark">
+                    หมายเลข IMEI
+                </a>
+                <a href="{{ route('adminHonor.receipts.logs') ?? '#' }}" class="btn btn-dark">
+                    Logs
+                </a>
                 <a href="{{ route('adminHonor.receipts.export') ?? '#' }}" class="btn btn-dark">
                     Export ข้อมูล
                 </a>
@@ -216,6 +222,7 @@
             </div>
         </form>
 
+
         {{-- Table --}}
         <div class="card">
             <div class="card-body p-0">
@@ -226,9 +233,8 @@
                                 <th class="min-w-60px">ลำดับ</th>
                                 <th class="min-w-120px">เวลาที่ลงทะเบียน</th>
                                 <th class="min-w-160px">ชื่อผู้ใช้</th>
-                                <th class="min-w-140px">หมายเลขใบเสร็จ</th>
                                 <th class="min-w-140px">IMEI</th>
-                                <th class="min-w-100px">รุ่น</th>
+                                <th class="min-w-100px">ร้านค้าที่ซื้อ</th>
                                 <th class="min-w-100px">สถานะ</th>
                                 <th class="min-w-180px">วันที่ตรวจสอบ</th>
                                 <th class="min-w-180px">ผู้ตรวจสอบ</th>
@@ -255,7 +261,7 @@
                                     <td>{{ $r->user_name ?? '-' }}</td>
 
                                     {{-- หมายเลขใบเสร็จ --}}
-                                    <td>{{ $r->receipt_number ?? '-' }}</td>
+
 
                                     {{-- IMEI --}}
                                     <td>{{ $r->imei ?? '-' }}</td>
@@ -301,26 +307,34 @@
 
                                             {{-- ปุ่มดูรายละเอียด --}}
                                             <button type="button"
-                                                class="btn btn-light-gray btn-sm btn-show-receipt"
-                                                data-index="{{ $index + 1 }}"
-                                                data-created="{{ $r->created_at }}"
-                                                data-approved="{{ $r->approved_at }}"
-                                                data-rejected="{{ $r->rejected_at }}"
-                                                data-checked-by="{{ $r->checked_by }}"
-                                                data-reject-reason="{{ $r->reject_reason }}"
-                                                data-receipt-file="{{ $r->receipt_file_path }}"
-                                                data-status="{{ $r->status }}"
-                                                data-fullname="{{ trim(($r->first_name ?? '').' '.($r->last_name ?? '')) }}"
-                                                data-phone="{{ $r->phone }}"
-                                                data-email="{{ $r->email }}"
-                                                data-province="{{ $r->province }}"
-                                                data-purchase-date="{{ $r->purchase_date }}"
-                                                data-purchase-time="{{ $r->purchase_time }}"
-                                                data-receipt-number="{{ $r->receipt_number }}"
-                                                data-imei="{{ $r->imei }}"
-                                                data-store="{{ $r->store_name }}">
-                                                <i class="fa-solid fa-eye me-1"></i> ดูรายละเอียด
-                                            </button>
+    class="btn btn-light-gray btn-sm btn-show-receipt"
+    data-index="{{ $index + 1 }}"
+    data-created="{{ $r->created_at }}"
+    data-approved="{{ $r->approved_at }}"
+    data-rejected="{{ $r->rejected_at }}"
+    data-checked-by="{{ $r->checked_by }}"
+    data-reject-reason="{{ $r->reject_reason }}"
+    data-receipt-file="{{ $r->receipt_file_path }}"
+    data-status="{{ $r->status }}"
+
+    data-fullname="{{ trim(($r->first_name ?? '').' '.($r->last_name ?? '')) }}"
+    data-phone="{{ $r->phone }}"
+    data-email="{{ $r->email }}"
+    data-province="{{ $r->province }}"
+
+    data-purchase-date="{{ $r->purchase_date }}"
+    data-purchase-time="{{ $r->purchase_time }}"
+    data-receipt-number="{{ $r->receipt_number }}"
+    data-imei="{{ $r->imei }}"
+    data-store="{{ $r->store_name }}"
+
+    {{-- ⭐ เพิ่ม 3 ตัวนี้ --}}
+    data-id-type="{{ $r->id_type }}"
+    data-citizen-id="{{ $r->citizen_id }}"
+    data-passport-id="{{ $r->passport_id }}"
+>
+    <i class="fa-solid fa-eye me-1"></i> ดูรายละเอียด
+</button>
 
                                             {{-- อนุมัติ --}}
                                             <form action="{{ route('adminHonor.receipts.approve', $r->id) }}"
@@ -350,12 +364,9 @@
                 </div>
             </div>
 
-            {{-- Pagination (ถ้ามี) --}}
-            @if (method_exists($receipts, 'links'))
-                <div class="card-footer py-4">
-                    {{ $receipts->withQueryString()->links() }}
-                </div>
-            @endif
+
+
+            @include('adminHonor.pagination.default', ['paginator' => $receipts])
         </div>
 
 
@@ -381,6 +392,13 @@
                             <p class="mb-1"><strong>เบอร์โทร:</strong> <span id="detail-phone">-</span></p>
                             <p class="mb-1"><strong>Email:</strong> <span id="detail-email">-</span></p>
                             <p class="mb-1"><strong>จังหวัด:</strong> <span id="detail-province">-</span></p>
+
+                            <!-- ⭐ เพิ่มข้อมูลเอกสาร -->
+                        <p class="mb-1"><strong>ประเภทเอกสาร:</strong> <span id="detail-id-type">-</span></p>
+                        <p class="mb-1"><strong>เลขบัตรประชาชน:</strong> <span id="detail-citizen-id">-</span></p>
+                        <p class="mb-1"><strong>เลขพาสปอร์ต:</strong> <span id="detail-passport-id">-</span></p>
+
+
                         </div>
                         <div class="col-md-6">
                             <p class="mb-1"><strong>วันที่ซื้อ:</strong> <span id="detail-purchase-date">-</span></p>
@@ -427,24 +445,6 @@
 
                     </div>
 
-                    <hr>
-
-                    <div>
-                        <h6 class="mb-2">หลักฐานการซื้อ (Slip / ใบเสร็จ)</h6>
-                        <div class="border rounded p-2 text-center">
-
-                            <img id="detail-receipt-image" src="" class="img-fluid" style="max-height: 450px;">
-
-                            <br>
-<a id="detail-download-btn" href="#" class="btn btn-dark mt-3">
-    ดาวน์โหลดภาพใบเสร็จ
-</a>
-
-                        </div>
-                    </div>
-
-
-
                 </div>
 
                 <div class="modal-footer">
@@ -483,6 +483,15 @@
                         .receiptNumber || '-';
                     document.getElementById('detail-imei').textContent = this.dataset.imei || '-';
                     document.getElementById('detail-store').textContent = this.dataset.store || '-';
+
+                    document.getElementById('detail-id-type').textContent =
+    this.dataset.idType || '-';
+
+document.getElementById('detail-citizen-id').textContent =
+    this.dataset.citizenId || '-';
+
+document.getElementById('detail-passport-id').textContent =
+    this.dataset.passportId || '-';
 
                     // สถานะ + สี
                     const statusEl = document.getElementById('detail-status');
