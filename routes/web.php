@@ -33,7 +33,7 @@ Route::domain('ttb.idx.co.th')->group(function () {
     });
 });
 
-Route::domain('honorluckydraw.com')->group(function () {
+Route::domain('{subdomain}.honorluckydraw.com')->group(function () {
 
 Route::get('/', function () {
                 return view('honor.index2'); // หรือ controller ก็ได้
