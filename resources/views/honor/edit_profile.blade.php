@@ -98,22 +98,23 @@
     <form method="POST" action="{{ url('/edit-profile') }}" onsubmit="return validateForm();" class="regis-form">
         @csrf
 
+
         <!-- คำนำหน้า -->
         <label>คำนำหน้า</label>
         <select name="prefix" class="regis-input" required>
-            <option value="">-- เลือก --</option>
-            <option value="นาย" {{ $user->prefix == 'นาย' ? 'selected' : '' }}>นาย</option>
-            <option value="นาง" {{ $user->prefix == 'นาง' ? 'selected' : '' }}>นาง</option>
-            <option value="นางสาว" {{ $user->prefix == 'นางสาว' ? 'selected' : '' }}>นางสาว</option>
+            <option value="">-- เลือก / Select --</option>
+            <option value="Mr." {{ $user->prefix == 'Mr.' ? 'selected' : '' }}>Mr.</option>
+            <option value="Mrs." {{ $user->prefix == 'Mrs.' ? 'selected' : '' }}>Mrs.</option>
+            <option value="Ms." {{ $user->prefix == 'Ms.' ? 'selected' : '' }}>Ms.</option>
         </select>
 
-        <label>ชื่อ</label>
+        <label>ชื่อ (Name)</label>
         <input type="text" name="first_name" class="regis-input" value="{{ $user->first_name }}" required>
 
-        <label>นามสกุล</label>
+        <label>นามสกุล (Lastname)</label>
         <input type="text" name="last_name" class="regis-input" value="{{ $user->last_name }}" required>
 
-        <label for="hbd_day">วัน เดือน ปีเกิด</label>
+        <label for="hbd_day">วัน เดือน ปีเกิด (Date of Birth)</label>
 
 <div class="hbd-wrapper">
 
@@ -182,7 +183,7 @@
                 <input type="radio" name="id_type" value="citizen"
                        {{ $user->id_type == 'citizen' ? 'checked' : '' }}>
                 <span class="radiomark"></span>
-                เลขบัตรประชาชน
+                เลขบัตรประชาชน (Identification Number)
             </label>
             <input type="text" name="citizen_id" maxlength="13"
                    class="regis-input"
@@ -194,7 +195,7 @@
                 <input type="radio" name="id_type" value="passport"
                        {{ $user->id_type == 'passport' ? 'checked' : '' }}>
                 <span class="radiomark"></span>
-                หมายเลขพาสปอร์ต
+                หมายเลขพาสปอร์ต (Passport Number)
             </label>
             <input type="text" name="passport_id"
                    class="regis-input"
@@ -205,7 +206,7 @@
         <input type="email" name="email" class="regis-input"
                value="{{ $user->email }}" required>
 
-<label>จังหวัด</label>
+<label>จังหวัด (Province)</label>
        <select name="province" class="regis-input" required>
     <option value="">-- เลือกจังหวัด --</option>
 
@@ -234,7 +235,7 @@
 
 
         <div class="text-center">
-            <button type="submit" class="btn-confirm mt-20">บันทึกข้อมูล</button>
+            <button type="submit" class="btn-confirm mt-20">Confirm</button>
         </div>
     </form>
 </div>

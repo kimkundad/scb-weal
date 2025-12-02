@@ -137,14 +137,14 @@
         <!-- Main Content -->
         <main class="page-content">
             <div class="regis-container" style="text-align: center;">
-                <h1 class="regis-title">สิทธิ์ของฉัน {{ session()->get('phone') }}</h1>
-                <p class="regis-subtitle">คุณมีสิทธิ์ลุ้นรางวัลทั้งหมด</p>
-                <h2 style="font-size: 48px; font-weight: bold; color: #22c55e;">{{ $totalApproved }} สิทธิ์</h2>
+                <h1 class="regis-title">สิทธิ์ของฉัน {{ session()->get('phone') }} <br> My eligibility </h1>
+                <p class="regis-subtitle">คุณมีสิทธิ์ลุ้นรางวัลทั้งหมด <br> Total eligibility for the lucky draw</p>
+                <h2 style="font-size: 48px; font-weight: bold; color: #22c55e;">{{ $totalApproved }} สิทธิ์ <span style="font-size: 22px;">(Eligibility)</span></h2>
 
-                <a href="{{ url('/regis_user_upslip') }}" class="btn-secondary mt-20">เพิ่มสิทธิ์ลุ้นรางวัล</a>
+                <a href="{{ url('/regis_user_upslip') }}" class="btn-secondary mt-20">Add more eligibility</a>
 
                 <a href="{{ url('/edit-profile') }}" class="btn-confirm mt-20">
-                    แก้ไขข้อมูลส่วนตัว
+                    Edit profile
                 </a>
 
 
@@ -154,10 +154,10 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th>วันที่ส่ง</th>
-                                    <th>วันที่ซื้อ</th>
+                                    <th>วันที่ส่ง <br> Summit date</th>
+                                    <th>วันที่ซื้อ <br> Purchase date</th>
                                     <th>IMEI</th>
-                                    <th>สถานะ</th>
+                                    <th>สถานะ <br> Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -195,7 +195,7 @@
                                         <td>{{ $r->imei }}</td>
                                         <td>
                                             <span class="status {{ $r->status }}">
-                                                {{ $r->status === 'approved' ? 'อนุมัติ' : ($r->status === 'pending' ? 'รอตรวจสอบ' : 'ไม่ผ่าน') }}
+                                                {{ $r->status === 'approved' ? 'Approved' : ($r->status === 'pending' ? 'Pending' : 'Reject') }}
                                             </span>
                                         </td>
                                     </tr>

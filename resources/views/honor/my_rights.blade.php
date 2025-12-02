@@ -40,7 +40,7 @@
   <main class="page-content">
   <div class="regis-container">
 
-    <h1 class="regis-title">เข้าร่วมกิจกรรมด้วยเบอร์โทรของคุณ</h1>
+    <h1 class="regis-title">เข้าร่วมกิจกรรมด้วยเบอร์โทรของคุณ <br> Join The Event With Your Phone Number</h1>
 
     @php
       $sessionPhone = session('phone');
@@ -71,9 +71,9 @@
         inputmode="numeric"
         required
     >
-      <p class="mt-20" style="margin-top: -10px;font-size: 14px;color: #64748b;">กรอกเบอร์โทรศัพท์ของคุณที่ได้ลงทะเบียนไว้กับเรา</p>
+      <p class="mt-20" style="margin-top: -10px;font-size: 14px;color: #64748b;">กรอกเบอร์โทรศัพท์ของคุณที่ได้ลงทะเบียนไว้กับเรา <br>Enter your phone number to start participating in the event</p>
 
-      <button type="submit" class="btn-secondary mt-20">ดูข้อมูลเบอร์นี้</button>
+      <button type="submit" class="btn-secondary mt-20">View Your Information</button>
     </form>
 
   </div>
