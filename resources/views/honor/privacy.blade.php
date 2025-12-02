@@ -170,35 +170,41 @@
                 <!-- SECTION 7 -->
                 <div class="privacy-section">
                     <h2>7. เงื่อนไขการรับรางวัล</h2>
-
+                    <p>ผู้ร่วมกิจกรรม 1 ท่าน มีสิทธิ์รับรางวัลมูลค่าสูงสุดได้เพียง 1 รางวัล และคำตัดสินของบริษัทฯ ถือเป็นสิทธิ์ขาดและสิ้นสุด</p>
                     <p>
-                        ผู้โชคดีต้องแสดงสำเนาบัตรประชาชนหรือพาสปอร์ต
-                        และต้องถ่ายภาพคู่กับสมาร์ทโฟนที่แสดง IMEI 1
-                        (ตรวจสอบโดยกด *#06#) ส่งผ่าน Facebook Messenger ที่
-                        https://www.facebook.com/honorthai
-                        ข้อมูลทั้งหมดต้องตรงกับที่ลงทะเบียนไว้ 100%
+                        ผู้โชคดีที่ได้รับรางวัลต้องแสดงสำเนาบัตรประจำตัวประชาชนหรือพาสปอร์ตในกรณีผู้โชคดีเป็นชาวต่างชาติ และถ่ายภาพคู่กับสมาร์ทโฟนหรือแท็บเล็ตแสดงหมายเลข IMEI 1
+                        ที่ตรงกับที่ลงทะเบียนไว้ (ตรวจสอบหมายเลข IMEI 1 โดยกด *#06#) เพื่อเป็นหลักฐานในการขอรับรางวัลทางกล่องข้อความบน Facebook Messenger <a href="https://www.facebook.com/honorthai"
+                            target="_blank">https://www.facebook.com/honorthai</a> ทั้งนี้ข้อมูลทั้งหมดที่นำมาเป็นหลักฐานต้องตรงกับที่ลงทะเบียนไว้ทั้งหมดเท่านั้น
                     </p>
+                    <p>การรับรางวัล ผู้โชคดีสามารถเลือกรับรางวัลด้วยตนเองพร้อมบัตรประชาชนหรือพาสปอร์ต หรือมอบอำนาจ ซึ่งต้องมีเอกสารมอบอำนาจ พร้อมสำเนาบัตรประชาชนหรือพาสปอร์ตของทั้งผู้โชคดีและผู้รับมอบอำนาจอย่างครบถ้วน โดยผู้มารับรางวัลต้องนำสมาร์ทโฟน HONOR X9d ที่มีหมายเลข IMEI ตรงกับที่ลงทะเบียนไว้มาเป็นหลักฐานอีกครั้งที่ห้องประชุมใหญ่ ณ บริษัท นิว เลจเจินด์ อินดัสเทรียล จำกัด (สำนักงานใหญ่)เลขที่ 89 เอไอเอ แคปปิตอล เซ็นเตอร์ ชั้น 32 ห้องที่ 3201-3202 ถนนรัชดาภิเษก เขตดินแดง แขวงดินแดง กรุงเทพมหานคร 10400 ภายใน 30 วันหลังจากที่ทำการจับรางวัล
+</p>
 
-                    <p>
-                        ผู้โชคดีรับรางวัลได้ 2 วิธี:
-                    </p>
-
-                    <ul>
-                        <li><strong>รับด้วยตนเอง</strong> พร้อมนำอุปกรณ์ HONOR X9d เครื่องจริงมาแสดง</li>
-                        <li><strong>มอบอำนาจ</strong> โดยมีหนังสือมอบอำนาจ + สำเนาบัตรของทั้ง 2 ฝ่าย</li>
-                    </ul>
-
-                    <p>
-                        ต้องรับรางวัลภายใน 30 วัน
-                        และต้องถูกหักภาษี ณ ที่จ่าย 5% ตามกฎหมาย
-                    </p>
+<p>ทั้งนี้ ผู้โชคดีที่ได้รับรางวัลจะต้องถูกหักภาษี ณ ที่จ่าย ร้อยละ 5 ของมูลค่ารางวัล ตามคำสั่งกรมสรรพากร ที่ ท.ป. 4/2528 ลงวันที่ 26 กันยายน 2528 ประกอบคำสั่งกรมสรรพากร  ที่ ท.ป. 101/2544 ลงวันที่ 15 กันยายน 2544 เป็นต้น</p>
 
                     <h3>(EN)</h3>
+
                     <p>
-                        Winners must submit all required identification, photo evidence with IMEI 1, and collect the
-                        prize within 30 days.
-                        A withholding tax of 5% applies.
+                        The participant is entitled to receive a maximum of only one prize, and the company's decision is final and binding.
                     </p>
+                    <p>Winners must present a copy of their Thai National ID card or Passport (for foreign nationals), and must submit a photograph of themselves together with the HONOR smartphone/tablet showing the IMEI 1 number that matches the registration data.</p>
+
+                    <p>IMEI 1 can be verified by dialing *#06#. <br> Such documents and evidence must be submitted via Facebook Messenger at:
+<a href="https://www.facebook.com/honorthai"
+                            target="_blank">https://www.facebook.com/honorthai</a>
+All information provided must match the registration details exactly. <Br> For prize collection, winners may choose to:</p>
+
+<ul>
+                        <li>Collect the prize in person, presenting their National ID or Passport and the HONOR X9d device with the matching IMEI number; or</li>
+                        <li>Authorize a representative, provided that a formal authorization letter is submitted together with copies of both the winner’s and the representative’s National ID or Passport.</li>
+                    </ul>
+
+                    <p>The authorized representative must present the HONOR X9d device with the matching IMEI number at the prize collection venue:</p>
+<p>Main Conference Room, New Legend Industrial Co., Ltd. (Head Office)
+89 AIA Capital Center, 32nd Floor, Rooms 3201–3202, Ratchadaphisek Road, Din Daeng District, Din Daeng Subdistrict, Bangkok 10400</p>
+<p>Prize collection must be completed within 30 days from the prize draw date.</p>
+<p>Winners are subject to 5% withholding tax on the prize value in accordance with Revenue Department Order Tor Por 4/2528 dated 26 September 1985, and Revenue Department Order Tor Por 101/2544 dated 15 September 2001, as applicable.
+</p>
+
                 </div>
 
                 <!-- SECTION 8 -->
