@@ -33,13 +33,18 @@ Route::domain('ttb.idx.co.th')->group(function () {
     });
 });
 
-Route::domain('{subdomain}.honorluckydraw.com')->group(function () {
 
-Route::get('/', function () {
-                return view('honor.index2'); // หรือ controller ก็ได้
-        });
+Route::group(['domain' => 'honorluckydraw.com'], function () {
+    Route::get('/', function () {
+        return view('honor.index2');
+    });
+});
 
-        });
+Route::group(['domain' => 'www.honorluckydraw.com'], function () {
+    Route::get('/', function () {
+        return view('honor.index2');
+    });
+});
 
 
   Route::domain('testing.honorluckydraw.com')->group(function () {
