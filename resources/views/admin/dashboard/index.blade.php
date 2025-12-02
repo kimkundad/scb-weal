@@ -1,8 +1,6 @@
 @extends('admin.layouts.template')
 
-@section('title')
-    <title>รายชื่อสมาชิกทั้งหมด</title>
-@endsection
+
 
 @section('stylesheet')
     <style>

@@ -36,7 +36,7 @@ Route::domain('ttb.idx.co.th')->group(function () {
 
 
 
- // Route::domain('testing.honorluckydraw.com')->group(function () {
+  Route::domain('testing.honorluckydraw.com')->group(function () {
         Route::get('/', function () {
                 return view('honor.index'); // หรือ controller ก็ได้
         });
@@ -136,7 +136,7 @@ Route::prefix('admin-honor')
     ->name('adminHonor.receipt.download');
 
 
-  //  });
+    });
 
 
 
