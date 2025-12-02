@@ -38,12 +38,26 @@ Route::group(['domain' => 'honorluckydraw.com'], function () {
     Route::get('/', function () {
         return view('honor.index2');
     });
+    Route::get('/terms', function () {
+            return view('honor.terms');
+        });
+
+        Route::get('/privacy-policy', function () {
+            return view('honor.privacy2');
+        });
 });
 
 Route::group(['domain' => 'www.honorluckydraw.com'], function () {
     Route::get('/', function () {
         return view('honor.index2');
     });
+    Route::get('/terms', function () {
+            return view('honor.terms');
+        });
+
+        Route::get('/privacy-policy', function () {
+            return view('honor.privacy2');
+        });
 });
 
 

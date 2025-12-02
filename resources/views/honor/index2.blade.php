@@ -143,7 +143,6 @@ body.index-page .page-wrapper2 {
         <footer class="page-footer2">
             <div class="copyright2">
                 © 2025 HONOR Thailand All rights reserved. <br>
-
                 <a href="{{ url('/terms') }}" class="footer-link">เงื่อนไขกิจกรรม</a> |
                 <a href="{{ url('/privacy-policy') }}" class="footer-link">นโยบายความเป็นส่วนตัว</a>
             </div>
