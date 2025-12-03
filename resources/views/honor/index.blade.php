@@ -164,14 +164,14 @@ body.index-page .page-wrapper2 {
 document.addEventListener("DOMContentLoaded", function () {
 
     // เวลาเริ่มแสดงปุ่ม (ตามโซนเวลาไทย)
-    const showTime = new Date("2025-12-04T01:55:00+07:00");
+    const showTime = new Date("2025-12-04T01:58:00+07:00");
 
     function checkTime() {
         const now = new Date();
-
+            console.log('showTime', showTime)
         if (now >= showTime) {
-            document.getElementById("btnJoin").style.display = " ";
-            document.getElementById("btnVerify").style.display = " ";
+            document.getElementById("btnJoin").style.display = "";
+            document.getElementById("btnVerify").style.display = "";
         } else {
             // ยังไม่ถึงเวลา — ซ่อนไว้ก่อน
             document.getElementById("btnJoin").style.display = "none";
