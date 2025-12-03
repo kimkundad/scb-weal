@@ -24,6 +24,7 @@
     <meta property="twitter:description" content="ชิงรถ C 350e AMG + ทองคำ 10 รางวัล มูลค่ารวมกว่า 3.2 ล้านบาท">
     <meta property="twitter:image" content="{{ url('img/honor/224402.jpg') }}">
       <link rel="stylesheet" href="{{ url('/home/assets/css/honor.css') }}?v={{ time() }}" />
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <style>
 
@@ -85,15 +86,15 @@
             <img src="{{ url('img/honor/logo@2x.png') }}" alt="HONOR Logo" style="margin-left:20px">
         </a>
         <a href="{{ url('/logout-honor') }}" class="btn-logout-header">
-                ออกจากระบบ
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
             </a>
     </header>
 
     <main class="page-content">
 
             <div class="regis-container">
-    <h1 class="regis-title">แก้ไขข้อมูลส่วนตัว</h1>
-    <p class="regis-subtitle">อัปเดตข้อมูลของคุณเพื่อใช้ในกิจกรรม</p>
+    <h1 class="regis-title">แก้ไขข้อมูลส่วนตัว <br> Edit Personal Information</h1>
+    <p class="regis-subtitle">อัปเดตข้อมูลของคุณเพื่อใช้ในกิจกรรม <br> Update your details for participation in the event.</p>
 
     <form method="POST" action="{{ url('/edit-profile') }}" onsubmit="return validateForm();" class="regis-form">
         @csrf

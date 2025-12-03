@@ -25,6 +25,7 @@
     <meta property="twitter:description" content="ชิงรถ C 350e AMG + ทองคำ 10 รางวัล มูลค่ารวมกว่า 3.2 ล้านบาท">
     <meta property="twitter:image" content="{{ url('img/honor/224402.jpg') }}">
     <link rel="stylesheet" href="{{ url('/home/assets/css/honor.css') }}?v={{ time() }}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <style>
@@ -101,7 +102,7 @@
             </a>
             <!-- ปุ่มออกจากระบบบนขวา -->
             <a href="{{ url('/logout-honor') }}" class="btn-logout-header">
-                ออกจากระบบ
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
             </a>
         </header>
 
@@ -205,10 +206,10 @@
 
                         <p id="imei-error" class="input-error" style="display:none;">กรุณากรอก IMEI ให้ถูกต้อง</p>
 
-                    <label>ร้านค้าที่ซื้อ</label>
+                    <label>ร้านค้าที่ซื้อ (Store)</label>
 
                     <select name="store_name_select" id="store_name_select" class="regis-input" required>
-                        <option value="">เลือกร้านค้า</option>
+                        <option value="">เลือกร้านค้า / Store</option>
                         <option value="HONOR EXPERIENCE STORE">ร้าน HONOR EXPERIENCE STORE</option>
                         <option value="Banana">ร้านในเครือ Banana</option>
                         <option value="IT CITY | CSC">ร้านในเครือ IT CITY | CSC</option>

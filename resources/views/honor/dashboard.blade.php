@@ -25,6 +25,7 @@
     <meta property="twitter:description" content="ชิงรถ C 350e AMG + ทองคำ 10 รางวัล มูลค่ารวมกว่า 3.2 ล้านบาท">
     <meta property="twitter:image" content="{{ url('img/honor/224402.jpg') }}">
     <link rel="stylesheet" href="{{ url('/home/assets/css/honor.css') }}?v={{ time() }}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 
@@ -130,7 +131,7 @@
             </a>
             <!-- เพิ่ม hamburger menu ได้ที่นี่หากต้องการ -->
             <a href="{{ url('/logout-honor') }}" class="btn-logout-header">
-                ออกจากระบบ
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
             </a>
         </header>
 
