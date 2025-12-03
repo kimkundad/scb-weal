@@ -127,7 +127,7 @@
                 <div class="privacy-section">
                     <h2>3.วัน เดือน ปี พ.ศ. และเวลาที่จับรางวัล</h2>
                     <p>
-                        จับรางวัลทั้งสิ้น 1 ครั้ง ในวันที่ 13 มกราคม 2569 เวลา 16.00 น. – 18:00 น.
+                        จับรางวัลทั้งสิ้น 1 ครั้ง ในวันที่ 13 มกราคม 2569 เวลา 14.00 น. – 15:00 น.
                     </p>
                 </div>
 
@@ -136,7 +136,7 @@
                 <div class="privacy-section">
                     <h2>3. Date and Time of the Prize Draw</h2>
                     <p>
-                        The prize draw shall be conducted once (1 time) on 13 January 2026, between 16:00 – 18:00 hrs
+                        The prize draw shall be conducted once (1 time) on 13 January 2026, between 14:00 – 15:00 hrs
                         (Thailand Time).
                     </p>
                 </div>
@@ -171,7 +171,7 @@
                     <p>
                         ประกาศรายชื่อผู้โชคดีที่ Facebook <a href="https://www.facebook.com/honorthai"
                             target="_blank">https://www.facebook.com/honorthai</a> <br>
-                        ครั้งที่ 1 : 13 มกราคม 2569 เวลา 18:00 น.
+                        ครั้งที่ 1 : 13 มกราคม 2569 เวลา 16:00 น.
                     </p>
                 </div>
 
@@ -182,22 +182,23 @@
                         The list of winners will be announced via the official Facebook page:
                         <a href="https://www.facebook.com/honorthai"
                             target="_blank">https://www.facebook.com/honorthai</a> <br>
-                        Announcement Round 1: 13 January 2026 at 18:00 hrs (Thailand Time).
+                        Announcement Round 1: 13 January 2026 at 16:00 hrs (Thailand Time).
                     </p>
                 </div>
 
                 <!-- SECTION 6 -->
                 <div class="privacy-section">
-                    <h2>6.รายละเอียดของรางวัลที่แจกให้ผู้โชคดี (ระบุยี่ห้อ รุ่น ราคา ให้ละเอียด)</h2>
+                    <h2>6.รายละเอียดของรางวัลที่แจกให้ผู้โชคดี </h2>
                     <p>
                         รถยนต์ Mercedes-Benz C 350 e AMG Dynamic มูลค่า 2,890,000 บาท จำนวน 1 รางวัล <br>
-                        ทองแท่งรูปพรรณ 2 สลึง มูลค่าหน่วยละ 31,250 บาท จำนวน 10 รางวัล
+                        ทองแท่งรูปพรรณ 2 สลึง มูลค่าหน่วยละ 31,250 บาท จำนวน 10 รางวัล <br>
+                        (อ้างอิงราคาตามเอกสารการจัดซื้อของบริษัทฯ)
                     </p>
                 </div>
 
                 <!-- SECTION 6 -->
                 <div class="privacy-section">
-                    <h2>6.Prize Details (Brand, Model, Value)</h2>
+                    <h2>6.Prize Details </h2>
                     <p>
                         One (1) Mercedes-Benz C 350 e AMG Dynamic, valued at THB 2,890,000. <br>
                         Ten (10) units of 2-salung gold bars, each valued at THB 31,250.

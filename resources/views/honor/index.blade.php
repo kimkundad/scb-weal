@@ -128,11 +128,24 @@ body.index-page .page-wrapper2 {
 <img src="{{ url('img/honor/224402.jpg') }}"
      alt="intro desktop"
      class="intro-img intro-desktop">
-                    <a href="{{ url('/terms_conditions') }}" class="btn-full btn-confirm mt-20">Join the event</a>
 
-                    <a href="{{ url('/dashboard') }}" class="btn-full btn-secondary mt-20 mw-350">
-                        Verify your eligibility
-                    </a>
+
+                    @php
+    use Carbon\Carbon;
+
+    // เวลาเริ่มแสดงปุ่ม: 4/12/2025 01:38 (เวลาไทย)
+    $openAt = Carbon::create(2025, 12, 4, 1, 38, 0, 'Asia/Bangkok');
+@endphp
+
+@if (now('Asia/Bangkok')->greaterThanOrEqualTo($openAt))
+    <a href="{{ url('/terms_conditions') }}" class="btn-full btn-confirm mt-20">
+        Join the event
+    </a>
+
+    <a href="{{ url('/dashboard') }}" class="btn-full btn-secondary mt-20 mw-350">
+        Verify your eligibility
+    </a>
+@endif
 
                 </div>
             </div>
