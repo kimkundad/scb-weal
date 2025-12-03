@@ -130,17 +130,22 @@ body.index-page .page-wrapper2 {
      class="intro-img intro-desktop">
 
 
-                    <a id="btnJoin" href="{{ url('/terms_conditions') }}"
-                    class="btn-full btn-confirm mt-20"
-                    style="display:none;">
-                        Join the event
-                    </a>
+@php
+    use Carbon\Carbon;
 
-                    <a id="btnVerify" href="{{ url('/dashboard') }}"
-                    class="btn-full btn-secondary mt-20 mw-350"
-                    style="display:none;">
-                    Verify your eligibility
-                    </a>
+    // เวลาเริ่มแสดงปุ่ม: 4/12/2025 07:00 (เวลาไทย)
+    $openAt = Carbon::create(2025, 12, 4, 7, 0, 0, 'Asia/Bangkok');
+@endphp
+
+@if (now('Asia/Bangkok')->greaterThanOrEqualTo($openAt))
+    <a href="{{ url('/terms_conditions') }}" class="btn-full btn-confirm mt-20">
+        Join the event
+    </a>
+
+    <a href="{{ url('/dashboard') }}" class="btn-full btn-secondary mt-20 mw-350">
+        Verify your eligibility
+    </a>
+@endif
 
                 </div>
             </div>
@@ -158,33 +163,5 @@ body.index-page .page-wrapper2 {
 
     </div>
 </body>
-
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-
-    // เวลาเริ่มแสดงปุ่ม (ตามโซนเวลาไทย)
-    const showTime = new Date("2025-12-04T01:58:00+07:00");
-
-    function checkTime() {
-        const now = new Date();
-            console.log('showTime', showTime)
-        if (now >= showTime) {
-            document.getElementById("btnJoin").style.display = "";
-            document.getElementById("btnVerify").style.display = "";
-        } else {
-            // ยังไม่ถึงเวลา — ซ่อนไว้ก่อน
-            document.getElementById("btnJoin").style.display = "none";
-            document.getElementById("btnVerify").style.display = "none";
-        }
-    }
-
-    // เช็คทันทีที่โหลด
-    checkTime();
-
-    // เช็คทุกๆ 1 วินาที (เพื่อไม่ต้องกด Refresh)
-    setInterval(checkTime, 3000);
-});
-</script>
 
 </html>
