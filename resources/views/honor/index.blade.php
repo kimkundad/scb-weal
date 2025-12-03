@@ -134,7 +134,7 @@ body.index-page .page-wrapper2 {
     use Carbon\Carbon;
 
     // เวลาเริ่มแสดงปุ่ม: 4/12/2025 01:38 (เวลาไทย)
-    $openAt = Carbon::create(2025, 12, 4, 1, 38, 0, 'Asia/Bangkok');
+    $openAt = Carbon::create(2025, 12, 4, 1, 45, 0, 'Asia/Bangkok');
 @endphp
 
 @if (now('Asia/Bangkok')->greaterThanOrEqualTo($openAt))
