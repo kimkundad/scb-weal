@@ -34,7 +34,7 @@ Route::domain('ttb.idx.co.th')->group(function () {
 });
 
 
-Route::group(['domain' => ['honorluckydraw.com', 'www.honorluckydraw.com']], function () {
+$honorRoutes = function () {
     Route::get('/', function () {
         return view('honor.index2');
     });
@@ -46,7 +46,13 @@ Route::group(['domain' => ['honorluckydraw.com', 'www.honorluckydraw.com']], fun
     Route::get('/privacy-policy', function () {
         return view('honor.privacy2');
     });
-});
+};
+
+// domain 1
+Route::group(['domain' => 'honorluckydraw.com'], $honorRoutes);
+
+// domain 2
+Route::group(['domain' => 'www.honorluckydraw.com'], $honorRoutes);
 
 
   Route::domain('testing.honorluckydraw.com')->group(function () {
