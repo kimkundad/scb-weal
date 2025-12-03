@@ -12,6 +12,7 @@ class ParticipantReceiptLog extends Model
         'action',
         'old_status',
         'new_status',
+        'reject_reason'
     ];
 
     public function receipt()

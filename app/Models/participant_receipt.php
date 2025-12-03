@@ -27,7 +27,7 @@ class participant_receipt extends Model
     'imei',
     'store_name',
     'receipt_file_path',
-
+    'reject_reason',
     'status',
     'approved_at',
     'rejected_at',

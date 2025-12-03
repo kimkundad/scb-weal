@@ -83,7 +83,17 @@
             font-size: 0.8rem;
             letter-spacing: 0.03em;
         }
+
+        .min-w-180px1 {
+            min-width: 120px;
+        }
+
+        .btn-group-sm>.btn:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon),
+        .btn:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon).btn-sm {
+            padding: 10px 8px;
+        }
     </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
@@ -182,22 +192,24 @@
         {{-- Search + filter bar --}}
         <form id="filterForm" method="GET" action="{{ url()->current() }}" class="card mb-6">
             <div class="card-body py-4">
-                {{-- hidden query อื่น ๆ ที่ต้องการเก็บ --}}
-                @foreach (request()->except(['q', 'status', 'page']) as $k => $v)
+
+                {{-- preserve query --}}
+                @foreach (request()->except(['q', 'status', 'start_date', 'end_date', 'page']) as $k => $v)
                     <input type="hidden" name="{{ $k }}" value="{{ $v }}">
                 @endforeach
 
-                <div class="row g-3 align-items-center">
+                <div class="row g-3">
+
                     {{-- Search --}}
-                    <div class="col-md-5">
-                        <div class="position-relative">
-                            <input type="text" class="form-control" name="q" value="{{ request('q') }}"
-                                placeholder="ค้นหาใบเสร็จ / IMEI / ชื่อผู้ใช้...">
-                        </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">ค้นหา</label>
+                        <input type="text" class="form-control" name="q" value="{{ request('q') }}"
+                            placeholder="ค้นหา: ใบเสร็จ / IMEI / ชื่อ / เบอร์โทร / อีเมล">
                     </div>
 
-                    {{-- Status dropdown --}}
+                    {{-- Status --}}
                     <div class="col-md-3">
+                        <label class="form-label fw-semibold">สถานะใบเสร็จ</label>
                         <select name="status" class="form-select">
                             <option value="">ทั้งหมด</option>
                             <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>รอตรวจสอบ
@@ -209,18 +221,36 @@
                         </select>
                     </div>
 
-                    {{-- Right buttons --}}
-                    <div class="col-md-4 d-flex justify-content-md-end gap-2 mt-3 mt-md-0">
-                        <button type="submit" class="btn btn-dark">
-                            กรอง
-                        </button>
-                        <a href="{{ url()->current() }}" class="btn btn-light">
-                            ล้างตัวกรอง
-                        </a>
+                    @php
+                    function displayDateInput($date) {
+                        if (!$date) return '';
+                        return \Carbon\Carbon::parse($date)->format('d/m/Y'); // ← แสดง dd/mm/yyyy
+                    }
+                    @endphp
+
+                    {{-- Date filter --}}
+                    <div class="col-md-5">
+                        <label class="form-label fw-semibold">ช่วงวันที่</label>
+                        <div class="d-flex gap-2">
+                            <input type="date" name="start_date" class="form-control "
+                                value="{{ request('start_date') }}">
+                            <input type="date" name="end_date" class="form-control " value="{{ request('end_date') }}">
+                        </div>
+                    </div>
+
+                </div>
+
+                {{-- Buttons Row --}}
+                <div class="row mt-4">
+                    <div class="col d-flex justify-content-end gap-2">
+                        <button type="submit" class="btn btn-dark px-4">กรอง</button>
+                        <a href="{{ url()->current() }}" class="btn btn-light px-4">ล้างตัวกรอง</a>
                     </div>
                 </div>
+
             </div>
         </form>
+
 
 
         {{-- Table --}}
@@ -230,9 +260,10 @@
                     <table class="table align-middle table-row-dashed fs-7 gy-4 mb-0">
                         <thead>
                             <tr class="text-start text-gray-500 fw-bold text-uppercase">
-                                <th class="min-w-60px">ลำดับ</th>
+                                <th>ลำดับ</th>
                                 <th class="min-w-120px">เวลาที่ลงทะเบียน</th>
                                 <th class="min-w-160px">ชื่อผู้ใช้</th>
+                                <th class="min-w-180px1">เบอร์โทร</th>
                                 <th class="min-w-140px">IMEI</th>
                                 <th class="min-w-100px">ร้านค้าที่ซื้อ</th>
                                 <th class="min-w-100px">สถานะ</th>
@@ -259,6 +290,8 @@
 
                                     {{-- ชื่อผู้ใช้ --}}
                                     <td>{{ $r->user_name ?? '-' }}</td>
+
+                                    <td>{{ $r->phone ?? '-' }}</td>
 
                                     {{-- หมายเลขใบเสร็จ --}}
 
@@ -306,35 +339,27 @@
                                         <div class="d-inline-flex gap-1">
 
                                             {{-- ปุ่มดูรายละเอียด --}}
-                                            <button type="button"
-    class="btn btn-light-gray btn-sm btn-show-receipt"
-    data-index="{{ $index + 1 }}"
-    data-created="{{ $r->created_at }}"
-    data-approved="{{ $r->approved_at }}"
-    data-rejected="{{ $r->rejected_at }}"
-    data-checked-by="{{ $r->checked_by }}"
-    data-reject-reason="{{ $r->reject_reason }}"
-    data-receipt-file="{{ $r->receipt_file_path }}"
-    data-status="{{ $r->status }}"
+                                            <button type="button" class="btn btn-light-gray btn-sm btn-show-receipt"
+                                                data-index="{{ $index + 1 }}" data-created="{{ $r->created_at }}"
+                                                data-approved="{{ $r->approved_at }}"
+                                                data-rejected="{{ $r->rejected_at }}"
+                                                data-checked-by="{{ $r->checked_by }}"
+                                                data-reject-reason="{{ $r->reject_reason }}"
+                                                data-receipt-file="{{ $r->receipt_file_path }}"
+                                                data-status="{{ $r->status }}"
+                                                data-fullname="{{ trim(($r->first_name ?? '') . ' ' . ($r->last_name ?? '')) }}"
+                                                data-phone="{{ $r->phone }}" data-email="{{ $r->email }}"
+                                                data-province="{{ $r->province }}"
+                                                data-purchase-date="{{ $r->purchase_date }}"
+                                                data-purchase-time="{{ $r->purchase_time }}"
+                                                data-receipt-number="{{ $r->receipt_number }}"
+                                                data-imei="{{ $r->imei }}" data-store="{{ $r->store_name }}"
+                                                {{-- ⭐ เพิ่ม 3 ตัวนี้ --}} data-id-type="{{ $r->id_type }}"
+                                                data-citizen-id="{{ $r->citizen_id }}"
+                                                data-passport-id="{{ $r->passport_id }}">
+                                                รายละเอียด
+                                            </button>
 
-    data-fullname="{{ trim(($r->first_name ?? '').' '.($r->last_name ?? '')) }}"
-    data-phone="{{ $r->phone }}"
-    data-email="{{ $r->email }}"
-    data-province="{{ $r->province }}"
-
-    data-purchase-date="{{ $r->purchase_date }}"
-    data-purchase-time="{{ $r->purchase_time }}"
-    data-receipt-number="{{ $r->receipt_number }}"
-    data-imei="{{ $r->imei }}"
-    data-store="{{ $r->store_name }}"
-
-    {{-- ⭐ เพิ่ม 3 ตัวนี้ --}}
-    data-id-type="{{ $r->id_type }}"
-    data-citizen-id="{{ $r->citizen_id }}"
-    data-passport-id="{{ $r->passport_id }}"
->
-    <i class="fa-solid fa-eye me-1"></i> ดูรายละเอียด
-</button>
 
                                             {{-- อนุมัติ --}}
                                             <form action="{{ route('adminHonor.receipts.approve', $r->id) }}"
@@ -344,11 +369,10 @@
                                             </form>
 
                                             {{-- ปฏิเสธ --}}
-                                            <form action="{{ route('adminHonor.receipts.reject', $r->id) }}"
-                                                method="POST">
-                                                @csrf @method('PATCH')
-                                                <button type="submit" class="btn btn-danger btn-sm">✕ ปฏิเสธ</button>
-                                            </form>
+                                            <button type="button" class="btn btn-danger btn-sm btn-reject"
+                                                data-id="{{ $r->id }}" data-imei="{{ $r->imei }}">
+                                                ✕ ปฏิเสธ
+                                            </button>
                                         </div>
                                     </td>
 
@@ -374,6 +398,44 @@
     </div>
 
 
+    <!-- Modal ปฏิเสธ -->
+    <div class="modal fade" id="rejectModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered">
+            <div class="modal-content">
+
+                <form id="rejectForm" method="POST">
+                    @csrf
+                    @method('PATCH')
+
+                    <div class="modal-header">
+                        <h5 class="modal-title">กรอกข้อมูลการใบเสร็จ</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <p class="mb-2">
+                            <strong>IMEI:</strong> <span id="reject-imei"></span>
+                        </p>
+
+                        <label class="form-label">กรุณาระบุสาเหตุที่ปฏิเสธ</label>
+                        <textarea name="reject_reason" id="reject_reason" class="form-control" rows="4" required></textarea>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">ยกเลิก</button>
+                        <button type="submit" class="btn btn-danger">ยืนยันปฏิเสธ</button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+
     {{-- Modal แสดงรายละเอียดใบเสร็จ --}}
     <div class="modal fade" id="receiptDetailModal" tabindex="-1" aria-labelledby="receiptDetailModalLabel"
         aria-hidden="true">
@@ -394,9 +456,9 @@
                             <p class="mb-1"><strong>จังหวัด:</strong> <span id="detail-province">-</span></p>
 
                             <!-- ⭐ เพิ่มข้อมูลเอกสาร -->
-                        <p class="mb-1"><strong>ประเภทเอกสาร:</strong> <span id="detail-id-type">-</span></p>
-                        <p class="mb-1"><strong>เลขบัตรประชาชน:</strong> <span id="detail-citizen-id">-</span></p>
-                        <p class="mb-1"><strong>เลขพาสปอร์ต:</strong> <span id="detail-passport-id">-</span></p>
+                            <p class="mb-1"><strong>ประเภทเอกสาร:</strong> <span id="detail-id-type">-</span></p>
+                            <p class="mb-1"><strong>เลขบัตรประชาชน:</strong> <span id="detail-citizen-id">-</span></p>
+                            <p class="mb-1"><strong>เลขพาสปอร์ต:</strong> <span id="detail-passport-id">-</span></p>
 
 
                         </div>
@@ -456,6 +518,44 @@
 @endsection
 
 @section('scripts')
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
+<script>
+flatpickr(".date-picker", {
+    dateFormat: "d/m/Y",
+    locale: "th"
+});
+</script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const rejectModal = new bootstrap.Modal(document.getElementById('rejectModal'));
+            const rejectForm = document.getElementById('rejectForm');
+            const rejectImei = document.getElementById('reject-imei');
+
+            document.querySelectorAll('.btn-reject').forEach(btn => {
+                btn.addEventListener('click', function() {
+
+                    const id = this.dataset.id;
+                    const imei = this.dataset.imei ?? "-";
+
+                    // ใส่ข้อมูลใน modal
+                    rejectImei.textContent = imei;
+
+                    // ตั้ง action url = receipts/{id}/reject
+                    rejectForm.action = `/admin-honor/receipts/${id}/reject`;
+
+                    // เปิด modal
+                    rejectModal.show();
+                });
+            });
+
+        });
+    </script>
+
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const buttons = document.querySelectorAll('.btn-show-receipt');
@@ -485,13 +585,13 @@
                     document.getElementById('detail-store').textContent = this.dataset.store || '-';
 
                     document.getElementById('detail-id-type').textContent =
-    this.dataset.idType || '-';
+                        this.dataset.idType || '-';
 
-document.getElementById('detail-citizen-id').textContent =
-    this.dataset.citizenId || '-';
+                    document.getElementById('detail-citizen-id').textContent =
+                        this.dataset.citizenId || '-';
 
-document.getElementById('detail-passport-id').textContent =
-    this.dataset.passportId || '-';
+                    document.getElementById('detail-passport-id').textContent =
+                        this.dataset.passportId || '-';
 
                     // สถานะ + สี
                     const statusEl = document.getElementById('detail-status');
@@ -522,112 +622,110 @@ document.getElementById('detail-passport-id').textContent =
             });
         });
 
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
 
-    const buttons = document.querySelectorAll('.btn-show-receipt');
-    const modal = new bootstrap.Modal(document.getElementById('receiptDetailModal'));
+            const buttons = document.querySelectorAll('.btn-show-receipt');
+            const modal = new bootstrap.Modal(document.getElementById('receiptDetailModal'));
 
-    buttons.forEach(btn => {
-        btn.addEventListener('click', function () {
+            buttons.forEach(btn => {
+                btn.addEventListener('click', function() {
 
-            // ลำดับใบเสร็จ
-            document.getElementById('detail-index').textContent = this.dataset.index;
+                    // ลำดับใบเสร็จ
+                    document.getElementById('detail-index').textContent = this.dataset.index;
 
-            // ลงทะเบียนวันที่ (ภาษาไทย)
-            document.getElementById('detail-created').textContent =
-                this.dataset.created
-                    ? new Date(this.dataset.created).toLocaleString('th-TH')
-                    : '-';
+                    // ลงทะเบียนวันที่ (ภาษาไทย)
+                    document.getElementById('detail-created').textContent =
+                        this.dataset.created ?
+                        new Date(this.dataset.created).toLocaleString('th-TH') :
+                        '-';
 
-            // อนุมัติวันที่
-            document.getElementById('detail-approved-at').textContent =
-                this.dataset.approved
-                    ? new Date(this.dataset.approved).toLocaleString('th-TH')
-                    : '-';
+                    // อนุมัติวันที่
+                    document.getElementById('detail-approved-at').textContent =
+                        this.dataset.approved ?
+                        new Date(this.dataset.approved).toLocaleString('th-TH') :
+                        '-';
 
-            // เจ้าหน้าที่
-            document.getElementById('detail-checked-by').textContent =
-                this.dataset.checkedBy || '-';
+                    // เจ้าหน้าที่
+                    document.getElementById('detail-checked-by').textContent =
+                        this.dataset.checkedBy || '-';
 
-            // ไม่อนุมัติวันที่
-            document.getElementById('detail-rejected-at').textContent =
-                this.dataset.rejected
-                    ? new Date(this.dataset.rejected).toLocaleString('th-TH')
-                    : '-';
+                    // ไม่อนุมัติวันที่
+                    document.getElementById('detail-rejected-at').textContent =
+                        this.dataset.rejected ?
+                        new Date(this.dataset.rejected).toLocaleString('th-TH') :
+                        '-';
 
-            // สาเหตุ reject
-            document.getElementById('detail-reject-reason').textContent =
-                this.dataset.rejectReason || '-';
+                    // สาเหตุ reject
+                    document.getElementById('detail-reject-reason').textContent =
+                        this.dataset.rejectReason || '-';
 
-            // โหลดรูปใบเสร็จ
-            const img = document.getElementById('detail-receipt-image');
-            img.src = this.dataset.receiptFile || '';
+                    // โหลดรูปใบเสร็จ
+                    const img = document.getElementById('detail-receipt-image');
+                    img.src = this.dataset.receiptFile || '';
 
-            // ปุ่มดาวน์โหลด
+                    // ปุ่มดาวน์โหลด
+                    const downloadBtn = document.getElementById('detail-download-btn');
+                    downloadBtn.href = this.dataset.receiptFile || '#';
+
+                    // เปิด modal
+                    modal.show();
+                });
+            });
+
+        });
+
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const buttons = document.querySelectorAll('.btn-show-receipt');
             const downloadBtn = document.getElementById('detail-download-btn');
-            downloadBtn.href = this.dataset.receiptFile || '#';
 
-            // เปิด modal
-            modal.show();
+            buttons.forEach(function(btn) {
+                btn.addEventListener('click', function() {
+
+                    let fileUrl = this.dataset.receiptFile;
+                    let imei = this.dataset.imei ?? 'unknown';
+                    let filename = `receipt_${imei}.jpg`;
+
+                    // ส่งไป controller เพื่อบังคับโหลด
+                    downloadBtn.href =
+                        `/adminHonor/receipt/download?url=${encodeURIComponent(fileUrl)}&filename=${filename}`;
+                });
+            });
+
         });
-    });
-
-});
 
 
 
-document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
 
-    const buttons = document.querySelectorAll('.btn-show-receipt');
-    const downloadBtn = document.getElementById('detail-download-btn');
+            let modal = null;
+            const modalEl = document.getElementById('receiptDetailModal');
 
-    buttons.forEach(function(btn) {
-        btn.addEventListener('click', function() {
+            // สร้าง modal แค่ครั้งเดียว
+            if (!modal) {
+                modal = new bootstrap.Modal(modalEl);
+            }
 
-            let fileUrl = this.dataset.receiptFile;
-            let imei = this.dataset.imei ?? 'unknown';
-            let filename = `receipt_${imei}.jpg`;
+            const buttons = document.querySelectorAll('.btn-show-receipt');
+            const downloadBtn = document.getElementById('detail-download-btn');
 
-            // ส่งไป controller เพื่อบังคับโหลด
-            downloadBtn.href = `/adminHonor/receipt/download?url=${encodeURIComponent(fileUrl)}&filename=${filename}`;
+            buttons.forEach(btn => {
+                btn.addEventListener('click', function() {
+
+                    // ... (ใส่ข้อมูลลง modal ตามเดิม)
+
+                    modal.show();
+                });
+            });
+
+            // ล้าง backdrop เมื่อ modal ปิด
+            modalEl.addEventListener('hidden.bs.modal', function() {
+                document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+                document.body.classList.remove('modal-open');
+                document.body.style = "";
+            });
         });
-    });
-
-});
-
-
-
-document.addEventListener('DOMContentLoaded', function () {
-
-    let modal = null;
-    const modalEl = document.getElementById('receiptDetailModal');
-
-    // สร้าง modal แค่ครั้งเดียว
-    if (!modal) {
-        modal = new bootstrap.Modal(modalEl);
-    }
-
-    const buttons = document.querySelectorAll('.btn-show-receipt');
-    const downloadBtn = document.getElementById('detail-download-btn');
-
-    buttons.forEach(btn => {
-        btn.addEventListener('click', function () {
-
-            // ... (ใส่ข้อมูลลง modal ตามเดิม)
-
-            modal.show();
-        });
-    });
-
-    // ล้าง backdrop เมื่อ modal ปิด
-    modalEl.addEventListener('hidden.bs.modal', function () {
-        document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
-        document.body.classList.remove('modal-open');
-        document.body.style = "";
-    });
-});
-
     </script>
-
-
 @endsection

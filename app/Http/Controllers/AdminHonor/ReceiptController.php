@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use App\Models\ParticipantReceiptLog;
 use Illuminate\Support\Facades\Auth;
-
+use Carbon\Carbon;
 
 class ReceiptController extends Controller
 {
@@ -17,59 +17,109 @@ class ReceiptController extends Controller
      */
     public function index(Request $request)
     {
-        // ---- Summary ด้านบน ----
+        // Summary
         $summary = [
-            // จำนวนผู้เข้าร่วม: นับเบอร์ติดต่อไม่ซ้ำ
-            'participants'    => participant_receipt::distinct('phone')->count('phone'),
-
-            // ใบเสร็จทั้งหมด
-            'receipts_total'  => participant_receipt::count(),
-
-            // สถานะ
-            'pending'         => participant_receipt::where('status', 'pending')->count(),
-            'approved'        => participant_receipt::where('status', 'approved')->count(),
-            // ใน DB ใช้คำว่า failed แต่บน UI เขียน "ไม่ผ่าน"
-            'rejected'        => participant_receipt::where('status', 'failed')->count(),
+            'participants' => participant_receipt::distinct('phone')->count('phone'),
+            'receipts_total' => participant_receipt::count(),
+            'pending' => participant_receipt::where('status', 'pending')->count(),
+            'approved' => participant_receipt::where('status', 'approved')->count(),
+            'rejected' => participant_receipt::where('status', 'failed')->count(),
         ];
 
-        // ---- Query list ใบเสร็จ ----
         $query = participant_receipt::query();
 
-        // ค้นหา (ใบเสร็จ / IMEI / ชื่อ / นามสกุล / เบอร์ ฯลฯ)
-        if ($q = $request->get('q')) {
-            $query->where(function ($sub) use ($q) {
+        // ------------------------------
+        // 🔍 ค้นหาทั่วไป
+        // ------------------------------
+        if ($q = $request->q) {
+
+            $q_no_dash = str_replace('-', '', $q);
+
+            $query->where(function ($sub) use ($q, $q_no_dash) {
                 $sub->where('receipt_number', 'like', "%{$q}%")
                     ->orWhere('imei', 'like', "%{$q}%")
                     ->orWhere('first_name', 'like', "%{$q}%")
                     ->orWhere('last_name', 'like', "%{$q}%")
-                    ->orWhere('phone', 'like', "%{$q}%")
                     ->orWhere('email', 'like', "%{$q}%")
-                    ->orWhere('store_name', 'like', "%{$q}%");
+                    ->orWhere('store_name', 'like', "%{$q}%")
+                    ->orWhere('phone', 'like', "%{$q}%")
+                    ->orWhereRaw("REPLACE(phone, '-', '') LIKE ?", ["%{$q_no_dash}%"]);
             });
         }
 
-        // filter status จาก dropdown (pending / approved / rejected)
-        if ($status = $request->get('status')) {
+        // ------------------------------
+        // 📌 กรองสถานะ
+        // ------------------------------
+        $status = $request->status;
 
-            if ($status === 'rejected') {
-                // map ค่าจาก UI -> DB
-                $query->where('status', 'failed');
+        if ($status === 'approved') {
+            $query->where('status', 'approved');
+        } elseif ($status === 'rejected') {
+            $query->where('status', 'failed');
+        } elseif ($status === 'pending') {
+            $query->where('status', 'pending');
+        }
+
+        // ------------------------------
+        // 📅 กรองวันที่ตามประเภทสถานะ
+        // ------------------------------
+        $start = $this->parseDate($request->start_date)?->startOfDay();
+$end   = $this->parseDate($request->end_date)?->endOfDay();
+
+        if ($start || $end) {
+
+            // ถ้าเลือก "อนุมัติแล้ว"
+            if ($status === 'approved') {
+
+                $query->whereBetween('approved_at', [
+                    $start ?? Carbon::minValue(),
+                    $end ?? Carbon::maxValue()
+                ]);
+
+            // ถ้าเลือก "ไม่ผ่าน"
+            } elseif ($status === 'rejected') {
+
+                $query->whereBetween('rejected_at', [
+                    $start ?? Carbon::minValue(),
+                    $end ?? Carbon::maxValue()
+                ]);
+
+            // pending หรือไม่ระบุสถานะ → ใช้ created_at
             } else {
-                $query->where('status', $status);
+
+                $query->whereBetween('created_at', [
+                    $start ?? Carbon::minValue(),
+                    $end ?? Carbon::maxValue()
+                ]);
             }
         }
 
-        // เรียงล่าสุดอยู่บน
-        $receipts = $query
-            ->orderByDesc('created_at')
-            ->paginate(20)
-            ->withQueryString();
+        // -----------------------------------------------------------------
+        // 🔽 เรียงลำดับ: ลงทะเบียนล่าสุด อยู่ด้านบนเสมอ
+        // -----------------------------------------------------------------
+        $receipts = $query->orderByDesc('created_at')
+                        ->paginate(20)
+                        ->withQueryString();
 
-        return view('adminHonor.receipts.index', [
-            'summary'  => $summary,
-            'receipts' => $receipts,
-        ]);
+        return view('adminHonor.receipts.index', compact('summary', 'receipts'));
     }
+
+    private function parseDate($date)
+{
+    if (!$date) return null;
+
+    // ถ้าเป็นรูปแบบ Y-m-d เช่น 2025-12-01
+    if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+        return Carbon::parse($date);
+    }
+
+    // ถ้าเป็นรูปแบบ d/m/Y เช่น 01/12/2025
+    if (preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $date)) {
+        return Carbon::createFromFormat('d/m/Y', $date);
+    }
+
+    return null; // ป้องกัน error
+}
 
     /**
      * ดูรายละเอียดใบเสร็จ
@@ -112,6 +162,7 @@ public function approve(participant_receipt $receipt)
 /**
  * ปฏิเสธ / ไม่ผ่านใบเสร็จ
  */
+
 public function reject(Request $request, participant_receipt $receipt)
 {
     $request->validate([
