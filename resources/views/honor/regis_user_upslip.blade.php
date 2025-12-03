@@ -322,7 +322,7 @@ function validateForm() {
     if (selectDate > today) {
         Swal.fire({
             icon: "error",
-            title: "เลือกวันอนาคตไม่ได้",
+            title: "ข้อมูลไม่ถูกต้อง",
             text: "วันที่ซื้อสินค้าต้องไม่เกินวันปัจจุบัน"
         });
         return false;
