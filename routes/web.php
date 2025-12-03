@@ -34,30 +34,18 @@ Route::domain('ttb.idx.co.th')->group(function () {
 });
 
 
-Route::group(['domain' => 'honorluckydraw.com'], function () {
+Route::group(['domain' => ['honorluckydraw.com', 'www.honorluckydraw.com']], function () {
     Route::get('/', function () {
         return view('honor.index2');
     });
+
     Route::get('/terms', function () {
-            return view('honor.terms');
-        });
-
-        Route::get('/privacy-policy', function () {
-            return view('honor.privacy2');
-        });
-});
-
-Route::group(['domain' => 'www.honorluckydraw.com'], function () {
-    Route::get('/', function () {
-        return view('honor.index2');
+        return view('honor.terms');
     });
-    Route::get('/terms', function () {
-            return view('honor.terms');
-        });
 
-        Route::get('/privacy-policy', function () {
-            return view('honor.privacy2');
-        });
+    Route::get('/privacy-policy', function () {
+        return view('honor.privacy2');
+    });
 });
 
 
