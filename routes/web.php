@@ -99,6 +99,9 @@ Route::post('/admin-honor/login', [LoginController::class, 'login'])
 Route::post('/admin-honor/logout', [LoginController::class, 'logout'])
     ->name('adminHonor.logout');
 
+    Route::get('/admin-honor/logout', [LoginController::class, 'logout'])
+    ->name('adminHonor.logout');
+
 
 Route::prefix('admin-honor')
     ->name('adminHonor.')
