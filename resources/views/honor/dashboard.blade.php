@@ -163,31 +163,42 @@
                             </thead>
                             <tbody>
                                 @php
-                                    function thaidate($date)
-                                    {
-                                        $d = \Carbon\Carbon::parse($date);
-                                        $months = [
-                                            'Jan' => 'ม.ค.',
-                                            'Feb' => 'ก.พ.',
-                                            'Mar' => 'มี.ค.',
-                                            'Apr' => 'เม.ย.',
-                                            'May' => 'พ.ค.',
-                                            'Jun' => 'มิ.ย.',
-                                            'Jul' => 'ก.ค.',
-                                            'Aug' => 'ส.ค.',
-                                            'Sep' => 'ก.ย.',
-                                            'Oct' => 'ต.ค.',
-                                            'Nov' => 'พ.ย.',
-                                            'Dec' => 'ธ.ค.',
-                                        ];
+function thaidate($date)
+{
+    // แปลงเป็น Carbon ก่อน
+    $d = \Carbon\Carbon::parse($date);
 
-                                        $day = $d->format('d');
-                                        $month = $months[$d->format('M')];
-                                        $year = $d->year + 543;
+    // ตรวจว่าปีเป็น พ.ศ. หรือไม่
+    $year = $d->year;
+    if ($year > 2400) {
+        // ถ้าเป็นพ.ศ.อยู่แล้ว เช่น 2568 → แปลงเป็น ค.ศ.
+        $year = $year - 543;
+        $d->year($year); // set ปีใหม่ใน Carbon
+    }
 
-                                        return "{$day} {$month} {$year}";
-                                    }
-                                @endphp
+    // ชุดเดือนภาษาไทย
+    $months = [
+        'Jan' => 'ม.ค.',
+        'Feb' => 'ก.พ.',
+        'Mar' => 'มี.ค.',
+        'Apr' => 'เม.ย.',
+        'May' => 'พ.ค.',
+        'Jun' => 'มิ.ย.',
+        'Jul' => 'ก.ค.',
+        'Aug' => 'ส.ค.',
+        'Sep' => 'ก.ย.',
+        'Oct' => 'ต.ค.',
+        'Nov' => 'พ.ย.',
+        'Dec' => 'ธ.ค.',
+    ];
+
+    $day = $d->format('d');
+    $month = $months[$d->format('M')];
+    $thaiYear = $d->year + 543;
+
+    return "{$day} {$month} {$thaiYear}";
+}
+@endphp
 
                                 @foreach ($receipts as $r)
                                     <tr>
