@@ -118,6 +118,9 @@
                 <a href="{{ route('adminHonor.receipts.export') ?? '#' }}" class="btn btn-dark">
                     Export ข้อมูล
                 </a>
+                <a href="{{ url('/admin-honor/logout') ?? '#' }}" class="btn btn-danger">
+                    Logout
+                </a>
             </div>
         </div>
 
