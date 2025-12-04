@@ -352,7 +352,7 @@ participant in the event
 
                     @if (!session('email_exists'))
                         <div class="text-center">
-                            <button type="submit" class="btn-confirm mt-20">Save and Continue</button>
+                            <button type="submit" class="btn-confirm mt-20">บันทึกและไปต่อ</button>
                         </div>
                     @endif
 

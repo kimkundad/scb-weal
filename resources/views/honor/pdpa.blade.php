@@ -499,7 +499,7 @@
 
             </div>
 
-            <button id="join-btn" class="btn-confirm mt-20" disabled>Confirm and continue</button>
+            <button id="join-btn" class="btn-confirm mt-20" disabled>ยืนยันและดำเนินการต่อ</button>
             <br><br>
         </main>
 

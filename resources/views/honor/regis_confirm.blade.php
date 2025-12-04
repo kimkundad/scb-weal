@@ -53,7 +53,7 @@
         January 13, 2026
       </p>
 
-      <a href="{{ url('/my-rights') }}" class="btn-confirm mt-20">View my eligibility</a>
+      <a href="{{ url('/my-rights') }}" class="btn-confirm mt-20">ดูสิทธิ์ของฉัน</a>
       <a href="{{ url('/regis_user_upslip') }}" class="btn-secondary mt-10">Add more eligibility</a>
     </div>
   </main>

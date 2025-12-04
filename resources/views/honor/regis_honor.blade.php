@@ -130,7 +130,7 @@
                     </div>
 
 
-                    <button type="submit" id="btn-submit" class="btn-confirm mt-20">Confirm phone number</button>
+                    <button type="submit" id="btn-submit" class="btn-confirm mt-20">ยืนยันเบอร์โทร</button>
 
 
                 </form>
@@ -157,7 +157,7 @@
                             <form method="POST" action="{{ url('/go-dashboard') }}" class="">
                                 @csrf
                                 <input type="hidden" name="phone" value="{{ $maskedPhone }}">
-                                <button type="submit" class="btn-confirm mt-20">Verify your eligibility</button>
+                                <button type="submit" class="btn-confirm mt-20">เข้าสู่หน้าตรวจสอบสิทธิ์ของคุณ</button>
                             </form>
                         </div>
 

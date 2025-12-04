@@ -119,7 +119,7 @@
                     Export ข้อมูล
                 </a>
                 <a href="{{ url('/admin-honor/logout') ?? '#' }}" class="btn btn-danger">
-                    Logout
+                    ออกจากระบบ
                 </a>
             </div>
         </div>

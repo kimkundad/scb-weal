@@ -317,7 +317,7 @@
 
             </div>
 
-            <button id="join-btn" class="btn-confirm mt-20" disabled>Join the event</button>
+            <button id="join-btn" class="btn-confirm mt-20" disabled>เข้าร่วมกิจกรรม</button>
             <br><br>
 
         </main>

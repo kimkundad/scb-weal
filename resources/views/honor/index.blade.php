@@ -139,11 +139,11 @@ body.index-page .page-wrapper2 {
 
 @if (now('Asia/Bangkok')->greaterThanOrEqualTo($openAt))
     <a href="{{ url('/terms_conditions') }}" class="btn-full btn-confirm mt-20">
-        Join the event
+        เข้าร่วมกิจกรรม
     </a>
 
     <a href="{{ url('/dashboard') }}" class="btn-full btn-secondary mt-20 mw-350">
-        Verify your eligibility
+        ตรวจสอบสิทธิ์ของคุณ
     </a>
 @endif
 

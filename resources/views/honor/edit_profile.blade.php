@@ -86,7 +86,7 @@
             <img src="{{ url('img/honor/logo@2x.png') }}" alt="HONOR Logo" style="margin-left:20px">
         </a>
         <a href="{{ url('/logout-honor') }}" class="btn-logout-header">
-                <i class="fa-solid fa-right-from-bracket"></i> Logout
+                <i class="fa-solid fa-right-from-bracket"></i> ออกจากระบบ
             </a>
     </header>
 
@@ -236,7 +236,7 @@
 
 
         <div class="text-center">
-            <button type="submit" class="btn-confirm mt-20">Confirm</button>
+            <button type="submit" class="btn-confirm mt-20">บันทึกข้อมูล</button>
         </div>
     </form>
 </div>

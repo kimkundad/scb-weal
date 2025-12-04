@@ -102,7 +102,7 @@
             </a>
             <!-- ปุ่มออกจากระบบบนขวา -->
             <a href="{{ url('/logout-honor') }}" class="btn-logout-header">
-                <i class="fa-solid fa-right-from-bracket"></i> Logout
+                <i class="fa-solid fa-right-from-bracket"></i> ออกจากระบบ
             </a>
         </header>
 
@@ -240,7 +240,7 @@
 
 
                     <div class="text-center">
-                        <button type="submit" class="btn-confirm mt-20">Submit information</button>
+                        <button type="submit" class="btn-confirm mt-20">ส่งข้อมูลเข้าร่วมกิจกรรม</button>
     <br>  <br>
                         <!-- 🔴 ปุ่มออกจากระบบ -->
 

@@ -73,7 +73,7 @@
     >
       <p class="mt-20" style="margin-top: -10px;font-size: 14px;color: #64748b;">กรอกเบอร์โทรศัพท์ของคุณที่ได้ลงทะเบียนไว้กับเรา <br>Enter your phone number to start participating in the event</p>
 
-      <button type="submit" class="btn-secondary mt-20">View Your Information</button>
+      <button type="submit" class="btn-secondary mt-20">ดูข้อมูลเบอร์นี้</button>
     </form>
 
   </div>

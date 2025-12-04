@@ -131,7 +131,7 @@
             </a>
             <!-- เพิ่ม hamburger menu ได้ที่นี่หากต้องการ -->
             <a href="{{ url('/logout-honor') }}" class="btn-logout-header">
-                <i class="fa-solid fa-right-from-bracket"></i> Logout
+                <i class="fa-solid fa-right-from-bracket"></i> ออกจากระบบ
             </a>
         </header>
 
@@ -142,10 +142,10 @@
                 <p class="regis-subtitle">คุณมีสิทธิ์ลุ้นรางวัลทั้งหมด <br> Total eligibility for the lucky draw</p>
                 <h2 style="font-size: 48px; font-weight: bold; color: #22c55e;">{{ $totalApproved }} สิทธิ์ <span style="font-size: 22px;">(Eligibility)</span></h2>
 
-                <a href="{{ url('/regis_user_upslip') }}" class="btn-secondary mt-20">Add more eligibility</a>
+                <a href="{{ url('/regis_user_upslip') }}" class="btn-secondary mt-20">เพิ่มสิทธิ์ลุ้นรางวัล</a>
 
                 <a href="{{ url('/edit-profile') }}" class="btn-confirm mt-20">
-                    Edit profile
+                    แก้ไขข้อมูลส่วนตัว
                 </a>
 
 
