@@ -305,7 +305,14 @@
 
                                     {{-- รุ่น --}}
                                     <td>{{ $r->model ?? '-' }}</td>
-                                    <td>{{ $r->hbd ?? '-' }}</td>
+                                    <td>
+                                        @if (!empty($r->hbd))
+                                            {{ $r->hbd }}
+                                            ({{ \Carbon\Carbon::parse($r->hbd)->age }} ปี)
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
 
                                     {{-- สถานะ --}}
                                     <td>
