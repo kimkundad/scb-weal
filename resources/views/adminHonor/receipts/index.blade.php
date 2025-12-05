@@ -269,6 +269,7 @@
                                 <th class="min-w-180px1">เบอร์โทร</th>
                                 <th class="min-w-140px">IMEI</th>
                                 <th class="min-w-100px">ร้านค้าที่ซื้อ</th>
+                                <th class="min-w-100px">วันเกิด</th>
                                 <th class="min-w-100px">สถานะ</th>
                                 <th class="min-w-180px">วันที่ตรวจสอบ</th>
                                 <th class="min-w-180px">ผู้ตรวจสอบ</th>
@@ -304,6 +305,7 @@
 
                                     {{-- รุ่น --}}
                                     <td>{{ $r->model ?? '-' }}</td>
+                                    <td>{{ $r->hbd ?? '-' }}</td>
 
                                     {{-- สถานะ --}}
                                     <td>
