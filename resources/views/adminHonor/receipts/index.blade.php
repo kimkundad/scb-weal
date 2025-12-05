@@ -254,6 +254,26 @@
             </div>
         </form>
 
+@php
+    function ageFromThaiDate($thaiDate) {
+        if (empty($thaiDate)) {
+            return null;
+        }
+
+        // แยกปี เดือน วัน
+        [$year, $month, $day] = explode('-', $thaiDate);
+
+        // ถ้าเป็นพ.ศ. (มากกว่า 2400) → แปลงเป็นค.ศ.
+        if ($year > 2400) {
+            $year -= 543;
+        }
+
+        // สร้าง Carbon date
+        $date = \Carbon\Carbon::create($year, $month, $day);
+
+        return $date->age;
+    }
+@endphp
 
 
         {{-- Table --}}
@@ -306,13 +326,12 @@
                                     {{-- รุ่น --}}
                                     <td>{{ $r->model ?? '-' }}</td>
                                     <td>
-                                        @if (!empty($r->hbd))
-                                            {{ $r->hbd }}
-                                            ({{ \Carbon\Carbon::parse($r->hbd)->age }} ปี)
-                                        @else
-                                            -
-                                        @endif
-                                    </td>
+    @if (!empty($r->hbd))
+        {{ $r->hbd }} ({{ ageFromThaiDate($r->hbd) }} ปี)
+    @else
+        -
+    @endif
+</td>
 
                                     {{-- สถานะ --}}
                                     <td>
