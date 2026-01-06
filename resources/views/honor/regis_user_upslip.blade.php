@@ -148,16 +148,13 @@
                         </select>
 
                         {{-- ⭐ YEAR (พ.ศ.) --}}
-                        @php
-                            $thisYearTH = date('Y') + 543;
-                            $startYearTH = $thisYearTH + 1;  // ซื้อย้อนหลังได้ 3 ปี (ปรับได้ตามต้องการ)
-                        @endphp
+
 
                         <select name="purchase_year" id="purchase_year" class="regis-input hbd-select" required>
 
-                            @foreach (range($thisYearTH, $startYearTH) as $y)
-                                <option value="{{ $y }}">{{ $y }}</option>
-                            @endforeach
+                                <option value="2568">2568</option>
+                                <option value="2569">2569</option>
+
                         </select>
 
                         <input type="hidden" name="purchase_date" id="purchase_date">
