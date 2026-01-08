@@ -5,6 +5,8 @@ namespace App\Http\Controllers\AdminHonor;
 use App\Http\Controllers\Controller;
 use App\Models\participant_receipt;
 use Illuminate\Http\Request;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use App\Models\ParticipantReceiptLog;
 use Illuminate\Support\Facades\Auth;
@@ -215,60 +217,88 @@ public function downloadReceipt(Request $request)
      */
     public function export(): StreamedResponse
     {
-        $fileName = 'participant_receipts_' . now()->format('Ymd_His') . '.csv';
+        $fileName = 'participant_receipts_' . now()->format('Ymd_His') . '.xlsx';
 
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Header
         $headers = [
-            'Content-Type'        => 'text/csv; charset=UTF-8',
-            'Content-Disposition' => "attachment; filename=\"{$fileName}\"",
+            'ID',
+            'Phone',
+            'Prefix',
+            'First Name',
+            'Last Name',
+            'HBD',
+            'ID Type',
+            'Citizen ID',
+            'Passport ID',
+            'Email',
+            'Province',
+            'Purchase Date',
+            'Purchase Time',
+            'Receipt Number',
+            'IMEI',
+            'Store Name',
+            'Receipt File Path',
+            'Reject Reason',
+            'Status',
+            'Approved At',
+            'Rejected At',
+            'Checked By',
+            'Created At',
+            'Updated At',
         ];
 
-        $callback = function () {
-            $handle = fopen('php://output', 'w');
+        $sheet->fromArray($headers, null, 'A1');
 
-            // เขียน BOM สำหรับ Excel ภาษาไทย
-            fprintf($handle, chr(0xEF).chr(0xBB).chr(0xBF));
+        // Data
+        $rowNumber = 2;
 
-            // หัวตาราง
-            fputcsv($handle, [
-                'ID',
-                'Phone',
-                'First Name',
-                'Last Name',
-                'Email',
-                'Province',
-                'Purchase Date',
-                'Purchase Time',
-                'Receipt Number',
-                'IMEI',
-                'Store Name',
-                'Status',
-                'Created At',
-            ]);
+        participant_receipt::orderBy('id')
+            ->chunk(500, function ($rows) use ($sheet, &$rowNumber) {
+                foreach ($rows as $row) {
+                    $sheet->fromArray([
+                        $row->id,
+                        $row->phone,
+                        $row->prefix,
+                        $row->first_name,
+                        $row->last_name,
+                        optional($row->hbd)->format('Y-m-d') ?? $row->hbd,
+                        $row->id_type,
+                        $row->citizen_id,
+                        $row->passport_id,
+                        $row->email,
+                        $row->province,
+                        optional($row->purchase_date)->format('Y-m-d') ?? $row->purchase_date,
+                        optional($row->purchase_time)->format('H:i:s') ?? $row->purchase_time,
+                        $row->receipt_number,
+                        $row->imei,
+                        $row->store_name,
+                        $row->receipt_file_path,
+                        $row->reject_reason,
+                        $row->status,
+                        optional($row->approved_at)->toDateTimeString(),
+                        optional($row->rejected_at)->toDateTimeString(),
+                        $row->checked_by,
+                        optional($row->created_at)->toDateTimeString(),
+                        optional($row->updated_at)->toDateTimeString(),
+                    ], null, 'A' . $rowNumber);
 
-            participant_receipt::orderBy('id')
-                ->chunk(500, function ($rows) use ($handle) {
-                    foreach ($rows as $row) {
-                        fputcsv($handle, [
-                            $row->id,
-                            $row->phone,
-                            $row->first_name,
-                            $row->last_name,
-                            $row->email,
-                            $row->province,
-                            $row->purchase_date,
-                            $row->purchase_time,
-                            $row->receipt_number,
-                            $row->imei,
-                            $row->store_name,
-                            $row->status,
-                            $row->created_at,
-                        ]);
-                    }
-                });
+                    $rowNumber++;
+                }
+            });
 
-            fclose($handle);
-        };
+        // ปรับ auto width
+        foreach (range('A', $sheet->getHighestColumn()) as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
 
-        return response()->stream($callback, 200, $headers);
+        return response()->streamDownload(function () use ($spreadsheet) {
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('php://output');
+        }, $fileName, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ]);
     }
 }

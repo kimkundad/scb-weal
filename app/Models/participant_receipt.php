@@ -20,7 +20,6 @@ class participant_receipt extends Model
     'passport_id',
     'email',
     'province',
-
     'purchase_date',
     'purchase_time',
     'receipt_number',

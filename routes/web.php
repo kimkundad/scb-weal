@@ -40,7 +40,7 @@ Route::post('/admin-honor/logout', [LoginController::class, 'logout'])
     ->name('adminHonor.logout');
 
 
-$honorRoutes = function () {
+//$honorRoutes = function () {
 
     Route::get('/', function () {
                 return view('honor.index'); // หรือ controller ก็ได้
@@ -141,8 +141,8 @@ Route::prefix('admin-honor')
     ->name('adminHonor.receipt.download');
 
 
-};
-
+//};
+$honorRoutes = null;
 // domain 1
 Route::group(['domain' => 'honorluckydraw.com'], $honorRoutes);
 
