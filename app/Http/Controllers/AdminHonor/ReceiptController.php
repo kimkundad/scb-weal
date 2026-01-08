@@ -224,7 +224,7 @@ public function downloadReceipt(Request $request)
 
         // Header
         $headers = [
-            'ID',
+            'No.',
             'Phone',
             'Prefix',
             'First Name',
@@ -254,40 +254,43 @@ public function downloadReceipt(Request $request)
 
         // Data
         $rowNumber = 2;
+        // Running number (เริ่ม 1)
+        $runningNumber = 1;
 
         participant_receipt::orderBy('id')
-            ->chunk(500, function ($rows) use ($sheet, &$rowNumber) {
-                foreach ($rows as $row) {
-                    $sheet->fromArray([
-                        $row->id,
-                        $row->phone,
-                        $row->prefix,
-                        $row->first_name,
-                        $row->last_name,
-                        optional($row->hbd)->format('Y-m-d') ?? $row->hbd,
-                        $row->id_type,
-                        $row->citizen_id,
-                        $row->passport_id,
-                        $row->email,
-                        $row->province,
-                        optional($row->purchase_date)->format('Y-m-d') ?? $row->purchase_date,
-                        optional($row->purchase_time)->format('H:i:s') ?? $row->purchase_time,
-                        $row->receipt_number,
-                        $row->imei,
-                        $row->store_name,
-                        $row->receipt_file_path,
-                        $row->reject_reason,
-                        $row->status,
-                        optional($row->approved_at)->toDateTimeString(),
-                        optional($row->rejected_at)->toDateTimeString(),
-                        $row->checked_by,
-                        optional($row->created_at)->toDateTimeString(),
-                        optional($row->updated_at)->toDateTimeString(),
-                    ], null, 'A' . $rowNumber);
+        ->chunk(500, function ($rows) use ($sheet, &$rowNumber, &$runningNumber) {
+            foreach ($rows as $row) {
+                $sheet->fromArray([
+                    $runningNumber, // 👈 ใช้เลขรันแทน id
+                    $row->phone,
+                    $row->prefix,
+                    $row->first_name,
+                    $row->last_name,
+                    optional($row->hbd)->format('Y-m-d') ?? $row->hbd,
+                    $row->id_type,
+                    $row->citizen_id,
+                    $row->passport_id,
+                    $row->email,
+                    $row->province,
+                    optional($row->purchase_date)->format('Y-m-d') ?? $row->purchase_date,
+                    optional($row->purchase_time)->format('H:i:s') ?? $row->purchase_time,
+                    $row->receipt_number,
+                    $row->imei,
+                    $row->store_name,
+                    $row->receipt_file_path,
+                    $row->reject_reason,
+                    $row->status,
+                    optional($row->approved_at)->toDateTimeString(),
+                    optional($row->rejected_at)->toDateTimeString(),
+                    $row->checked_by,
+                    optional($row->created_at)->toDateTimeString(),
+                    optional($row->updated_at)->toDateTimeString(),
+                ], null, 'A' . $rowNumber);
 
-                    $rowNumber++;
-                }
-            });
+                $rowNumber++;      // แถว Excel
+                $runningNumber++;  // เลขรัน
+            }
+        });
 
         // ปรับ auto width
         foreach (range('A', $sheet->getHighestColumn()) as $col) {
