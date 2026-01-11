@@ -96,6 +96,12 @@ body.index-page .page-wrapper2 {
     display: none;
 }
 
+.new-text {
+        margin-top: 25px;
+        font-size: 15px;
+        font-family: 'Anuphan', sans-serif !important;
+    }
+
 /* ถ้าเป็น Desktop ≥ 768px → ซ่อนรูปมือถือ และแสดงรูป Desktop */
 @media (min-width: 768px) {
     .intro-mobile {
@@ -103,6 +109,11 @@ body.index-page .page-wrapper2 {
     }
     .intro-desktop {
         display: block;
+    }
+    .new-text {
+        margin-top: 25px;
+        font-size: 20px;
+        font-family: 'Anuphan', sans-serif !important;
     }
 }
 </style>
@@ -147,7 +158,7 @@ body.index-page .page-wrapper2 {
     </a>
 @endif --}}
 
-    <p style="margin-top: 25px; font-size: 20px;">ขอบคุณที่ร่วมกิจกรรม HONOR X9D <br>
+    <p class="new-text" style="">ขอบคุณที่ร่วมกิจกรรม HONOR X9D <br>
     ทนนน... จัด! คุ้มจัด ลุ้นขับ MERCEDES-BENZ <br>
     ประกาศผลรางวัล วันที่ 13 มกราคม 2569 เวลา 16.00 น. <br>
     ช่องทางเพจ FACEBOOK HONOR THAILAND</p>
