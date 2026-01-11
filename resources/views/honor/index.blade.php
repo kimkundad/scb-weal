@@ -130,7 +130,7 @@ body.index-page .page-wrapper2 {
      class="intro-img intro-desktop">
 
 
-@php
+{{-- @php
     use Carbon\Carbon;
 
     // เวลาเริ่มแสดงปุ่ม: 4/12/2025 07:00 (เวลาไทย)
@@ -145,7 +145,19 @@ body.index-page .page-wrapper2 {
     <a href="{{ url('/dashboard') }}" class="btn-full btn-secondary mt-20 mw-350">
         ตรวจสอบสิทธิ์ของคุณ
     </a>
-@endif
+@endif --}}
+
+    <p style="margin-top: 25px; font-size: 20px;">ขอบคุณที่ร่วมกิจกรรม HONOR X9D <br>
+    ทนนน... จัด! คุ้มจัด ลุ้นขับ MERCEDES-BENZ <br>
+    ประกาศผลรางวัล วันที่ 13 มกราคม 2569 เวลา 16.00 น. <br>
+    ช่องทางเพจ FACEBOOK HONOR THAILAND</p>
+
+    <a href="https://www.facebook.com/HonorThai" class="btn-full btn-secondary mt-10 mw-350">
+        FACEBOOK HONOR THAILAND
+    </a>
+    <br>
+    <br>
+    <br>
 
                 </div>
             </div>

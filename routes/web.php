@@ -46,34 +46,34 @@ $honorRoutes = function () {
                 return view('honor.index'); // หรือ controller ก็ได้
         });
 
-        Route::get('/terms_conditions', function () {
-                return view('honor.privacy'); // หรือ controller ก็ได้
-        });
+        // Route::get('/terms_conditions', function () {
+        //         return view('honor.privacy'); // หรือ controller ก็ได้
+        // });
 
-        Route::get('/pdpa', function () {
-                return view('honor.pdpa'); // หรือ controller ก็ได้
-        });
+        // Route::get('/pdpa', function () {
+        //         return view('honor.pdpa'); // หรือ controller ก็ได้
+        // });
 
-        Route::get('/regis_honor', [RegistrationController::class, 'showPhoneForm']);
-        Route::post('/regis_honor', [RegistrationController::class, 'storePhone']);
+        // Route::get('/regis_honor', [RegistrationController::class, 'showPhoneForm']);
+        // Route::post('/regis_honor', [RegistrationController::class, 'storePhone']);
 
-        Route::get('/regis_user_data', [RegistrationController::class, 'showUserDataForm']);
-        Route::post('/regis_user_data', [RegistrationController::class, 'storeUserData']);
+        // Route::get('/regis_user_data', [RegistrationController::class, 'showUserDataForm']);
+        // Route::post('/regis_user_data', [RegistrationController::class, 'storeUserData']);
 
-        Route::get('/regis_user_upslip', [RegistrationController::class, 'showUploadForm']);
-        Route::post('/regis_user_upslip', [RegistrationController::class, 'storeUpload']);
+        // Route::get('/regis_user_upslip', [RegistrationController::class, 'showUploadForm']);
+        // Route::post('/regis_user_upslip', [RegistrationController::class, 'storeUpload']);
 
-        Route::get('/regis_confirm', [RegistrationController::class, 'showConfirm']);
+        // Route::get('/regis_confirm', [RegistrationController::class, 'showConfirm']);
 
-        Route::get('/my-rights', [RegistrationController::class, 'showLoginOrRedirect']);
+        // Route::get('/my-rights', [RegistrationController::class, 'showLoginOrRedirect']);
 
-        Route::post('/go-dashboard', [RegistrationController::class, 'goDashboard']);
-        Route::get('/go-dashboard', [RegistrationController::class, 'showDashboard']);
+        // Route::post('/go-dashboard', [RegistrationController::class, 'goDashboard']);
+        // Route::get('/go-dashboard', [RegistrationController::class, 'showDashboard']);
 
-        Route::get('/dashboard', [RegistrationController::class, 'showDashboard']);
-        Route::get('/dashboard2', [RegistrationController::class, 'showDashboard2']);
+        // Route::get('/dashboard', [RegistrationController::class, 'showDashboard']);
+        // Route::get('/dashboard2', [RegistrationController::class, 'showDashboard2']);
 
-        Route::post('/check-imei', [RegistrationController::class, 'checkIMEI']);
+        // Route::post('/check-imei', [RegistrationController::class, 'checkIMEI']);
 
         Route::get('/logout-honor', function () {
             session()->flush();     // ล้าง Session ทั้งหมด
